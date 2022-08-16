@@ -15,7 +15,7 @@ The mirror can be configured:
 Transparent mirror is hopefully coming soon™
 
 UI isn't the most pretty, but it works! And that is better than no UI. (And to answer why it is so far away from the QM, because the canvas for the QM is bigger then it looks and will eat interactions if you overlap it)
-![image](https://user-images.githubusercontent.com/81605232/184996359-0a6be891-9a44-4019-a317-7aaf44d6c7e8.png)
+![image](https://user-images.githubusercontent.com/81605232/184996671-63cea3ff-a798-43a4-baf2-f106a3429262.png)
 
 There are a few MelonPrefs that can be customized (I recommend using https://github.com/sinai-dev/MelonPreferencesManager | For CVR use the Mono version)
 	* QuickMenu Starts Maximized - Exactly as it says, default state of the mirror menu attached to your QuickMenu
