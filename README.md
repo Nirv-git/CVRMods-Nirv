@@ -20,6 +20,6 @@ UI isn't the most pretty, but it works! And that is better than no UI. (And to a
 There are a few MelonPrefs that can be customized (I recommend using https://github.com/sinai-dev/MelonPreferencesManager | For CVR use the Mono version)   
   * QuickMenu Starts Maximized - Exactly as it says, default state of the mirror menu attached to your QuickMenu
   * QuickMenu Position (0=Right, 1=Top, 2=Left) - If the mirror menu is on the Left/Right/Top side of your QuickMenu
-  * QuickMenu is smaller - Mirror menu is smaller
+  * QuickMenu is smaller - Mirror menu is smaller (Mainly for Desktop)
   * Enabled Mirror Keybind - If you want the hell that is the keymap I made for it! [image](https://user-images.githubusercontent.com/81605232/184995574-2e2cc5a6-4265-4e1b-97e5-d7a5eb304519.png)
 	
