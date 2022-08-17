@@ -8,11 +8,10 @@ This mod allows the user to locally spawn mirrors for themselves in any world.
 
 The mirror can be configured:
   * Allow/disallow mirror pickup
-  * Toggle between full/optimized
+  * Toggle between full/optimized/cutout or transparent
   * Configurable mirror size and distance from you
   * Standard, 45 degree, ceiling, and small mirrors
     
-Transparent mirror is hopefully coming soon™
 
 UI isn't the most pretty, but it works! And that is better than no UI. (And to answer why it is so far away from the QM, because the canvas for the QM is bigger then it looks and will eat interactions if you overlap it)
 ![image](https://user-images.githubusercontent.com/81605232/184996202-cfdfcf57-7b6e-4ade-a25a-30e6a7e0f5bf.png)

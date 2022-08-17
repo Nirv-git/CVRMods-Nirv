@@ -17,9 +17,9 @@ namespace PortableMirror
             settings.transform.SetParent(GameObject.Find("Cohtml/QuickMenu").transform, false);
             switch (Main.QMposition.Value)
             {
-                case 1: if(Main.QMsmaller.Value) QM.settings.transform.localPosition = new Vector3(-0.35f, 0.55f, 0f); else QM.settings.transform.localPosition = new Vector3(-0.3f, 0.55f, 0f); break; //Top
-                case 2: if(Main.QMsmaller.Value) QM.settings.transform.localPosition = new Vector3(-0.75f, -0.3f, 0f); else QM.settings.transform.localPosition = new Vector3(-1f, -0.45f, 0f); break; //Left
-                default: if(Main.QMsmaller.Value) QM.settings.transform.localPosition = new Vector3(0.5f, -0.3f, 0f); else QM.settings.transform.localPosition = new Vector3(0.5f, -0.45f, 0f); break; //Right
+                case 1: if (Main.QMsmaller.Value) QM.settings.transform.localPosition = new Vector3(-0.35f, 0.55f, 0f); else QM.settings.transform.localPosition = new Vector3(-0.3f, 0.55f, 0f); break; //Top
+                case 2: if (Main.QMsmaller.Value) QM.settings.transform.localPosition = new Vector3(-0.85f, -0.3f, 0f); else QM.settings.transform.localPosition = new Vector3(-1.1f, -0.45f, 0f); break; //Left
+                default: if (Main.QMsmaller.Value) QM.settings.transform.localPosition = new Vector3(0.5f, -0.3f, 0f); else QM.settings.transform.localPosition = new Vector3(0.5f, -0.45f, 0f); break; //Right
             }
             if (Main.QMsmaller.Value)
                 settings.transform.localScale = new Vector3(0.007f, 0.007f, 0.01f);
@@ -53,6 +53,20 @@ namespace PortableMirror
             settingsCanvas.transform.Find("Base-Opt").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
             {
                 Main._base_MirrorState.Value = "MirrorOpt";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("Base-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._base_MirrorState.Value = "MirrorCutout";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("Base-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._base_MirrorState.Value = "MirrorTransparent";
                 Main main = new Main(); main.OnPreferencesSaved();
                 ParseSettings();
             }
@@ -121,6 +135,20 @@ namespace PortableMirror
                 ParseSettings();
             }
             ));
+            settingsCanvas.transform.Find("45-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._45_MirrorState.Value = "MirrorCutout";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("45-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._45_MirrorState.Value = "MirrorTransparent";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
             settingsCanvas.transform.Find("45-MinusDist").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
             {
                 Main._45_MirrorDistance.Value -= Main._mirrorDistAdj;
@@ -181,6 +209,20 @@ namespace PortableMirror
             settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
             {
                 Main._ceil_MirrorState.Value = "MirrorOpt";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._ceil_MirrorState.Value = "MirrorCutout";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._ceil_MirrorState.Value = "MirrorTransparent";
                 Main main = new Main(); main.OnPreferencesSaved();
                 ParseSettings();
             }
@@ -249,7 +291,20 @@ namespace PortableMirror
                 ParseSettings();
             }
             ));
-           
+            settingsCanvas.transform.Find("Micro-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._micro_MirrorState.Value = "MirrorCutout";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+             ));
+            settingsCanvas.transform.Find("Micro-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._micro_MirrorState.Value = "MirrorTransparent";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
             settingsCanvas.transform.Find("Micro-MinusSize").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
             {
                 if (Main._micro_MirrorScaleX.Value > .02 && Main._micro_MirrorScaleY.Value > .02)
@@ -281,8 +336,109 @@ namespace PortableMirror
                 ParseSettings();
             }
             ));
+            //trans
+            settingsCanvas.transform.Find("Trans-Toggle").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main.ToggleMirrorTrans();
+            }
+            ));
+
+
+            settingsCanvas.transform.Find("Trans-Full").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._trans_MirrorState.Value = "MirrorFull";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("Trans-Opt").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._trans_MirrorState.Value = "MirrorOpt";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("Trans-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._trans_MirrorState.Value = "MirrorCutout";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("Trans-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._trans_MirrorState.Value = "MirrorTransparent";
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("Trans-MinusDist").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._trans_MirrorDistance.Value -= Main._mirrorDistAdj;
+                Main main = new Main(); main.OnPreferencesSaved();
+            }
+            ));
+            settingsCanvas.transform.Find("Trans-PlusDist").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._trans_MirrorDistance.Value += Main._mirrorDistAdj;
+                Main main = new Main(); main.OnPreferencesSaved();
+            }
+            ));
+            settingsCanvas.transform.Find("Trans-MinusSize").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                if (Main._trans_MirrorScaleX.Value > .25 && Main._trans_MirrorScaleY.Value > .25)
+                {
+                    Main._trans_MirrorScaleX.Value -= .25f;
+                    Main._trans_MirrorScaleY.Value -= .25f;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                }
+
+            }
+            ));
+            settingsCanvas.transform.Find("Trans-PlusSize").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._trans_MirrorScaleX.Value += .25f;
+                Main._trans_MirrorScaleY.Value += .25f;
+                Main main = new Main(); main.OnPreferencesSaved();
+            }
+            ));
+            settingsCanvas.transform.Find("Trans-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._trans_CanPickupMirror.Value = !Main._trans_CanPickupMirror.Value;
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+            settingsCanvas.transform.Find("Trans-ToTracking").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                Main._trans_AnchorToTracking.Value = !Main._trans_AnchorToTracking.Value;
+                Main main = new Main(); main.OnPreferencesSaved();
+                ParseSettings();
+            }
+            ));
+
+
 
             ///Mics Settings
+            
+            settingsCanvas.transform.Find("TransMinus").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                if (Main.TransMirrorTrans.Value >= .1f)
+                    Main.TransMirrorTrans.Value -= .1f;
+                else
+                    Main.TransMirrorTrans.Value = 0f;
+                Main main = new Main(); main.OnPreferencesSaved();
+            }
+           ));
+            settingsCanvas.transform.Find("TransPlus").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+            {
+                if (Main.TransMirrorTrans.Value < 1f)
+                    Main.TransMirrorTrans.Value += .1f;
+                else
+                    Main.TransMirrorTrans.Value = 1f;
+                Main main = new Main(); main.OnPreferencesSaved();
+            }
+           ));
 
             settingsCanvas.transform.Find("Sett-PickupToHand").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
             {
@@ -330,7 +486,6 @@ namespace PortableMirror
                 Main.ForceMirrorLayer();
             }
             ));
-
             settingsCanvas.transform.Find("Sett-HighPrecisionDistanceAdjustment").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
             {
                 Main._mirrorDistHighPrec = !Main._mirrorDistHighPrec;
@@ -339,6 +494,8 @@ namespace PortableMirror
             }
             ));
 
+           
+
 
         }
 
@@ -346,49 +503,150 @@ namespace PortableMirror
 
         public static void ParseSettings()
         {
-
+            var custColor = new Color(.18f, .18f, .18f);
             //State
-            if (Main._base_MirrorState.Value == "MirrorFull")
+            switch (Main._base_MirrorState.Value)
             {
-                settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = Color.white;
-                settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = Color.gray;
+                case "MirrorOpt":
+                    settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor; 
+                    break;
+                case "MirrorCutout":
+                    settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor; 
+                    break;
+                case "MirrorTransparent":
+                    settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = Color.white; 
+                    break;
+                default:
+                    settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor;
+                    break; 
             }
-            else
+
+            switch (Main._45_MirrorState.Value)
             {
-                settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = Color.gray;
-                settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = Color.white;
+                case "MirrorOpt":
+                    settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = custColor;
+                    break;
+                case "MirrorCutout":
+                    settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = custColor;
+                    break;
+                case "MirrorTransparent":
+                    settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = Color.white;
+                    break;
+                default:
+                    settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = custColor;
+                    break;
             }
-            if (Main._45_MirrorState.Value == "MirrorFull")
+            switch (Main._ceil_MirrorState.Value)
             {
-                settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = Color.white;
-                settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = Color.gray;
+                case "MirrorOpt":
+                    settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = custColor;
+                    break;
+                case "MirrorCutout":
+                    settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = custColor;
+                    break;
+                case "MirrorTransparent":
+                    settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = Color.white;
+                    break;
+                default:
+                    settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = custColor;
+                    break;
             }
-            else
+            switch (Main._micro_MirrorState.Value)
             {
-                settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = Color.gray;
-                settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = Color.white;
+                case "MirrorOpt":
+                    settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = custColor;
+                    break;
+                case "MirrorCutout":
+                    settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = custColor;
+                    break;
+                case "MirrorTransparent":
+                    settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = Color.white;
+                    break;
+                default:
+                    settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = custColor;
+                    break;
             }
-            if (Main._ceil_MirrorState.Value == "MirrorFull")
+            switch (Main._trans_MirrorState.Value)
             {
-                settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = Color.white;
-                settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = Color.gray;
+                case "MirrorOpt":
+                    settingsCanvas.transform.Find("Trans-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = custColor;
+                    break;
+                case "MirrorCutout":
+                    settingsCanvas.transform.Find("Trans-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = custColor;
+                    break;
+                case "MirrorTransparent":
+                    settingsCanvas.transform.Find("Trans-Full").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = Color.white;
+                    break;
+                default:
+                    settingsCanvas.transform.Find("Trans-Full").GetComponent<Image>().color = Color.white;
+                    settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = custColor;
+                    settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = custColor;
+                    break;
             }
-            else
-            {
-                settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = Color.gray;
-                settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = Color.white;
-            }
-            if (Main._micro_MirrorState.Value == "MirrorFull")
-            {
-                settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = Color.white;
-                settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = Color.gray;
-            }
-            else
-            {
-                settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = Color.gray;
-                settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = Color.white;
-            }
-  
+
+
+
+
+
+
             //Pickup
             if (Main._base_CanPickupMirror.Value)
                 settingsCanvas.transform.Find("Base-Grab").GetComponent<Image>().color = Color.white;
@@ -457,7 +715,7 @@ namespace PortableMirror
             //if (Main.fixRenderOrder.Value)
             //    settingsCanvas.transform.Find("Sett-fixRenderOrder/Text").GetComponent<TextMeshProUGUI>().color = Color.white;
             //else
-            //    settingsCanvas.transform.Find("Sett-fixRenderOrder/Text").GetComponent<TextMeshProUGUI>().color = Color.gray;
+            //    settingsCanvas.transform.Find("Sett-fixRenderOrder/Text").GetComponent<TextMeshProUGUI>().color = custColor;
 
         }
 
