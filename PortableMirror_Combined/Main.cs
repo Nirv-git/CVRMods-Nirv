@@ -10,7 +10,7 @@ using ABI.CCK.Components;
 using ABI_RC.Core.InteractionSystem;
 using HarmonyLib;
 
-[assembly: MelonInfo(typeof(PortableMirror.Main), "PortableMirrorMod", "2.0.2", "Nirvash")] 
+[assembly: MelonInfo(typeof(PortableMirror.Main), "PortableMirrorMod", "2.0.3", "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
 
 namespace PortableMirror
@@ -30,6 +30,8 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> QMstartMax;
         public static MelonPreferences_Entry<int> QMposition;
         public static MelonPreferences_Entry<bool> QMsmaller;
+        public static MelonPreferences_Entry<int> QMhighlightColor;
+
 
         public static MelonPreferences_Entry<float> _base_MirrorScaleX;
         public static MelonPreferences_Entry<float> _base_MirrorScaleY;
@@ -97,6 +99,7 @@ namespace PortableMirror
             QMstartMax = MelonPreferences.CreateEntry<bool>("PortableMirror", "QMstartMax", false, "QuickMenu Starts Maximized");
             QMposition = MelonPreferences.CreateEntry<int>("PortableMirror", "QMposition", 0, "QuickMenu Position (0=Right, 1=Top, 2=Left)");
             QMsmaller = MelonPreferences.CreateEntry<bool>("PortableMirror", "QMsmaller", false, "QuickMenu is smaller");
+            QMhighlightColor = MelonPreferences.CreateEntry<int>("PortableMirror", "QMhighlightColor", 0, "Enabled color for QuickMenu items (0=Orange, 1=Yellow, 2=Pink)");
             MirrorKeybindEnabled = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorKeybindEnabled", false, "Enabled Mirror Keybind");
             usePixelLights = MelonPreferences.CreateEntry<bool>("PortableMirror", "usePixelLights", false, "Use PixelLights for mirrors");
             PickupToHand = MelonPreferences.CreateEntry<bool>("PortableMirror", "PickupToHand", false, "Pickups snap to hand - Global for all mirrors");
@@ -178,14 +181,31 @@ namespace PortableMirror
             {
                 switch (Main.QMposition.Value)
                 {
-                    case 1: if (Main.QMsmaller.Value) QM.settings.transform.localPosition = new Vector3(-0.35f, 0.55f, 0f); else QM.settings.transform.localPosition = new Vector3(-0.3f, 0.55f, 0f); break; //Top
-                    case 2: if (Main.QMsmaller.Value) QM.settings.transform.localPosition = new Vector3(-0.85f, -0.3f, 0f); else QM.settings.transform.localPosition = new Vector3(-1.1f, -0.45f, 0f); break; //Left
-                    default: if (Main.QMsmaller.Value) QM.settings.transform.localPosition = new Vector3(0.5f, -0.3f, 0f); else QM.settings.transform.localPosition = new Vector3(0.5f, -0.45f, 0f); break; //Right
+                    case 1: QM.settingsRight.SetActive(false); QM.settingsTop.SetActive(true); QM.settingsLeft.SetActive(false); QM.settingsCanvas = QM.settings.transform.Find("MenuTop/SettingsMenuCanvas").gameObject; break; //Top
+                    case 2: QM.settingsRight.SetActive(false); QM.settingsTop.SetActive(false); QM.settingsLeft.SetActive(true); QM.settingsCanvas = QM.settings.transform.Find("MenuLeft/SettingsMenuCanvas").gameObject; break; //Left
+                    default: QM.settingsRight.SetActive(true); QM.settingsTop.SetActive(false); QM.settingsLeft.SetActive(false); QM.settingsCanvas = QM.settings.transform.Find("MenuRight/SettingsMenuCanvas").gameObject; break; //Right
                 }
+
                 if (Main.QMsmaller.Value)
-                    QM.settings.transform.localScale = new Vector3(0.007f, 0.007f, 0.01f);
+                {//smoll
+                    QM.settingsRight.transform.localPosition = new Vector3(63f, 0f, 1f);  //Right
+                    QM.settingsTop.transform.localPosition = new Vector3(-30f, 77f, 1f); //Top
+                    QM.settingsLeft.transform.localPosition = new Vector3(-66f, 0f, 1f); //Left
+
+                    QM.settingsRight.transform.localScale = new Vector3(10f, 10f, 20f);
+                    QM.settingsTop.transform.localScale = new Vector3(10f, 10f, 20f);
+                    QM.settingsLeft.transform.localScale = new Vector3(10f, 10f, 20f);
+                }
                 else
-                    QM.settings.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+                {//big
+                    QM.settingsRight.transform.localPosition = new Vector3(77f, 0f, 1f);
+                    QM.settingsTop.transform.localPosition = new Vector3(-42f, 105f, 1f);
+                    QM.settingsLeft.transform.localPosition = new Vector3(-77f, 0f, 1f);
+
+                    QM.settingsRight.transform.localScale = new Vector3(20f, 20f, 20f);
+                    QM.settingsTop.transform.localScale = new Vector3(20f, 20f, 20f);
+                    QM.settingsLeft.transform.localScale = new Vector3(20f, 20f, 20f);
+                }           
             }
 
             _mirrorDistAdj = _mirrorDistHighPrec ? MirrorDistAdjAmmount.Value : .25f;
@@ -335,6 +355,7 @@ namespace PortableMirror
                     { try { UnityEngine.Object.Destroy(_mirrorMicro); } catch (System.Exception ex) { Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); } _mirrorMicro = null; }
                     if (_mirrorTrans != null)
                     { try { UnityEngine.Object.Destroy(_mirrorTrans); } catch (System.Exception ex) { Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); } _mirrorTrans = null; }
+                    QM.ParseSettings();
                     break;
             }
         }
@@ -718,7 +739,7 @@ namespace PortableMirror
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
                 mirror.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
                 if (!Main._trans_AnchorToTracking.Value) mirror.transform.SetParent(null);
-                else mirror.transform.SetParent(GameObject.Find("_Application/TrackingVolume/PlayerObjects").transform, true);
+                else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value) MelonCoroutines.Start(SetOrder(mirror));
 
                 _mirrorTrans = mirror;
