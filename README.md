@@ -17,7 +17,7 @@ The mirror can be configured:
 
 
 UI isn't the most pretty, but it works! And that is better than no UI. (And to answer why it is so far away from the QM, because the canvas for the QM is bigger then it looks and will eat interactions if you overlap it)
-![image](https://user-images.githubusercontent.com/81605232/185270484-a39d204e-4d03-473e-bd9a-276bd9a9f892.png)
+![image](https://user-images.githubusercontent.com/81605232/185270659-b535f7ba-f63a-42d5-9033-93ea6ba8fdbc.png)
 
 
 There are a few MelonPrefs that can be customized (I recommend using https://github.com/sinai-dev/MelonPreferencesManager | For CVR use the Mono version)   
