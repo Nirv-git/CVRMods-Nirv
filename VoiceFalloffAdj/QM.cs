@@ -25,9 +25,9 @@ namespace VoiceFalloffAdj
             settingsTop = settings.transform.Find("MenuTop").gameObject;
 
 
-            QM.settingsRight.transform.localPosition = new Vector3(78f, -31f, 0f);
-            QM.settingsTop.transform.localPosition = new Vector3(-17f, 75.3f, 0f);
-            QM.settingsLeft.transform.localPosition = new Vector3(-75f, -30.6f, 0f);
+            QM.settingsRight.transform.localPosition = new Vector3(78f, -31f, -0.05f);
+            QM.settingsTop.transform.localPosition = new Vector3(-17f, 75.3f, -0.05f);
+            QM.settingsLeft.transform.localPosition = new Vector3(-75f, -30.6f, -0.05f);
 
 
             var list = new GameObject[] { settingsRight, settingsLeft, settingsTop };

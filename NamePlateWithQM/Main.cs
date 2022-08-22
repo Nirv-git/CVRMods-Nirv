@@ -3,7 +3,12 @@ using MelonLoader;
 using UnityEngine;
 using ABI_RC.Core.InteractionSystem;
 using ABI_RC.Core.Player;
+using ABI_RC.Core.Base;
 using HarmonyLib;
+using System;
+using System.Linq;
+using System.Collections;
+using ABI_RC.Core.Savior;
 
 [assembly: MelonInfo(typeof(NamePlateWithQM.Main), "NamePlateWithQM", "0.1", "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
@@ -16,18 +21,15 @@ namespace NamePlateWithQM
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
-
+        public static bool plateState = false;
         public static MelonPreferences_Entry<bool> enNamePlateWithQM;
-
-        public static bool changedQMState = false;
 
         public override void OnApplicationStart()
         {
             Logger = new MelonLogger.Instance("NamePlateWithQM");
 
             MelonPreferences.CreateCategory("NamePlateWithQM", "NamePlateWithQM");
-            enNamePlateWithQM = MelonPreferences.CreateEntry<bool>("NamePlateWithQM", "enNamePlateWithQM", true, "Enable Nameplates when Quickmenu is open");
-            
+            enNamePlateWithQM = MelonPreferences.CreateEntry<bool>("NamePlateWithQM", "enNamePlateWithQM", true, "Enable/Disable Nameplates when Quickmenu is open");      
         }
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -41,6 +43,7 @@ namespace NamePlateWithQM
                     if (firstload)
                     {
                         HarmonyInstance.Patch(typeof(CVR_MenuManager).GetMethod(nameof(CVR_MenuManager.ToggleQuickMenu)), null, new HarmonyMethod(typeof(Main).GetMethod(nameof(QMtoggle), BindingFlags.NonPublic | BindingFlags.Static)));
+                        HarmonyInstance.Patch(AccessTools.Constructor(typeof(PlayerDescriptor)), null, new HarmonyMethod(typeof(Main).GetMethod(nameof(OnPlayerJoined), BindingFlags.NonPublic | BindingFlags.Static)));
                         //Logger.Msg("default" + buildIndex);
                         firstload = false;
                     }
@@ -48,40 +51,47 @@ namespace NamePlateWithQM
             }
         }
 
+        public override void OnPreferencesSaved()
+        {
+        //Do something here for the CVR setting to ensure nameplates are on.
+        }
+
+
         private static void QMtoggle(bool __0)
         {
             if (!enNamePlateWithQM.Value)
                 return;
 
-            void setState(PlayerNameplate[] array, bool value)
-            {
-                for (int i = 0; i < array.Length; i++)
-                {
-                    try
-                    {
-                        array[i].transform.GetChild(0).gameObject.SetActive(value);
-                        //Logger.Msg(Utils.GetPath(array[i].transform));
-                    }
-                    catch (System.Exception ex) { Logger.Msg($"Error for {i} | {value}\n" + ex.ToString()); }
-                }
-            }
-
             var plates = GameObject.FindObjectsOfType<PlayerNameplate>();
             if (plates.Length == 0)
                 return;
 
-            if(__0)
-            {//If QM is being opened, try to enable
-                if (plates[0].transform.GetChild(0).gameObject.activeSelf)
-                    return; //Canvas is already active, no need to change
-                setState(plates, true);
-                changedQMState = true;
-            }else if (changedQMState)
-            {//Check if we enabled them, and if so, disable them
-                setState(plates, false);
-                changedQMState = false;
-            } 
+            for (int i = 0; i < plates.Length; i++)
+            {
+                try
+                {
+                    plates[i].transform.GetChild(0).gameObject.SetActive(__0);
+                    //Logger.Msg(Utils.GetPath(array[i].transform));
+                }
+                catch (System.Exception ex) { Logger.Msg($"Error for {i} | {__0}\n" + ex.ToString()); }
+            }
+            plateState = __0;
+            
         }
+
+
+        private static void OnPlayerJoined(PlayerDescriptor __instance)
+        {
+            if (enNamePlateWithQM.Value) MelonCoroutines.Start(DelayPlayerInfo(__instance));
+        }
+
+
+        public static IEnumerator DelayPlayerInfo(PlayerDescriptor value)
+        {
+            yield return new WaitForSeconds(2.222f);
+            value.transform.Find("[NamePlate]").GetChild(0).gameObject.SetActive(plateState);
+        }
+        
     }
 }
 
