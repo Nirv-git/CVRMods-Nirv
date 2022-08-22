@@ -29,8 +29,8 @@ There are a few MelonPrefs that can be customized (I recommend using https://git
 # VoiceFalloffAdjMod
 A simple mod that adds the ability to change the max voice distance for other players in a range from 1-14.5 meters. *The real max is 10meters, I assume as a bandwidth saving feature(?), however I have the slider max out at 14.5 so you can hear someone at that 10meter point)
 
-The UI is the same as PortableMirror and is aligned not to conflict with it. In Melon Prefs you can change the position of the menu. (I recommend using https://github.com/sinai-dev/MelonPreferencesManager | For CVR use the Mono version) 
-	* QuickMenu Position (0=Right, 1=Top, 2=Left) - If the mirror menu is on the Left/Right/Top side of your QuickMenu
+The UI is the same as PortableMirror and is aligned not to conflict with it. In Melon Prefs you can change the position of the menu. (I recommend using https://github.com/sinai-dev/MelonPreferencesManager | For CVR use the Mono version)   
+  * QuickMenu Position (0=Right, 1=Top, 2=Left) - If the mirror menu is on the Left/Right/Top side of your QuickMenu
 
 ![image](https://user-images.githubusercontent.com/81605232/185814627-5f02b27c-abb6-4e48-ac7e-d26888e1b90e.png)
 
