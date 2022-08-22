@@ -35,4 +35,8 @@ The UI is the same as PortableMirror and is aligned not to conflict with it. In 
 ![image](https://user-images.githubusercontent.com/81605232/185814627-5f02b27c-abb6-4e48-ac7e-d26888e1b90e.png)
 
 # NamePlateWithQMmod
-Simple mod, this will enable Nameplates when your QuickMenu is open, similar to VRC. There is a MelonPref that lets you disable this behavior. 
+Simple mod, this will enable/disable Nameplates when your QuickMenu is open, similar to VRC. 
+There is a MelonPref that lets you disable this behavior.
+ 
+'Show Nameplates' in CVR settings must be enabled
+![image](https://user-images.githubusercontent.com/81605232/185835628-ff2e0b0c-cd8a-429e-b58b-7502fb594846.png)
