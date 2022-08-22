@@ -10,7 +10,7 @@ using ABI.CCK.Components;
 using ABI_RC.Core.InteractionSystem;
 using HarmonyLib;
 
-[assembly: MelonInfo(typeof(PortableMirror.Main), "PortableMirrorMod", "2.0.3", "Nirvash")] 
+[assembly: MelonInfo(typeof(PortableMirror.Main), "PortableMirrorMod", "2.0.4", "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
 
 namespace PortableMirror
