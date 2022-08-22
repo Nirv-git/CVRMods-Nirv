@@ -10,7 +10,7 @@ using System.Linq;
 using System.Collections;
 using ABI_RC.Core.Savior;
 
-[assembly: MelonInfo(typeof(NamePlateWithQM.Main), "NamePlateWithQM", "0.1", "Nirvash")] 
+[assembly: MelonInfo(typeof(NamePlateWithQM.Main), "NamePlateWithQM", "0.1.1", "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
 
 namespace NamePlateWithQM
@@ -29,7 +29,7 @@ namespace NamePlateWithQM
             Logger = new MelonLogger.Instance("NamePlateWithQM");
 
             MelonPreferences.CreateCategory("NamePlateWithQM", "NamePlateWithQM");
-            enNamePlateWithQM = MelonPreferences.CreateEntry<bool>("NamePlateWithQM", "enNamePlateWithQM", true, "Enable/Disable Nameplates when Quickmenu is open");      
+            enNamePlateWithQM = MelonPreferences.CreateEntry<bool>("NamePlateWithQM", "enNamePlateWithQM", true, "Enable/Disable Nameplates when Quickmenu is open");
         }
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -51,16 +51,16 @@ namespace NamePlateWithQM
             }
         }
 
-        public override void OnPreferencesSaved()
-        {
-        //Do something here for the CVR setting to ensure nameplates are on.
-        }
-
-
         private static void QMtoggle(bool __0)
         {
             if (!enNamePlateWithQM.Value)
                 return;
+
+            if (!MetaPort.Instance.settings.GetSettingsBool("GeneralShowNameplates"))
+            {
+                //Logger.Msg("Nameplates must be enabled in CVR General settings for Mod to function. You can disable this mod with a MelonPref."); //I would force enable it, but that causes crashes in testing
+                return;
+            }
 
             var plates = GameObject.FindObjectsOfType<PlayerNameplate>();
             if (plates.Length == 0)
@@ -71,12 +71,10 @@ namespace NamePlateWithQM
                 try
                 {
                     plates[i].transform.GetChild(0).gameObject.SetActive(__0);
-                    //Logger.Msg(Utils.GetPath(array[i].transform));
                 }
                 catch (System.Exception ex) { Logger.Msg($"Error for {i} | {__0}\n" + ex.ToString()); }
             }
-            plateState = __0;
-            
+            plateState = __0;     
         }
 
 
@@ -90,8 +88,7 @@ namespace NamePlateWithQM
         {
             yield return new WaitForSeconds(2.222f);
             value.transform.Find("[NamePlate]").GetChild(0).gameObject.SetActive(plateState);
-        }
-        
+        }  
     }
 }
 
