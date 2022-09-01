@@ -51,7 +51,8 @@ Current animations are, 'Lay down on back', 'Sit', 'Sit Crossed Legs', 'Sit Legs
   
 Pressing the toggle chair button will place you into a chair at your current location with the selected sitting animation. The movement controls lets you adjust the location of the chair object. Rotation Lock stops your body from rotating in the chair when your head turns.      
 
-![image](https://user-images.githubusercontent.com/81605232/187956905-3948aba9-3ff4-442b-8d85-e6cc08012fc9.png)
+![image](https://user-images.githubusercontent.com/81605232/187956905-3948aba9-3ff4-442b-8d85-e6cc08012fc9.png)     
+
 If you find it too easy to leave chairs you can use [SeatExitController](https://api.cvrmg.com/v1/mods/download/49)   
 
 > Prevents you from falling out of seats accidentally. Press both triggers in VR, or q and e in desktop to leave seats.   
