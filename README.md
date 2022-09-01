@@ -43,9 +43,12 @@ There is a MelonPref that lets you disable this behavior.
 'Show Nameplates' in CVR settings must be enabled
 ![image](https://user-images.githubusercontent.com/81605232/185835628-ff2e0b0c-cd8a-429e-b58b-7502fb594846.png)
 # SitLaydownMod
-This mod is meant to reproduce some of the functionality for custom [Sit/Laydown animations that could be added to an avatar in VRC](https://github.com/Dervali-git/VRC-Tips/blob/main/LaySittingPrefab.md) for half body users, however I didn't want to figure out how to do it with avatar animators and am now abusing chairs!       
+This mod is meant to reproduce some of the functionality for custom [Sit/Laydown animations that could be added to an avatar in VRC](https://github.com/Dervali-git/VRC-Tips/blob/main/LaySittingPrefab.md) for half body users, however I didn't want to figure out how to do it with avatar animators and am now abusing chairs!  ~~Also this works on all avatars and I don't have to support people configuring it on their own one~~     
 
 Current animations are, 'Lay down on back', 'Sit', 'Sit Crossed Legs', 'Sit Legs Down'   
+   
+![image](https://user-images.githubusercontent.com/81605232/187961673-05d763c9-0b06-4135-9e5b-aa374bd20d14.png)     
+  
 ### Todo
   * Tweak starting pose offset in VR. Some animations start in the floor and need to be moved up with movement controls.      
   
