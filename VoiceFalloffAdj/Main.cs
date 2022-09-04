@@ -12,14 +12,15 @@ using ABI_RC.Core.InteractionSystem;
 using ABI_RC.Core.Player;
 using HarmonyLib;
 
-[assembly: MelonInfo(typeof(VoiceFalloffAdj.Main), "VoiceFalloffAdj", "0.1", "Nirvash")] 
+[assembly: MelonInfo(typeof(VoiceFalloffAdj.Main), "VoiceFalloffAdj", VoiceFalloffAdj.Main.versionStr, "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
 
 namespace VoiceFalloffAdj
 {
 
     public class Main : MelonMod
-    { 
+    {
+        public const string versionStr = "0.1.1";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -54,8 +55,9 @@ namespace VoiceFalloffAdj
 
         public static IEnumerator DelaySlider()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(.5f);
             //Logger.Msg("Co Update");
+            adjustVoiceMax.Value = true; //If slider is adjusted, enable mod
             Main main = new Main(); main.OnPreferencesSaved();            
         }
 
