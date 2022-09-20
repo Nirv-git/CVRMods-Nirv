@@ -28,9 +28,9 @@ namespace PortableMirror
 
             if (Main.QMsmaller.Value)
             {//smoll
-                QM.settingsRight.transform.localPosition = new Vector3(63f, 0f, 1f);  //Right
-                QM.settingsTop.transform.localPosition = new Vector3(-30f, 77f, 1f); //Top
-                QM.settingsLeft.transform.localPosition = new Vector3(-66f, 0f, 1f); //Left
+                QM.settingsRight.transform.localPosition = new Vector3(63f, 0f, -0.05f);  //Right
+                QM.settingsTop.transform.localPosition = new Vector3(-30f, 77f, -0.05f); //Top
+                QM.settingsLeft.transform.localPosition = new Vector3(-66f, 0f, -0.05f); //Left
 
                 QM.settingsRight.transform.localScale = new Vector3(10f, 10f, 20f);
                 QM.settingsTop.transform.localScale = new Vector3(10f, 10f, 20f);
@@ -38,9 +38,9 @@ namespace PortableMirror
             }
             else
             {//big
-                QM.settingsRight.transform.localPosition = new Vector3(77f, 0f, 1f);
-                QM.settingsTop.transform.localPosition = new Vector3(-42f, 105f, 1f);
-                QM.settingsLeft.transform.localPosition = new Vector3(-77f, 0f, 1f);
+                QM.settingsRight.transform.localPosition = new Vector3(77f, 0f, -0.05f);
+                QM.settingsTop.transform.localPosition = new Vector3(-42f, 105f, -0.05f);
+                QM.settingsLeft.transform.localPosition = new Vector3(-77f, 0f, -0.05f);
 
                 QM.settingsRight.transform.localScale = new Vector3(20f, 20f, 20f);
                 QM.settingsTop.transform.localScale = new Vector3(20f, 20f, 20f);
@@ -531,6 +531,13 @@ namespace PortableMirror
                     ParseSettings();
                 }
                 ));
+                settingsCanvas.transform.Find("Sett-DistDisable").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main.distanceDisable.Value = !Main.distanceDisable.Value;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
+                }
+                ));
 
 
             }
@@ -800,6 +807,12 @@ namespace PortableMirror
             else
                 settingsCanvas.transform.Find("Sett-HighPrecisionDistanceAdjustment/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
 
+            if (Main.distanceDisable.Value)
+                settingsCanvas.transform.Find("Sett-DistDisable/Text").GetComponent<TextMeshProUGUI>().color = custColor1;
+            else
+                settingsCanvas.transform.Find("Sett-DistDisable/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
+
+
             //if (Main.fixRenderOrder.Value)
             //    settingsCanvas.transform.Find("Sett-fixRenderOrder/Text").GetComponent<TextMeshProUGUI>().color = custColor1;
             //else
@@ -807,7 +820,7 @@ namespace PortableMirror
 
         }
 
-       
+
 
     }
 }

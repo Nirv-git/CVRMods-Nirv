@@ -7,7 +7,7 @@ namespace PortableMirror
 {
     public static class Utils
     {
-        public static PlayerSetup GetVRCPlayer()
+        public static PlayerSetup GetPlayer()
         {
             return ABI_RC.Core.Player.PlayerSetup.Instance;
         }
