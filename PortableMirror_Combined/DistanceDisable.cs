@@ -1,42 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
 using System.Collections;
-using System.Reflection;
 using MelonLoader;
 using UnityEngine;
-using System.Collections.Generic;
-using System.IO;
 using ABI.CCK.Components;
-using ABI_RC.Core.InteractionSystem;
-using HarmonyLib;
 
 namespace PortableMirror
 {
     internal class DistanceDisable
     {
-
         private static int nearLayer = 10; 
         private static int farLayer = 4;
 
         public static object distDisableRoutine = null;
         public static bool distActive = false;
         public static bool distWasActive = false;
-
-        public static void OnChange(bool oldValue, bool newValue)
-        { 
-            if (Main.distanceDisable.Value)
-            {
-                if (!distActive)
-                    distDisableRoutine = MelonCoroutines.Start(DistDisableUpdate());
-            }
-            else
-                ReturnAllPlayersToNormal();
-        }
 
 
         public static IEnumerator DistDisableUpdate()
@@ -68,7 +46,7 @@ namespace PortableMirror
                         //Main.Logger.Msg($"setto {setToLayer}");
                         if (avatar.gameObject.layer != setToLayer)
                         {
-                            Main.Logger.Msg($"{avatar.gameObject.name} to {setToLayer}");
+                            //Main.Logger.Msg($"{avatar.gameObject.name} to {setToLayer}");
                             avatar.gameObject.layer = setToLayer;
                             var childMeshs = avatar.gameObject.GetComponentsInChildren<MeshRenderer>();
                             for (int meshI = 0; meshI < childMeshs.Length; meshI++)
@@ -95,12 +73,16 @@ namespace PortableMirror
                 MelonCoroutines.Stop(distDisableRoutine);
             distActive = false;
 
+            var self = GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]");
             var avatars = GameObject.FindObjectsOfType<CVRAvatar>();
             for (int i = 0; i < avatars.Length; i++)
             {
                 try
                 {
                     var avatar = avatars[i];
+                    if (avatar.transform.IsChildOf(self.transform))
+                        continue;
+
                     int setToLayer = nearLayer;
                         
                     if (avatar.gameObject.layer != setToLayer)
@@ -121,6 +103,5 @@ namespace PortableMirror
                 catch (System.Exception ex) { Main.Logger.Msg($"Error for {i} ReturnAllPlayersToNormal\n" + ex.ToString()); }
             }
         }
-
     }
 }

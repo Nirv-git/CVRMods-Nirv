@@ -190,13 +190,8 @@ namespace PortableMirror
 
             MelonPreferences.CreateCategory("PortableMirrorDistDisable", "PortableMirror Distance Disable");
             distanceDisable = MelonPreferences.CreateEntry<bool>("PortableMirrorDistDisable", "distanceDisable", false, "Disable avatars > than a distane from showing in Mirrors");
-            distanceValue = MelonPreferences.CreateEntry<float>("PortableMirrorDistDisable", "distanceValue", 5f, "Distance in meteres");
+            distanceValue = MelonPreferences.CreateEntry<float>("PortableMirrorDistDisable", "distanceValue", 3f, "Distance in meteres");
             distanceUpdateInit = MelonPreferences.CreateEntry<float>("PortableMirrorDistDisable", "distanceUpdateInit", .5f, "Update interval");
-
-
-            //distanceDisable.OnValueChanged += DistanceDisable.OnChange;
-
-            
 
             if (MirrorKeybindEnabled.Value)
             { //God help you
@@ -407,8 +402,6 @@ namespace PortableMirror
                             _calInit = true;
                         }
                         catch (System.Exception ex) { Main.Logger.Error($"Error for calibration patches\n" + ex.ToString()); }
-
-
 
                         firstload = false;
                         //Logger.Msg("default" + buildIndex);
