@@ -91,14 +91,20 @@ namespace PortableMirror
                 ));
                 settingsCanvas.transform.Find("Base-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._base_MirrorState.Value = "MirrorCutout";
+                    if(Main._base_MirrorState.Value != "MirrorCutout")
+                        Main._base_MirrorState.Value = "MirrorCutout";
+                    else
+                        Main._base_MirrorState.Value = "MirrorCutoutSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Base-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._base_MirrorState.Value = "MirrorTransparent";
+                    if (Main._base_MirrorState.Value != "MirrorTransparent")
+                        Main._base_MirrorState.Value = "MirrorTransparent";
+                    else
+                        Main._base_MirrorState.Value = "MirrorTransparentSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
@@ -170,14 +176,20 @@ namespace PortableMirror
                 ));
                 settingsCanvas.transform.Find("45-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._45_MirrorState.Value = "MirrorCutout";
+                    if (Main._45_MirrorState.Value != "MirrorCutout")
+                        Main._45_MirrorState.Value = "MirrorCutout";
+                    else
+                        Main._45_MirrorState.Value = "MirrorCutoutSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("45-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._45_MirrorState.Value = "MirrorTransparent";
+                    if (Main._45_MirrorState.Value != "MirrorTransparent")
+                        Main._45_MirrorState.Value = "MirrorTransparent";
+                    else
+                        Main._45_MirrorState.Value = "MirrorTransparentSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
@@ -249,14 +261,20 @@ namespace PortableMirror
                 ));
                 settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._ceil_MirrorState.Value = "MirrorCutout";
+                    if(Main._ceil_MirrorState.Value != "MirrorCutout")
+                        Main._ceil_MirrorState.Value = "MirrorCutout";
+                    else
+                        Main._ceil_MirrorState.Value = "MirrorCutoutSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._ceil_MirrorState.Value = "MirrorTransparent";
+                    if (Main._ceil_MirrorState.Value != "MirrorTransparent")
+                        Main._ceil_MirrorState.Value = "MirrorTransparent";
+                    else
+                        Main._ceil_MirrorState.Value = "MirrorTransparentSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
@@ -328,14 +346,20 @@ namespace PortableMirror
                 ));
                 settingsCanvas.transform.Find("Micro-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._micro_MirrorState.Value = "MirrorCutout";
+                    if(Main._micro_MirrorState.Value != "MirrorCutout")
+                        Main._micro_MirrorState.Value = "MirrorCutout";
+                    else
+                        Main._micro_MirrorState.Value = "MirrorCutoutSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
                  ));
                 settingsCanvas.transform.Find("Micro-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._micro_MirrorState.Value = "MirrorTransparent";
+                    if (Main._micro_MirrorState.Value != "MirrorTransparent")
+                        Main._micro_MirrorState.Value = "MirrorTransparent";
+                    else
+                        Main._micro_MirrorState.Value = "MirrorTransparentSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
@@ -396,14 +420,20 @@ namespace PortableMirror
                 ));
                 settingsCanvas.transform.Find("Trans-Cut").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._trans_MirrorState.Value = "MirrorCutout";
+                    if(Main._trans_MirrorState.Value != "MirrorCutout")
+                        Main._trans_MirrorState.Value = "MirrorCutout";
+                    else
+                        Main._trans_MirrorState.Value = "MirrorCutoutSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Trans-Trans").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._trans_MirrorState.Value = "MirrorTransparent";
+                    if (Main._trans_MirrorState.Value != "MirrorTransparent")
+                        Main._trans_MirrorState.Value = "MirrorTransparent";
+                    else
+                        Main._trans_MirrorState.Value = "MirrorTransparentSolo";
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
@@ -598,25 +628,49 @@ namespace PortableMirror
                     settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = custColor2;
-                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor2; 
+                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Base-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Base-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorCutout":
                     settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = custColor1;
-                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor2; 
+                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Base-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Base-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorTransparent":
                     settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = custColor2;
-                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor1; 
+                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Base-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Base-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorCutoutSolo":
+                    settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Base-CutSolo").gameObject.SetActive(true);
+                    settingsCanvas.transform.Find("Base-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorTransparentSolo":
+                    settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Base-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Base-TransSolo").gameObject.SetActive(true);
                     break;
                 default:
                     settingsCanvas.transform.Find("Base-Full").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Base-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Base-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Base-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Base-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Base-TransSolo").gameObject.SetActive(false);
                     break; 
             }
 
@@ -627,24 +681,48 @@ namespace PortableMirror
                     settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("45-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("45-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorCutout":
                     settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("45-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("45-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorTransparent":
                     settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("45-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("45-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorCutoutSolo":
+                    settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("45-CutSolo").gameObject.SetActive(true);
+                    settingsCanvas.transform.Find("45-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorTransparentSolo":
+                    settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("45-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("45-TransSolo").gameObject.SetActive(true);
                     break;
                 default:
                     settingsCanvas.transform.Find("45-Full").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("45-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("45-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("45-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("45-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("45-TransSolo").gameObject.SetActive(false);
                     break;
             }
             switch (Main._ceil_MirrorState.Value)
@@ -654,24 +732,48 @@ namespace PortableMirror
                     settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Ceil-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Ceil-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorCutout":
                     settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Ceil-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Ceil-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorTransparent":
                     settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Ceil-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Ceil-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorCutoutSolo":
+                    settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Ceil-CutSolo").gameObject.SetActive(true);
+                    settingsCanvas.transform.Find("Ceil-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorTransparentSolo":
+                    settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Ceil-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Ceil-TransSolo").gameObject.SetActive(true);
                     break;
                 default:
                     settingsCanvas.transform.Find("Ceil-Full").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Ceil-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Ceil-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Ceil-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Ceil-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Ceil-TransSolo").gameObject.SetActive(false);
                     break;
             }
             switch (Main._micro_MirrorState.Value)
@@ -681,24 +783,48 @@ namespace PortableMirror
                     settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Micro-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Micro-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorCutout":
                     settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Micro-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Micro-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorTransparent":
                     settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Micro-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Micro-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorCutoutSolo":
+                    settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Micro-CutSolo").gameObject.SetActive(true);
+                    settingsCanvas.transform.Find("Micro-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorTransparentSolo":
+                    settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Micro-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Micro-TransSolo").gameObject.SetActive(true);
                     break;
                 default:
                     settingsCanvas.transform.Find("Micro-Full").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Micro-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Micro-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Micro-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Micro-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Micro-TransSolo").gameObject.SetActive(false);
                     break;
             }
             switch (Main._trans_MirrorState.Value)
@@ -708,24 +834,48 @@ namespace PortableMirror
                     settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Trans-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Trans-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorCutout":
                     settingsCanvas.transform.Find("Trans-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Trans-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Trans-TransSolo").gameObject.SetActive(false);
                     break;
                 case "MirrorTransparent":
                     settingsCanvas.transform.Find("Trans-Full").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Trans-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Trans-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorCutoutSolo":
+                    settingsCanvas.transform.Find("Trans-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Trans-CutSolo").gameObject.SetActive(true);
+                    settingsCanvas.transform.Find("Trans-TransSolo").gameObject.SetActive(false);
+                    break;
+                case "MirrorTransparentSolo":
+                    settingsCanvas.transform.Find("Trans-Full").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = custColor1;
+                    settingsCanvas.transform.Find("Trans-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Trans-TransSolo").gameObject.SetActive(true);
                     break;
                 default:
                     settingsCanvas.transform.Find("Trans-Full").GetComponent<Image>().color = custColor1;
                     settingsCanvas.transform.Find("Trans-Opt").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Trans-Cut").GetComponent<Image>().color = custColor2;
                     settingsCanvas.transform.Find("Trans-Trans").GetComponent<Image>().color = custColor2;
+                    settingsCanvas.transform.Find("Trans-CutSolo").gameObject.SetActive(false);
+                    settingsCanvas.transform.Find("Trans-TransSolo").gameObject.SetActive(false);
                     break;
             }
 

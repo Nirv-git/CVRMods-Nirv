@@ -27,7 +27,7 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.0.8";
+        public const string versionStr = "2.0.9";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -42,6 +42,7 @@ namespace PortableMirror
         public static MelonPreferences_Entry<int> QMposition;
         public static MelonPreferences_Entry<bool> QMsmaller;
         public static MelonPreferences_Entry<int> QMhighlightColor;
+        //public static MelonPreferences_Entry<bool> ActionMenu;
 
 
         public static MelonPreferences_Entry<float> _base_MirrorScaleX;
@@ -133,7 +134,7 @@ namespace PortableMirror
             MirrorsShowInCamera = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorsShowInCamera", true, "Mirrors show in Cameras - Global for all mirrors --Don't use--");
             MirrorDistAdjAmmount = MelonPreferences.CreateEntry<float>("PortableMirror", "MirrorDistAdjAmmount", .05f, "High Precision Distance Adjustment - Global for all mirrors");
             ColliderDepth = MelonPreferences.CreateEntry<float>("PortableMirror", "ColliderDepth", 0.01f, "Collider Depth - Global for all mirrors");
-            
+            //ActionMenu = MelonPreferences.CreateEntry<bool>("PortableMirror", "ActionMenu", true, "Enable Controls on Action Menu (Requires Restart)");
 
             MelonPreferences.CreateCategory("PortableMirrorBase", "PortableMirror Base");
             _base_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorBase", "MirrorScaleX", 2f, "Mirror Scale X");
@@ -210,6 +211,12 @@ namespace PortableMirror
                     $"\n[Num-] -> Mirror Size - on All" +
                     $"\n[Num.] -> Toggle position on view for base and micro mirrors");
             }
+
+            //if (MelonHandler.Mods.Any(m => m.Info.Name == "ActionMenu") && ActionMenu.Value)
+            //{
+            //    CustomActionMenu.InitUi();
+            //}
+           // else Logger.Msg("ActionMenu is missing, or setting is toggled off in Mod Settings - Not adding controls to ActionMenu");
 
         }
         public override void OnPreferencesSaved()
@@ -739,7 +746,7 @@ namespace PortableMirror
                 var player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
                 Vector3 pos = cam.transform.position;
-                pos.y -= Main._micro_MirrorScaleY.Value / 4;///This will need turning
+                //pos.y += Main._micro_MirrorScaleY.Value / 4;///This will need turning
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
                 mirror.transform.localScale = new Vector3(Main._micro_MirrorScaleX.Value, Main._micro_MirrorScaleY.Value, 1f);
