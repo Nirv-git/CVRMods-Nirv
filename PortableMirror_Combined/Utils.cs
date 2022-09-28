@@ -85,6 +85,14 @@ namespace PortableMirror
                 return "/" + current.name;
             return current.parent.GetPath() + "/" + current.name;
         }
+
+        public static string RoundFloatToString(float x)
+        {
+            if (x >= 10f)
+                return x.ToString("F0");
+            else
+                return x.ToString("F2");
+        }
       
 
     }

@@ -113,12 +113,14 @@ namespace PortableMirror
                 {
                     Main._base_MirrorDistance.Value -= Main._mirrorDistAdj;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Base-PlusDist").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     Main._base_MirrorDistance.Value += Main._mirrorDistAdj;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Base-MinusSize").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -128,6 +130,7 @@ namespace PortableMirror
                         Main._base_MirrorScaleX.Value -= .25f;
                         Main._base_MirrorScaleY.Value -= .25f;
                         Main main = new Main(); main.OnPreferencesSaved();
+                        ParseSettings();
                     }
 
                 }
@@ -137,6 +140,7 @@ namespace PortableMirror
                     Main._base_MirrorScaleX.Value += .25f;
                     Main._base_MirrorScaleY.Value += .25f;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Base-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -148,7 +152,18 @@ namespace PortableMirror
                 ));
                 settingsCanvas.transform.Find("Base-ToTracking").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._base_AnchorToTracking.Value = !Main._base_AnchorToTracking.Value;
+                    if (!Main._base_AnchorToTracking.Value)
+                        Main._base_AnchorToTracking.Value = true;
+                    else
+                    {
+                        if (!Main._base_followGaze.Value && Main.enableGaze.Value)
+                            Main._base_followGaze.Value = true;
+                        else
+                        {
+                            Main._base_AnchorToTracking.Value = false;
+                            Main._base_followGaze.Value = false;
+                        }
+                    }
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
@@ -198,12 +213,14 @@ namespace PortableMirror
                 {
                     Main._45_MirrorDistance.Value -= Main._mirrorDistAdj;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("45-PlusDist").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     Main._45_MirrorDistance.Value += Main._mirrorDistAdj;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("45-MinusSize").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -213,6 +230,7 @@ namespace PortableMirror
                         Main._45_MirrorScaleX.Value -= .25f;
                         Main._45_MirrorScaleY.Value -= .25f;
                         Main main = new Main(); main.OnPreferencesSaved();
+                        ParseSettings();
                     }
 
                 }
@@ -222,6 +240,7 @@ namespace PortableMirror
                     Main._45_MirrorScaleX.Value += .25f;
                     Main._45_MirrorScaleY.Value += .25f;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("45-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -233,7 +252,18 @@ namespace PortableMirror
                 ));
                 settingsCanvas.transform.Find("45-ToTracking").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._45_AnchorToTracking.Value = !Main._45_AnchorToTracking.Value;
+                    if (!Main._45_AnchorToTracking.Value)
+                        Main._45_AnchorToTracking.Value = true;
+                    else
+                    {
+                        if (!Main._45_followGaze.Value && Main.enableGaze.Value)
+                            Main._45_followGaze.Value = true;
+                        else
+                        {
+                            Main._45_AnchorToTracking.Value = false;
+                            Main._45_followGaze.Value = false;
+                        }
+                    }
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
@@ -283,12 +313,14 @@ namespace PortableMirror
                 {
                     Main._ceil_MirrorDistance.Value -= Main._mirrorDistAdj;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Ceil-PlusDist").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     Main._ceil_MirrorDistance.Value += Main._mirrorDistAdj;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Ceil-MinusSize").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -298,6 +330,7 @@ namespace PortableMirror
                         Main._ceil_MirrorScaleX.Value -= .25f;
                         Main._ceil_MirrorScaleZ.Value -= .25f;
                         Main main = new Main(); main.OnPreferencesSaved();
+                        ParseSettings();
                     }
 
                 }
@@ -307,6 +340,7 @@ namespace PortableMirror
                     Main._ceil_MirrorScaleX.Value += .25f;
                     Main._ceil_MirrorScaleZ.Value += .25f;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Ceil-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -364,6 +398,20 @@ namespace PortableMirror
                     ParseSettings();
                 }
                 ));
+                settingsCanvas.transform.Find("Micro-MinusDist").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main._micro_MirrorDistance.Value -= Main._mirrorDistAdj / 4;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
+                }
+                ));
+                settingsCanvas.transform.Find("Micro-PlusDist").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main._micro_MirrorDistance.Value += Main._mirrorDistAdj / 4;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();ParseSettings();
+                }
+                ));
                 settingsCanvas.transform.Find("Micro-MinusSize").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     if (Main._micro_MirrorScaleX.Value > .02 && Main._micro_MirrorScaleY.Value > .02)
@@ -372,6 +420,7 @@ namespace PortableMirror
                         Main._micro_MirrorScaleY.Value -= .01f;
                     }
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Micro-PlusSize").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -379,6 +428,7 @@ namespace PortableMirror
                     Main._micro_MirrorScaleX.Value += .01f;
                     Main._micro_MirrorScaleY.Value += .01f;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Micro-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -390,7 +440,18 @@ namespace PortableMirror
                 ));
                 settingsCanvas.transform.Find("Micro-ToTracking").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._micro_AnchorToTracking.Value = !Main._micro_AnchorToTracking.Value;
+                    if (!Main._micro_AnchorToTracking.Value)
+                        Main._micro_AnchorToTracking.Value = true;
+                    else
+                    {
+                        if (!Main._micro_followGaze.Value && Main.enableGaze.Value)
+                            Main._micro_followGaze.Value = true;
+                        else
+                        {
+                            Main._micro_AnchorToTracking.Value = false;
+                            Main._micro_followGaze.Value = false;
+                        }
+                    }
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
@@ -442,12 +503,14 @@ namespace PortableMirror
                 {
                     Main._trans_MirrorDistance.Value -= Main._mirrorDistAdj;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Trans-PlusDist").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     Main._trans_MirrorDistance.Value += Main._mirrorDistAdj;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Trans-MinusSize").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -457,6 +520,7 @@ namespace PortableMirror
                         Main._trans_MirrorScaleX.Value -= .25f;
                         Main._trans_MirrorScaleY.Value -= .25f;
                         Main main = new Main(); main.OnPreferencesSaved();
+                        ParseSettings();
                     }
 
                 }
@@ -466,6 +530,7 @@ namespace PortableMirror
                     Main._trans_MirrorScaleX.Value += .25f;
                     Main._trans_MirrorScaleY.Value += .25f;
                     Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
                 }
                 ));
                 settingsCanvas.transform.Find("Trans-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
@@ -477,7 +542,18 @@ namespace PortableMirror
                 ));
                 settingsCanvas.transform.Find("Trans-ToTracking").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main._trans_AnchorToTracking.Value = !Main._trans_AnchorToTracking.Value;
+                    if (!Main._trans_AnchorToTracking.Value)
+                        Main._trans_AnchorToTracking.Value = true;
+                    else
+                    {
+                        if (!Main._trans_followGaze.Value && Main.enableGaze.Value)
+                            Main._trans_followGaze.Value = true;
+                        else
+                        {
+                            Main._trans_AnchorToTracking.Value = false;
+                            Main._trans_followGaze.Value = false;
+                        }
+                    }
                     Main main = new Main(); main.OnPreferencesSaved();
                     ParseSettings();
                 }
@@ -489,10 +565,10 @@ namespace PortableMirror
 
                 settingsCanvas.transform.Find("TransMinus").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    if (Main.TransMirrorTrans.Value >= .1f)
+                    if (Main.TransMirrorTrans.Value > .1f)
                         Main.TransMirrorTrans.Value -= .1f;
                     else
-                        Main.TransMirrorTrans.Value = 0f;
+                        Main.TransMirrorTrans.Value = .1f;
                     Main main = new Main(); main.OnPreferencesSaved();
                 }
                ));
@@ -522,13 +598,13 @@ namespace PortableMirror
                 }
                 ));
 
-                settingsCanvas.transform.Find("Sett-MirrorsShowInCamera").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
-                {
-                    Main.MirrorsShowInCamera.Value = !Main.MirrorsShowInCamera.Value;
-                    Main main = new Main(); main.OnPreferencesSaved();
-                    ParseSettings();
-                }
-                ));
+                //settingsCanvas.transform.Find("Sett-MirrorsShowInCamera").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                //{
+                //    Main.MirrorsShowInCamera.Value = !Main.MirrorsShowInCamera.Value;
+                //    Main main = new Main(); main.OnPreferencesSaved();
+                //    ParseSettings();
+                //}
+                //));
 
                 settingsCanvas.transform.Find("Sett-PositionOnView").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
@@ -930,6 +1006,32 @@ namespace PortableMirror
             else
                 settingsCanvas.transform.Find("Trans-ToTracking").GetComponent<Image>().color = custColor2;
 
+            //Gaze
+            settingsCanvas.transform.Find("Base-Gaze").gameObject.SetActive(Main._base_followGaze.Value);
+            settingsCanvas.transform.Find("45-Gaze").gameObject.SetActive(Main._45_followGaze.Value);
+            settingsCanvas.transform.Find("Micro-Gaze").gameObject.SetActive(Main._micro_followGaze.Value);
+            settingsCanvas.transform.Find("Trans-Gaze").gameObject.SetActive(Main._trans_followGaze.Value);
+
+
+
+            //Dist
+            settingsCanvas.transform.Find("Base-Dist").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._base_MirrorDistance.Value);
+            settingsCanvas.transform.Find("45-Dist").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._45_MirrorDistance.Value);
+            settingsCanvas.transform.Find("Ceil-Dist").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._ceil_MirrorDistance.Value);
+            settingsCanvas.transform.Find("Micro-Dist").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._micro_MirrorDistance.Value);
+            settingsCanvas.transform.Find("Trans-Dist").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._trans_MirrorDistance.Value);
+
+            //Size
+            settingsCanvas.transform.Find("Base-Size").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._base_MirrorScaleX.Value) + "x" +
+                Utils.RoundFloatToString(Main._base_MirrorScaleY.Value);
+            settingsCanvas.transform.Find("45-Size").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._45_MirrorScaleX.Value) + "x" +
+                Utils.RoundFloatToString(Main._45_MirrorScaleY.Value);
+            settingsCanvas.transform.Find("Ceil-Size").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._ceil_MirrorScaleX.Value) + "x" +
+                Utils.RoundFloatToString(Main._ceil_MirrorScaleZ.Value);
+            settingsCanvas.transform.Find("Micro-Size").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._micro_MirrorScaleX.Value) + "x" +
+                Utils.RoundFloatToString(Main._micro_MirrorScaleY.Value);
+            settingsCanvas.transform.Find("Trans-Size").GetComponent<TextMeshProUGUI>().text = Utils.RoundFloatToString(Main._trans_MirrorScaleX.Value) + "x" +
+                Utils.RoundFloatToString(Main._trans_MirrorScaleY.Value);
 
             //Mics Settings
             if (Main.PickupToHand.Value)
@@ -942,10 +1044,10 @@ namespace PortableMirror
             else
                 settingsCanvas.transform.Find("Sett-usePixelLights/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
 
-            if (Main.MirrorsShowInCamera.Value)
-                settingsCanvas.transform.Find("Sett-MirrorsShowInCamera/Text").GetComponent<TextMeshProUGUI>().color = custColor1;
-            else
-                settingsCanvas.transform.Find("Sett-MirrorsShowInCamera/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
+            //if (Main.MirrorsShowInCamera.Value)
+            //    settingsCanvas.transform.Find("Sett-MirrorsShowInCamera/Text").GetComponent<TextMeshProUGUI>().color = custColor1;
+            //else
+            //    settingsCanvas.transform.Find("Sett-MirrorsShowInCamera/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
 ;
             if (Main._base_PositionOnView.Value)
                 settingsCanvas.transform.Find("Sett-PositionOnView/Text").GetComponent<TextMeshProUGUI>().color = custColor1;

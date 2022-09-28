@@ -10,14 +10,6 @@ using ABI.CCK.Components;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.InteractionSystem;
 using HarmonyLib;
-using System;
-using System.Linq;
-using System.Collections;
-using System.Reflection;
-using MelonLoader;
-using UnityEngine;
-using System.Collections.Generic;
-using System.IO;
 
 [assembly: MelonInfo(typeof(PortableMirror.Main), "PortableMirrorMod", PortableMirror.Main.versionStr, "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
@@ -27,7 +19,7 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.0.9";
+        public const string versionStr = "2.0.11";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -42,6 +34,9 @@ namespace PortableMirror
         public static MelonPreferences_Entry<int> QMposition;
         public static MelonPreferences_Entry<bool> QMsmaller;
         public static MelonPreferences_Entry<int> QMhighlightColor;
+        public static MelonPreferences_Entry<bool> enableGaze;
+        public static MelonPreferences_Entry<float> followGazeSpeed;
+
         //public static MelonPreferences_Entry<bool> ActionMenu;
 
 
@@ -53,12 +48,12 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> _base_enableBase;
         public static MelonPreferences_Entry<bool> _base_PositionOnView;
         public static MelonPreferences_Entry<bool> _base_AnchorToTracking;
-        public static MelonPreferences_Entry<string> _base_MirrorKeybind;
+        public static MelonPreferences_Entry<bool> _base_followGaze;
 
         public static MelonPreferences_Entry<bool> QuickMenuOptions;
         public static MelonPreferences_Entry<bool> OpenLastQMpage;
         public static MelonPreferences_Entry<float> TransMirrorTrans;
-        public static MelonPreferences_Entry<bool> MirrorsShowInCamera;
+        //public static MelonPreferences_Entry<bool> MirrorsShowInCamera;
         public static MelonPreferences_Entry<float> MirrorDistAdjAmmount;
         public static MelonPreferences_Entry<bool> ActionMenu;
         public static MelonPreferences_Entry<bool> amapi_ModsFolder;
@@ -72,6 +67,7 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> _45_CanPickupMirror;
         public static MelonPreferences_Entry<bool> _45_enable45;
         public static MelonPreferences_Entry<bool> _45_AnchorToTracking;
+        public static MelonPreferences_Entry<bool> _45_followGaze;
 
         public static MelonPreferences_Entry<float> _ceil_MirrorScaleX;
         public static MelonPreferences_Entry<float> _ceil_MirrorScaleZ;
@@ -83,12 +79,15 @@ namespace PortableMirror
 
         public static MelonPreferences_Entry<float> _micro_MirrorScaleX;
         public static MelonPreferences_Entry<float> _micro_MirrorScaleY;
+        public static MelonPreferences_Entry<float> _micro_MirrorDistance;
         public static MelonPreferences_Entry<float> _micro_GrabRange;
         public static MelonPreferences_Entry<string> _micro_MirrorState;
         public static MelonPreferences_Entry<bool> _micro_CanPickupMirror;
         public static MelonPreferences_Entry<bool> _micro_enableMicro;
         public static MelonPreferences_Entry<bool> _micro_AnchorToTracking;
         public static MelonPreferences_Entry<bool> _micro_PositionOnView;
+        public static MelonPreferences_Entry<bool> _micro_followGaze;
+
 
         public static MelonPreferences_Entry<float> _trans_MirrorScaleX;
         public static MelonPreferences_Entry<float> _trans_MirrorScaleY;
@@ -98,6 +97,7 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> _trans_enableTrans;
         public static MelonPreferences_Entry<bool> _trans_AnchorToTracking;
         public static MelonPreferences_Entry<bool> _trans_PositionOnView;
+        public static MelonPreferences_Entry<bool> _trans_followGaze;
 
         public static MelonPreferences_Entry<bool> _cal_enable;
         public static MelonPreferences_Entry<float> _cal_MirrorScale;
@@ -106,6 +106,9 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> _cal_AlwaysInFront;
         public static MelonPreferences_Entry<bool> _cal_DelayMirror;
         public static MelonPreferences_Entry<float> _cal_DelayMirrorTime;
+        public static MelonPreferences_Entry<bool> _cal_DelayOff;
+        public static MelonPreferences_Entry<float> _cal_DelayOffTime;
+        public static MelonPreferences_Entry<bool> _cal_hideOthers;
 
         public static MelonPreferences_Entry<bool> distanceDisable;
         public static MelonPreferences_Entry<float> distanceValue;
@@ -120,21 +123,30 @@ namespace PortableMirror
             loadAssets();
 
             MelonPreferences.CreateCategory("PortableMirror", "PortableMirror");
-            Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "-Past this are global settings for all portable mirror types-");
-            QMstartMax = MelonPreferences.CreateEntry<bool>("PortableMirror", "QMstartMax", false, "QuickMenu Starts Maximized");
-            QMposition = MelonPreferences.CreateEntry<int>("PortableMirror", "QMposition", 0, "QuickMenu Position (0=Right, 1=Top, 2=Left)");
-            QMsmaller = MelonPreferences.CreateEntry<bool>("PortableMirror", "QMsmaller", false, "QuickMenu is smaller");
-            QMhighlightColor = MelonPreferences.CreateEntry<int>("PortableMirror", "QMhighlightColor", 0, "Enabled color for QuickMenu items (0=Orange, 1=Yellow, 2=Pink)");
+            QMstartMax = MelonPreferences.CreateEntry<bool>("PortableMirror", "QMstartMax", false, "QuickMenu (QM) Starts Maximized");
+            QMposition = MelonPreferences.CreateEntry<int>("PortableMirror", "QMposition", 0, "QM Position (0=Right, 1=Top, 2=Left)");
+            QMsmaller = MelonPreferences.CreateEntry<bool>("PortableMirror", "QMsmaller", false, "QM is smaller");
+            QMhighlightColor = MelonPreferences.CreateEntry<int>("PortableMirror", "QMhighlightColor", 0, "Enabled color for QM (0=Orange, 1=Yellow, 2=Pink)");
+            MirrorKeybindEnabled = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorKeybindEnabled", false, "Enabled Mirror Keybind (See ReadMe)");
+            Spacer1 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer1", false, "-These are global settings for all portable mirror types-");///
+            fixRenderOrder = MelonPreferences.CreateEntry("PortableMirror", "fixRenderOrder", false, "Change render order on mirrors to fix overrendering --Don't use--", "", true);
+            MirrorDistAdjAmmount = MelonPreferences.CreateEntry<float>("PortableMirror", "MirrorDistAdjAmmount", .05f, "High Precision Distance Adjustment");
+            ColliderDepth = MelonPreferences.CreateEntry<float>("PortableMirror", "ColliderDepth", 0.01f, "Collider Depth");
             pickupFrame = MelonPreferences.CreateEntry<bool>("PortableMirror", "pickupFrame", false, "Show frame when mirror is pickupable");
-            MirrorKeybindEnabled = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorKeybindEnabled", false, "Enabled Mirror Keybind");
+            enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
+            followGazeSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeSpeed", .6f, "Follow Gaze Speed");
+            Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "-These options are on the QM also-");///
             usePixelLights = MelonPreferences.CreateEntry<bool>("PortableMirror", "usePixelLights", false, "Use PixelLights for mirrors");
             PickupToHand = MelonPreferences.CreateEntry<bool>("PortableMirror", "PickupToHand", false, "Pickups snap to hand - Global for all mirrors");
             TransMirrorTrans = MelonPreferences.CreateEntry<float>("PortableMirror", "TransMirrorTrans", .4f, "Transparent Mirror transparency - Higher is more transparent - Global for all mirrors");
-            fixRenderOrder = MelonPreferences.CreateEntry<bool>("PortableMirror", "fixRenderOrder", false, "Change render order on mirrors to fix overrendering --Don't use--");
-            MirrorsShowInCamera = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorsShowInCamera", true, "Mirrors show in Cameras - Global for all mirrors --Don't use--");
-            MirrorDistAdjAmmount = MelonPreferences.CreateEntry<float>("PortableMirror", "MirrorDistAdjAmmount", .05f, "High Precision Distance Adjustment - Global for all mirrors");
-            ColliderDepth = MelonPreferences.CreateEntry<float>("PortableMirror", "ColliderDepth", 0.01f, "Collider Depth - Global for all mirrors");
+
+            //MirrorsShowInCamera = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorsShowInCamera", true, "Mirrors show in Cameras - Global for all mirrors --Don't use--");
             //ActionMenu = MelonPreferences.CreateEntry<bool>("PortableMirror", "ActionMenu", true, "Enable Controls on Action Menu (Requires Restart)");
+
+            MelonPreferences.CreateCategory("PortableMirrorDistDisable", "PortableMirror Distance Disable");
+            distanceDisable = MelonPreferences.CreateEntry<bool>("PortableMirrorDistDisable", "distanceDisable", false, "Disable avatars > than a distane from showing in Mirrors");
+            distanceValue = MelonPreferences.CreateEntry<float>("PortableMirrorDistDisable", "distanceValue", 3f, "Distance in meteres");
+            distanceUpdateInit = MelonPreferences.CreateEntry<float>("PortableMirrorDistDisable", "distanceUpdateInit", .5f, "Update interval");
 
             MelonPreferences.CreateCategory("PortableMirrorBase", "PortableMirror Base");
             _base_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorBase", "MirrorScaleX", 2f, "Mirror Scale X");
@@ -144,6 +156,7 @@ namespace PortableMirror
             _base_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorBase", "CanPickupMirror", false, "Can Pickup Mirror");
             _base_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorBase", "PositionOnView", false, "Position mirror based on view angle");
             _base_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorBase", "AnchorToTracking", false, "Mirror Follows You");
+            _base_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorBase", "followGaze", false, "Follow Gaze Enabled");
 
             MelonPreferences.CreateCategory("PortableMirror45", "PortableMirror 45 Degree");
             _45_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirror45", "MirrorScaleX", 5f, "Mirror Scale X");
@@ -152,6 +165,7 @@ namespace PortableMirror
             _45_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirror45", "MirrorState", "MirrorFull", "Mirror Type (MirrorFull or MirrorOpt)");
             _45_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirror45", "CanPickupMirror", false, "Can Pickup 45 Mirror");
             _45_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirror45", "AnchorToTracking", false, "Mirror Follows You");
+            _45_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirror45", "followGaze", false, "Follow Gaze Enabled");
 
             MelonPreferences.CreateCategory("PortableMirrorCeiling", "PortableMirror Ceiling");
             _ceil_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorCeiling", "MirrorScaleX", 5f, "Mirror Scale X");
@@ -164,11 +178,13 @@ namespace PortableMirror
             MelonPreferences.CreateCategory("PortableMirrorMicro", "PortableMirror Micro");
             _micro_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorMicro", "MirrorScaleX", .05f, "Mirror Scale X");
             _micro_MirrorScaleY = MelonPreferences.CreateEntry<float>("PortableMirrorMicro", "MirrorScaleY", .1f, "Mirror Scale Y");
+            _micro_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorMicro", "MirrorDistance", 0f, "Mirror Distance");
             _micro_GrabRange = MelonPreferences.CreateEntry<float>("PortableMirrorMicro", "GrabRange", .1f, "GrabRange");
             _micro_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorMicro", "MirrorState", "MirrorFull", "Mirror Type (MirrorFull or MirrorOpt)");
             _micro_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorMicro", "CanPickupMirror", false, "Can Pickup MirrorMicro");
             _micro_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorMicro", "PositionOnView", false, "Position mirror based on view angle");
             _micro_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorMicro", "AnchorToTracking", false, "Mirror Follows You");
+            _micro_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorMicro", "followGaze", false, "Follow Gaze Enabled");
 
             MelonPreferences.CreateCategory("PortableMirrorTrans", "PortableMirror Transparent");
             _trans_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorTrans", "MirrorScaleX", 5f, "Mirror Scale X");
@@ -179,6 +195,7 @@ namespace PortableMirror
             _trans_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorTrans", "CanPickupMirror", false, "Can Pickup Mirror");
             _trans_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorTrans", "PositionOnView", false, "Position mirror based on view angle");
             _trans_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorTrans", "AnchorToTracking", false, "Mirror Follows You");
+            _trans_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorTrans", "followGaze", false, "Follow Gaze Enabled");
 
             MelonPreferences.CreateCategory("PortableMirrorCal", "PortableMirror Calibration");
             _cal_enable = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "MirrorEnable", true, "Enable Mirror when Calibrating");
@@ -186,13 +203,12 @@ namespace PortableMirror
             _cal_MirrorDistanceScale = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "MirrorDistanceScale", 1f, "MirrorDistanceScale");
             _cal_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorCal", "MirrorState", "MirrorCutoutSolo", "Mirror Type");
             //_cal_AlwaysInFront = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "AlwaysInFront", false, "Mirror is always infront of where you are looking");
-            _cal_DelayMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "DelayMirror", false, "Delay Mirror Creation for x seconds");
+            _cal_DelayMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "DelayMirror2", true, "Delay Mirror Creation for x seconds");
             _cal_DelayMirrorTime = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "DelayMirrorTime", 1f, "Delay Mirror Time");
+            _cal_hideOthers = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "hideOthers", true, "Hide other mirros while calibrating");
+            _cal_DelayOff = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "DelayOff", false, "Delay Mirror Deletion for x seconds");
+            _cal_DelayOffTime = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "DelayOffTime", 5f, "Delay Mirror Deletion Time");
 
-            MelonPreferences.CreateCategory("PortableMirrorDistDisable", "PortableMirror Distance Disable");
-            distanceDisable = MelonPreferences.CreateEntry<bool>("PortableMirrorDistDisable", "distanceDisable", false, "Disable avatars > than a distane from showing in Mirrors");
-            distanceValue = MelonPreferences.CreateEntry<float>("PortableMirrorDistDisable", "distanceValue", 3f, "Distance in meteres");
-            distanceUpdateInit = MelonPreferences.CreateEntry<float>("PortableMirrorDistDisable", "distanceUpdateInit", .5f, "Update interval");
 
             if (MirrorKeybindEnabled.Value)
             { //God help you
@@ -221,6 +237,7 @@ namespace PortableMirror
         }
         public override void OnPreferencesSaved()
         {
+            if (firstload) return; //Other mods, stop calling on saved for all mods OnAppInit! 
             if (QM.settings != null)
             {
                 switch (Main.QMposition.Value)
@@ -268,6 +285,10 @@ namespace PortableMirror
             _mirrorDistAdj = _mirrorDistHighPrec ? MirrorDistAdjAmmount.Value : .25f;
             if (_mirrorBase != null && Utils.GetPlayer() != null)
             {
+                if (_base_followGaze.Value)
+                    if (!_baseFollowGazeActive)
+                        MelonCoroutines.Start(followGazeBase());
+
                 _mirrorBase.transform.SetParent(null);
                 _mirrorBase.transform.localScale = new Vector3(Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value, 1f);
                 _mirrorBase.transform.position = new Vector3(_mirrorBase.transform.position.x, _mirrorBase.transform.position.y + ((Main._base_MirrorScaleY.Value - _oldMirrorScaleYBase) / 2), _mirrorBase.transform.position.z  );
@@ -280,11 +301,13 @@ namespace PortableMirror
                     _mirrorBase.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirrorBase.transform.Find(Main._base_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 _mirrorBase.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
                 if (Main._base_AnchorToTracking.Value) _mirrorBase.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(SetOrder(childMirror.gameObject));
                 _mirrorBase.transform.Find("Frame").gameObject.SetActive(_base_CanPickupMirror.Value & pickupFrame.Value);
+                if (Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
+
             }
 
             _oldMirrorScaleYBase = Main._base_MirrorScaleY.Value;
@@ -292,6 +315,10 @@ namespace PortableMirror
 
             if (_mirror45 != null && Utils.GetPlayer() != null)
             {
+                if (_45_followGaze.Value)
+                    if (!_45FollowGazeActive)
+                        MelonCoroutines.Start(followGaze45());
+
                 _mirror45.transform.SetParent(null);
                 _mirror45.transform.localScale = new Vector3(Main._45_MirrorScaleX.Value, Main._45_MirrorScaleY.Value, 1f);
                 _mirror45.transform.rotation = _mirror45.transform.rotation * Quaternion.AngleAxis(-45, Vector3.left);
@@ -308,11 +335,13 @@ namespace PortableMirror
                     _mirror45.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirror45.transform.Find(Main._45_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 _mirror45.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
                 if (Main._45_AnchorToTracking.Value) _mirror45.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(SetOrder(childMirror.gameObject));
                 _mirror45.transform.Find("Frame").gameObject.SetActive(_45_CanPickupMirror.Value & pickupFrame.Value);
+                if (Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
+
             }
             _oldMirrorScaleY45 = Main._45_MirrorScaleY.Value;
             _oldMirrorDistance45 = Main._45_MirrorDistance.Value;
@@ -333,20 +362,28 @@ namespace PortableMirror
                     _mirrorCeiling.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirrorCeiling.transform.Find(Main._ceil_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 _mirrorCeiling.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
                 if (Main._ceil_AnchorToTracking.Value)  _mirrorCeiling.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(SetOrder(childMirror.gameObject));
                 _mirrorCeiling.transform.Find("Frame").gameObject.SetActive(_ceil_CanPickupMirror.Value & pickupFrame.Value);
+                if (Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
+
             }
             _oldMirrorDistanceCeiling = Main._ceil_MirrorDistance.Value;
 
 
             if (_mirrorMicro != null && Utils.GetPlayer() != null)
             {
+                if (_micro_followGaze.Value)
+                    if (!_microFollowGazeActive)
+                        MelonCoroutines.Start(followGazeMicro());
+
                 _mirrorMicro.transform.SetParent(null);
                 _mirrorMicro.transform.localScale = new Vector3(Main._micro_MirrorScaleX.Value, Main._micro_MirrorScaleY.Value, 1f);
                 _mirrorMicro.transform.position = new Vector3(_mirrorMicro.transform.position.x, _mirrorMicro.transform.position.y + ((Main._micro_MirrorScaleY.Value - _oldMirrorScaleYMicro) / 2), _mirrorMicro.transform.position.z);
+                _mirrorMicro.transform.position += _mirrorMicro.transform.forward * (Main._micro_MirrorDistance.Value - _oldMirrorDistanceMicro);
+
 
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = Main._micro_GrabRange.Value;
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().enabled = Main._micro_CanPickupMirror.Value;
@@ -358,14 +395,22 @@ namespace PortableMirror
                     _mirrorMicro.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirrorMicro.transform.Find(Main._micro_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 if (Main._micro_AnchorToTracking.Value) _mirrorMicro.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(SetOrder(childMirror.gameObject));
+                if (Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
+
             }
             _oldMirrorScaleYMicro = Main._micro_MirrorScaleY.Value;
+            _oldMirrorDistanceMicro = Main._micro_MirrorDistance.Value;
+
 
             if (_mirrorTrans != null && Utils.GetPlayer() != null)
             {
+                if (_trans_followGaze.Value)
+                    if (!_transFollowGazeActive)
+                        MelonCoroutines.Start(followGazeTrans());
+
                 _mirrorTrans.transform.SetParent(null);
                 _mirrorTrans.transform.localScale = new Vector3(Main._trans_MirrorScaleX.Value, Main._trans_MirrorScaleY.Value, 1f);
                 _mirrorTrans.transform.position = new Vector3(_mirrorTrans.transform.position.x, _mirrorTrans.transform.position.y + ((Main._trans_MirrorScaleY.Value - _oldMirrorScaleYTrans) / 2), _mirrorTrans.transform.position.z);
@@ -380,11 +425,13 @@ namespace PortableMirror
                     _mirrorTrans.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirrorTrans.transform.Find(Main._trans_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 10;
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 10;
                 _mirrorTrans.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
                 if (Main._trans_AnchorToTracking.Value) _mirrorTrans.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(SetOrder(childMirror.gameObject));
                 _mirrorTrans.transform.Find("Frame").gameObject.SetActive(_trans_CanPickupMirror.Value & pickupFrame.Value);
+                if (Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
+
             }
             _oldMirrorScaleYTrans = Main._trans_MirrorScaleY.Value;
             _oldMirrorDistanceTrans = Main._trans_MirrorDistance.Value;
@@ -572,7 +619,7 @@ namespace PortableMirror
             yield return new WaitForSeconds(1f);
             if (!obj?.Equals(null) ?? false)
             {
-                if (fixRenderOrder.Value) obj.GetComponentInChildren<Renderer>().material.renderQueue = 5000;
+                //if (fixRenderOrder.Value) obj.GetComponentInChildren<Renderer>().material.renderQueue = 5000;
                 obj.GetComponentInChildren<CVRMirror>().m_DisablePixelLights = !usePixelLights.Value;
             }
 
@@ -596,6 +643,160 @@ namespace PortableMirror
                 }
                 catch (System.Exception ex) { Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); }
             }
+        }
+
+        public static IEnumerator FixMirrorLayer(Transform mirrorBase)
+        { //CVR appearently adds layers on init of the mirror, this should? fix that. 
+
+            yield return new WaitForSeconds(.1f);
+            mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = 33024; //Layers 8 (Playerlocal) & 15 (layer for shader)
+        }
+
+        public static IEnumerator followGazeBase()
+        {
+            Logger.Msg($"EnterFollowGaze");
+            var cam = Camera.main.gameObject;
+            var player = Utils.GetPlayer();
+            var mirror = _mirrorBase;
+            _baseFollowGazeActive = true;
+            while (Main._base_followGaze.Value)
+            {
+                if (mirror?.Equals(null) ?? true) { _baseFollowGazeActive = false; yield break; }
+
+                var pos = player.transform.position;
+                pos.y += .5f;
+                pos.y += (Main._base_MirrorScaleY.Value - 1) / 2;
+
+                Quaternion tempRot; Vector3 tempPos;
+
+                if (Main._base_PositionOnView.Value)
+                {
+                    tempRot = cam.transform.rotation;
+                    tempPos = cam.transform.position + cam.transform.forward + (cam.transform.forward * Main._base_MirrorDistance.Value);
+                }
+                else
+                {
+                    tempRot = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f); //Make vertical
+                    tempPos = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z) +
+                          tempRot * Vector3.forward * (1f + Main._base_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
+                }
+                //_mirrorCal.transform.rotation = tempRot;
+                var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
+                mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
+                mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step*40);
+
+                yield return null;
+            }
+            _baseFollowGazeActive = false;
+            Logger.Msg($"ExitFollowGaze");
+        }
+
+        public static IEnumerator followGaze45()
+        {
+            Logger.Msg($"EnterFollowGaze");
+            var cam = Camera.main.gameObject;
+            var player = Utils.GetPlayer();
+            var mirror = _mirror45;
+            _45FollowGazeActive = true;
+            while (Main._45_followGaze.Value)
+            {
+                if (mirror?.Equals(null) ?? true) { _45FollowGazeActive = false; yield break; }
+
+                var pos = player.transform.position;
+                pos.y += .5f;
+                pos.y += (Main._45_MirrorScaleY.Value - 1) / 2;
+
+                Quaternion tempRot; Vector3 tempPos;
+
+                tempRot = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f); //Make vertical
+                tempPos = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z)
+                    + tempRot * Vector3.forward * (1f + Main._45_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
+                tempRot = tempRot * Quaternion.AngleAxis(45, Vector3.left);  // Sets the transform's current rotation to a new rotation that rotates 30 degrees around the y-axis(Vector3.up)
+
+                var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
+                mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
+                mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
+
+                yield return null;
+            }
+            _45FollowGazeActive = false;
+            Logger.Msg($"ExitFollowGaze");
+        }
+
+        public static IEnumerator followGazeMicro()
+        {
+            Logger.Msg($"EnterFollowGaze");
+            var cam = Camera.main.gameObject;
+            var mirror = _mirrorMicro;
+            _microFollowGazeActive = true;
+            while (Main._micro_followGaze.Value)
+            {
+                if (mirror?.Equals(null) ?? true) { _microFollowGazeActive = false; yield break; }
+
+                var pos = cam.transform.position;
+
+                Quaternion tempRot; Vector3 tempPos;
+
+                if (Main._micro_PositionOnView.Value)
+                {
+                    tempRot = cam.transform.rotation;
+                    tempPos = cam.transform.position + (cam.transform.forward * Main._micro_MirrorScaleY.Value)
+                        + (mirror.transform.forward * Main._micro_MirrorDistance.Value);
+                }
+                else
+                {
+                    tempRot = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f); //Make vertical
+                    tempPos = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z) +
+                          tempRot * Vector3.forward * (Main._micro_MirrorScaleY.Value + Main._micro_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
+                }
+
+                var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
+                mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
+                mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
+
+                yield return null;
+            }
+            _microFollowGazeActive = false;
+            Logger.Msg($"ExitFollowGaze");
+        }
+
+        public static IEnumerator followGazeTrans()
+        {
+            Logger.Msg($"EnterFollowGaze");
+            var cam = Camera.main.gameObject;
+            var player = Utils.GetPlayer();
+            var mirror = _mirrorTrans;
+            _transFollowGazeActive = true;
+            while (Main._trans_followGaze.Value)
+            {
+                if (mirror?.Equals(null) ?? true) { _transFollowGazeActive = false; yield break; }
+
+                var pos = player.transform.position;
+                pos.y += .5f;
+                pos.y += (Main._trans_MirrorScaleY.Value - 1) / 2;
+
+                Quaternion tempRot; Vector3 tempPos;
+
+                if (Main._trans_PositionOnView.Value)
+                {
+                    tempRot = cam.transform.rotation;
+                    tempPos = cam.transform.position + cam.transform.forward + (cam.transform.forward * Main._trans_MirrorDistance.Value);
+                }
+                else
+                {
+                    tempRot = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f); //Make vertical
+                    tempPos = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z) +
+                          tempRot * Vector3.forward * (1f + Main._trans_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
+                }
+                //_mirrorCal.transform.rotation = tempRot;
+                var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
+                mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
+                mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
+
+                yield return null;
+            }
+            _transFollowGazeActive = false;
+            Logger.Msg($"ExitFollowGaze");
         }
 
         public static void ToggleMirror()
@@ -633,7 +834,7 @@ namespace PortableMirror
 
                 var childMirror = mirror.transform.Find(Main._base_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8; //Default prefab 4:Water - 8:Playerlocal 
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8; //Default prefab 4:Water - 8:Playerlocal 
                 if (Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorTransparentSolo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
@@ -644,7 +845,9 @@ namespace PortableMirror
                 if (!Main._base_AnchorToTracking.Value) mirror.transform.SetParent(null);
                 else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value) MelonCoroutines.Start(SetOrder(mirror));
+                if (Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
                 _mirrorBase = mirror;
+                if (_base_followGaze.Value) MelonCoroutines.Start(followGazeBase());
             }
         }
 
@@ -675,7 +878,7 @@ namespace PortableMirror
 
                 var childMirror = mirror.transform.Find(Main._45_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 if (Main._45_MirrorState.Value == "MirrorTransparent" || Main._45_MirrorState.Value == "MirrorTransparentSolo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
@@ -686,8 +889,9 @@ namespace PortableMirror
                 if (!Main._45_AnchorToTracking.Value) mirror.transform.SetParent(null);
                 else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value) MelonCoroutines.Start(SetOrder(mirror));
-
+                if (Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
                 _mirror45 = mirror;
+                if (_45_followGaze.Value) MelonCoroutines.Start(followGaze45());
             }
         }
 
@@ -717,7 +921,7 @@ namespace PortableMirror
 
                 var childMirror = mirror.transform.Find(Main._ceil_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 if (Main._ceil_MirrorState.Value == "MirrorTransparent" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value); 
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
@@ -728,7 +932,7 @@ namespace PortableMirror
                 if (!Main._ceil_AnchorToTracking.Value) mirror.transform.SetParent(null);
                 else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value) MelonCoroutines.Start(SetOrder(mirror));
-
+                if (Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
                 _mirrorCeiling = mirror;
             }
         }
@@ -754,19 +958,21 @@ namespace PortableMirror
 
                 if (Main._micro_PositionOnView.Value)
                 {
-                    mirror.transform.position = cam.transform.position + (cam.transform.forward * Main._micro_MirrorScaleY.Value);
                     mirror.transform.rotation = cam.transform.rotation;
+                    mirror.transform.position = cam.transform.position + (cam.transform.forward * Main._micro_MirrorScaleY.Value)
+                        + (mirror.transform.forward * Main._micro_MirrorDistance.Value);
                 }
                 else
                 {
                     mirror.transform.position = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z); //Set to player height instead of centered on camera
                     mirror.transform.rotation = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f); //Make vertical
-                    mirror.transform.position = mirror.transform.position + (mirror.transform.forward * Main._micro_MirrorScaleY.Value); //Move on distance
+                    mirror.transform.position = mirror.transform.position + (mirror.transform.forward * Main._micro_MirrorScaleY.Value)
+                        + (mirror.transform.forward * Main._micro_MirrorDistance.Value); //Move on distance
                 }
 
                 var childMirror = mirror.transform.Find(Main._micro_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 if (Main._micro_MirrorState.Value == "MirrorTransparent" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = Main._micro_GrabRange.Value;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._micro_CanPickupMirror.Value;
@@ -775,8 +981,10 @@ namespace PortableMirror
                 if (!Main._micro_AnchorToTracking.Value) mirror.transform.SetParent(null);
                 else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value) MelonCoroutines.Start(SetOrder(mirror));
-
+                if (Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
                 _mirrorMicro = mirror;
+                if (_micro_followGaze.Value) MelonCoroutines.Start(followGazeMicro());
+
             }
         }
 
@@ -814,7 +1022,7 @@ namespace PortableMirror
 
                 var childMirror = mirror.transform.Find(Main._trans_MirrorState.Value);
                 childMirror.gameObject.active = true;
-                childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 10;
+                //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 10;
                 if (Main._trans_MirrorState.Value == "MirrorTransparent" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._trans_CanPickupMirror.Value;
@@ -825,8 +1033,9 @@ namespace PortableMirror
                 if (!Main._trans_AnchorToTracking.Value) mirror.transform.SetParent(null);
                 else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value) MelonCoroutines.Start(SetOrder(mirror));
-
+                if (Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror));
                 _mirrorTrans = mirror;
+                if (_trans_followGaze.Value) MelonCoroutines.Start(followGazeTrans());
             }
         }
 
@@ -840,9 +1049,27 @@ namespace PortableMirror
                 ResetControllerLayer();
                 try { UnityEngine.Object.Destroy(_mirrorCal); } catch (System.Exception ex) { Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); }
                 _mirrorCal = null;
+
+                if (Main._cal_hideOthers.Value)
+                {
+                    if (!_mirrorBase?.Equals(null) ?? false) _mirrorBase.SetActive(true);
+                    if (!_mirror45?.Equals(null) ?? false) _mirror45.SetActive(true);
+                    if (!_mirrorCeiling?.Equals(null) ?? false) _mirrorCeiling.SetActive(true);
+                    if (!_mirrorMicro?.Equals(null) ?? false) _mirrorMicro.SetActive(true);
+                    if (!_mirrorTrans?.Equals(null) ?? false) _mirrorTrans.SetActive(true);
+                }
             }
             else if (_mirrorCal == null && state)
             {
+                if (Main._cal_hideOthers.Value)
+                {
+                    if (!_mirrorBase?.Equals(null) ?? false) _mirrorBase.SetActive(false);
+                    if (!_mirror45?.Equals(null) ?? false) _mirror45.SetActive(false);
+                    if (!_mirrorCeiling?.Equals(null) ?? false) _mirrorCeiling.SetActive(false);
+                    if (!_mirrorMicro?.Equals(null) ?? false) _mirrorMicro.SetActive(false);
+                    if (!_mirrorTrans?.Equals(null) ?? false) _mirrorTrans.SetActive(false);
+                }
+
                 //Logger.Msg("STate 2");
                 if (Main._cal_MirrorState.Value == "MirrorCutout" || Main._cal_MirrorState.Value == "MirrorTransparent" || Main._cal_MirrorState.Value == "MirrorCutoutSolo" || Main._cal_MirrorState.Value == "MirrorTransparentSolo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer();
@@ -873,13 +1100,13 @@ namespace PortableMirror
                 if (Main._cal_MirrorState.Value == "MirrorTransparent" || Main._cal_MirrorState.Value == "MirrorTransparentSolo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = false;
                 if (fixRenderOrder.Value) MelonCoroutines.Start(SetOrder(mirror));
-
                 _mirrorCal = mirror;
 
                 //if (Main._cal_AlwaysInFront.Value) MelonCoroutines.Start(calMirrorTracking());
                 //else 
                 //mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
-                mirror.transform.SetParent(null);
+                mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
+                mirror.transform.SetParent(null); //Put cal mirror in DontDestroy Scene
             }
         }
 
@@ -895,6 +1122,9 @@ namespace PortableMirror
                 //Logger.Msg("CAL STARTED");
                 if (_calInit && Main._cal_enable.Value)
                 {
+                    if (calDelayRoutine != null) MelonCoroutines.Stop(calDelayRoutineOff);
+                    ToggleMirrorCal(false);
+
                     if (_cal_DelayMirror.Value)
                         calDelayRoutine = MelonCoroutines.Start(DelayCalMirror());
                     else
@@ -916,7 +1146,10 @@ namespace PortableMirror
                 //Logger.Msg("1");
                 if (waitForMeasureRoutine != null) MelonCoroutines.Stop(waitForMeasureRoutine);
                 //Logger.Msg("2");
-                ToggleMirrorCal(false);
+                if (_cal_DelayOff.Value)
+                    calDelayRoutineOff = MelonCoroutines.Start(DelayCalMirrorOff());
+                else
+                    ToggleMirrorCal(false);
                 //Logger.Msg("CAL END Complete");
             }
             catch (System.Exception ex) { Logger.Error("Error in OnCalibrationEnd:\n" + ex.ToString()); }
@@ -1015,6 +1248,12 @@ namespace PortableMirror
             //Logger.Msg("DelayCalMirror-Done");
         }
 
+        public static IEnumerator DelayCalMirrorOff()
+        {
+            yield return new WaitForSeconds(_cal_DelayOffTime.Value);
+            ToggleMirrorCal(false);
+        }
+
         //No head follow yet, so always being in front would never be right
         //public static IEnumerator calMirrorTracking()
         //{
@@ -1037,7 +1276,7 @@ namespace PortableMirror
 
         //        pos.y += .5f;
         //        pos.y += (mirrorHeight - 1) / 2;
-                
+
         //        Vector3 toPos = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z); //Set to player height instead of centered on camera
         //        toPos += (cam.transform.forward * mirrorHeight / 3 * Main._cal_MirrorDistanceScale.Value);
 
@@ -1090,20 +1329,18 @@ namespace PortableMirror
 
         public static AssetBundle assetBundle;
         public static GameObject mirrorPrefab, mirrorSettingsPrefab;
-        public static object calDelayRoutine, waitForMeasureRoutine;
+        public static object calDelayRoutine, waitForMeasureRoutine, calDelayRoutineOff;
 
-        public static GameObject _mirrorBase;
-
-        public static float _oldMirrorDistance;
-        public static float _oldMirrorScaleYBase;
-        public static KeyCode _mirrorKeybindBase;
-        public static int _qmOptionsLastPage = 1;
         public static float _mirrorDistAdj;
         public static bool _mirrorDistHighPrec = false;
         public static bool _AllPickupable = false;
         public static bool _calInit = false;
         public static float _calHeight;
-        
+
+        public static GameObject _mirrorBase;
+        public static float _oldMirrorDistance;
+        public static float _oldMirrorScaleYBase;
+
         public static GameObject _mirror45;
         public static float _oldMirrorDistance45;
         public static float _oldMirrorScaleY45;
@@ -1112,6 +1349,7 @@ namespace PortableMirror
         public static float _oldMirrorDistanceCeiling;
 
         public static GameObject _mirrorMicro;
+        public static float _oldMirrorDistanceMicro;
         public static float _oldMirrorScaleYMicro;
 
         public static GameObject _mirrorTrans;
@@ -1120,6 +1358,8 @@ namespace PortableMirror
 
         public static GameObject _mirrorCal;
         public static Dictionary<GameObject, int> calObjects = new Dictionary<GameObject, int>();
+
+        public static bool _baseFollowGazeActive, _45FollowGazeActive, _transFollowGazeActive, _microFollowGazeActive;
     }
 }
 
