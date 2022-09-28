@@ -12,7 +12,7 @@ namespace PortableMirror
 
         public static void CreateQuickMenuButton()
         {
-            settings = GameObject.Instantiate(Main.mirrorSettingsPrefab);
+            settings = GameObject.Instantiate(Mirrors.mirrorSettingsPrefab);
             settings.SetActive(false);
 
             settings.transform.SetParent(GameObject.Find("Cohtml/QuickMenu").transform, false);
@@ -69,7 +69,7 @@ namespace PortableMirror
                 //Base
                 settingsCanvas.transform.Find("Base-Toggle").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main.ToggleMirror();
+                    Mirrors.ToggleMirror();
                     ParseSettings();
                 }
                 ));
@@ -171,7 +171,7 @@ namespace PortableMirror
                 //45
                 settingsCanvas.transform.Find("45-Toggle").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main.ToggleMirror45();
+                    Mirrors.ToggleMirror45();
                     ParseSettings();
                 }
                 ));
@@ -271,7 +271,7 @@ namespace PortableMirror
                 //ceil
                 settingsCanvas.transform.Find("Ceil-Toggle").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main.ToggleMirrorCeiling();
+                    Mirrors.ToggleMirrorCeiling();
                     ParseSettings();
                 }
                 ));
@@ -360,7 +360,7 @@ namespace PortableMirror
                 //micro
                 settingsCanvas.transform.Find("Micro-Toggle").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main.ToggleMirrorMicro();
+                    Mirrors.ToggleMirrorMicro();
                     ParseSettings();
                 }
                 ));
@@ -459,7 +459,7 @@ namespace PortableMirror
                 //trans
                 settingsCanvas.transform.Find("Trans-Toggle").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main.ToggleMirrorTrans();
+                    Mirrors.ToggleMirrorTrans();
                     ParseSettings();
                 }
                 ));
@@ -627,7 +627,7 @@ namespace PortableMirror
 
                 settingsCanvas.transform.Find("Sett-forceMirrors").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    Main.ForceMirrorLayer();
+                    Mirrors.ForceMirrorLayer();
                 }
                 ));
                 settingsCanvas.transform.Find("Sett-HighPrecisionDistanceAdjustment").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
