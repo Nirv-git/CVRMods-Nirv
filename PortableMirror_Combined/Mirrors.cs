@@ -152,7 +152,11 @@ namespace PortableMirror
                 childMirror.gameObject.active = true;
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8; //Default prefab 4:Water - 8:Playerlocal 
                 if (Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._base_MirrorState.Value == "MirrorTransCutCombo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    Main._base_MirrorState.Value == "MirrorTransCutCombo")
+                { 
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._base_CanPickupMirror.Value & Main.pickupFrame.Value);
@@ -199,7 +203,11 @@ namespace PortableMirror
                 childMirror.gameObject.active = true;
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 if (Main._45_MirrorState.Value == "MirrorTransparent" || Main._45_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._45_MirrorState.Value == "MirrorTransCutCombo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    Main._45_MirrorState.Value == "MirrorTransCutCombo")
+                {
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._45_CanPickupMirror.Value & Main.pickupFrame.Value);
@@ -245,7 +253,11 @@ namespace PortableMirror
                 childMirror.gameObject.active = true;
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 if (Main._ceil_MirrorState.Value == "MirrorTransparent" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._ceil_MirrorState.Value == "MirrorTransCutCombo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    Main._ceil_MirrorState.Value == "MirrorTransCutCombo")
+                {
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._ceil_CanPickupMirror.Value & Main.pickupFrame.Value);
@@ -298,7 +310,11 @@ namespace PortableMirror
                 childMirror.gameObject.active = true;
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 if (Main._micro_MirrorState.Value == "MirrorTransparent" || Main._micro_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._micro_MirrorState.Value == "MirrorTransCutCombo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    Main._micro_MirrorState.Value == "MirrorTransCutCombo")
+                {
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = Main._micro_GrabRange.Value;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._micro_CanPickupMirror.Value;
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
@@ -350,7 +366,11 @@ namespace PortableMirror
                 childMirror.gameObject.active = true;
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 10;
                 if (Main._trans_MirrorState.Value == "MirrorTransparent" || Main._trans_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._trans_MirrorState.Value == "MirrorTransCutCombo") childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    Main._trans_MirrorState.Value == "MirrorTransCutCombo")
+                {
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._trans_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._trans_CanPickupMirror.Value & Main.pickupFrame.Value);

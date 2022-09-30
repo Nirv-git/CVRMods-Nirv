@@ -581,10 +581,10 @@ namespace PortableMirror
 
                 settingsCanvas.transform.Find("TransMinus").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    if (Main.TransMirrorTrans.Value > .1f)
+                    if (Main.TransMirrorTrans.Value >= .1f)
                         Main.TransMirrorTrans.Value -= .1f;
                     else
-                        Main.TransMirrorTrans.Value = .1f;
+                        Main.TransMirrorTrans.Value = 0f;
                     Main main = new Main(); main.OnPreferencesSaved();
                 }
                ));

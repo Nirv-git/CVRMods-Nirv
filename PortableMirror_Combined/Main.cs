@@ -296,12 +296,16 @@ namespace PortableMirror
                 _mirrorBase.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
                 _mirrorBase.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
                 if (Main._base_MirrorState.Value == "MirrorCutout" || Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
-                if (Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._base_MirrorState.Value == "MirrorTransCutCombo") _mirrorBase.transform.Find(Main._base_MirrorState.Value).GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 for (int i = 0; i < _mirrorBase.transform.childCount; i++)
                     _mirrorBase.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirrorBase.transform.Find(Main._base_MirrorState.Value);
                 childMirror.gameObject.active = true;
+                if (Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorTransparentSolo" ||
+                   Main._base_MirrorState.Value == "MirrorTransCutCombo")
+                {
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 _mirrorBase.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
                 if (Main._base_AnchorToTracking.Value) _mirrorBase.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
@@ -331,12 +335,16 @@ namespace PortableMirror
                 _mirror45.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
                 if (Main._45_MirrorState.Value == "MirrorCutout" || Main._45_MirrorState.Value == "MirrorTransparent" || Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
-                if (Main._45_MirrorState.Value == "MirrorTransparent" || Main._45_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._45_MirrorState.Value == "MirrorTransCutCombo") _mirror45.transform.Find(Main._45_MirrorState.Value).GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 for (int i = 0; i < _mirror45.transform.childCount; i++)
                     _mirror45.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirror45.transform.Find(Main._45_MirrorState.Value);
                 childMirror.gameObject.active = true;
+                if (Main._45_MirrorState.Value == "MirrorTransparent" || Main._45_MirrorState.Value == "MirrorTransparentSolo" ||
+                    Main._45_MirrorState.Value == "MirrorTransCutCombo")
+                {
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 _mirror45.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
                 if (Main._45_AnchorToTracking.Value) _mirror45.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
@@ -360,12 +368,16 @@ namespace PortableMirror
                 _mirrorCeiling.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
                 if (Main._ceil_MirrorState.Value == "MirrorCutout" || Main._ceil_MirrorState.Value == "MirrorTransparent" || Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
-                if (Main._ceil_MirrorState.Value == "MirrorTransparent" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._ceil_MirrorState.Value == "MirrorTransCutCombo") _mirrorCeiling.transform.Find(Main._ceil_MirrorState.Value).GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 for (int i = 0; i < _mirrorCeiling.transform.childCount; i++)
                     _mirrorCeiling.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirrorCeiling.transform.Find(Main._ceil_MirrorState.Value);
                 childMirror.gameObject.active = true;
+                if (Main._ceil_MirrorState.Value == "MirrorTransparent" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo" ||
+                    Main._ceil_MirrorState.Value == "MirrorTransCutCombo")
+                {
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 _mirrorCeiling.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
                 if (Main._ceil_AnchorToTracking.Value)  _mirrorCeiling.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
@@ -395,12 +407,16 @@ namespace PortableMirror
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
                 if (Main._micro_MirrorState.Value == "MirrorCutout" || Main._micro_MirrorState.Value == "MirrorTransparent" || Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
-                if (Main._micro_MirrorState.Value == "MirrorTransparent" || Main._micro_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._micro_MirrorState.Value == "MirrorTransCutCombo") _mirrorMicro.transform.Find(Main._micro_MirrorState.Value).GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 for (int i = 0; i < _mirrorMicro.transform.childCount; i++)
                     _mirrorMicro.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirrorMicro.transform.Find(Main._micro_MirrorState.Value);
                 childMirror.gameObject.active = true;
+                if (Main._micro_MirrorState.Value == "MirrorTransparent" || Main._micro_MirrorState.Value == "MirrorTransparentSolo" ||
+                    Main._micro_MirrorState.Value == "MirrorTransCutCombo") 
+                { 
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 if (Main._micro_AnchorToTracking.Value) _mirrorMicro.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
@@ -427,12 +443,16 @@ namespace PortableMirror
                 _mirrorTrans.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
                 if (Main._trans_MirrorState.Value == "MirrorCutout" || Main._trans_MirrorState.Value == "MirrorTransparent" || Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
-                if (Main._trans_MirrorState.Value == "MirrorTransparent" || Main._trans_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._trans_MirrorState.Value == "MirrorTransCutCombo") _mirrorTrans.transform.Find(Main._trans_MirrorState.Value).GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                 for (int i = 0; i < _mirrorTrans.transform.childCount; i++)
                     _mirrorTrans.transform.GetChild(i).gameObject.active = false;
                 var childMirror = _mirrorTrans.transform.Find(Main._trans_MirrorState.Value);
                 childMirror.gameObject.active = true;
+                if (Main._trans_MirrorState.Value == "MirrorTransparent" || Main._trans_MirrorState.Value == "MirrorTransparentSolo" ||
+                    Main._trans_MirrorState.Value == "MirrorTransCutCombo")
+                {
+                    childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
+                    childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
+                }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 10;
                 _mirrorTrans.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
                 if (Main._trans_AnchorToTracking.Value) _mirrorTrans.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
