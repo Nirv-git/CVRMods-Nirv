@@ -9,18 +9,24 @@ This mod allows the user to locally spawn mirrors for themselves in any world.
 The mirror can be configured:
   * Allow/disallow mirror pickup
   * Toggle between full/optimized/cutout or transparent
+	  * Subtypes
+		  * Solo - This shows just you, available for both Cutout and Transparent | Click Cutout/Trans Type button twice to access.
+		  * Combo - This shows a cutout mirror for you and transparent for others | Click Trans Type again after Solo to access.
   * Configurable mirror size and distance from you
   * Standard, 45 degree, ceiling, small and calibration mirrors
+	  * Calibration mirror can be configured to remain on for a few seconds after calibrating, this can be enabled with a MelonPref
   * Optional feature to disable far avatars from rendering in the mirror
     
 ### Todo
   * Make the menu less ugly?
 
 UI isn't the most pretty, but it works! And that is better than no UI. (And to answer why it is so far away from the QM, because the canvas for the QM is bigger then it looks and will eat interactions if you overlap it)
-![image](https://user-images.githubusercontent.com/81605232/185270659-b535f7ba-f63a-42d5-9033-93ea6ba8fdbc.png)
+![image](https://user-images.githubusercontent.com/81605232/193378409-fb6ce679-db51-4cc9-a3fc-2cf23eace120.png)![image](https://user-images.githubusercontent.com/81605232/193378446-9ee438da-8e36-4493-9e84-3cc003ff1efe.png)
 
 
-There are a few MelonPrefs that can be customized (I recommend using https://github.com/sinai-dev/MelonPreferencesManager | For CVR use the Mono version)   
+
+
+There are a few MelonPrefs that can be customized - I recommend using [UI Expansion Kit](https://api.cvrmg.com/v1/mods/download/90)
   * QuickMenu Starts Maximized - Exactly as it says, default state of the mirror menu attached to your QuickMenu
   * QuickMenu Position (0=Right, 1=Top, 2=Left) - If the mirror menu is on the Left/Right/Top side of your QuickMenu
   * Enabled color for QuickMenu items (0=Orange, 1=Yellow, 2=Pink)
