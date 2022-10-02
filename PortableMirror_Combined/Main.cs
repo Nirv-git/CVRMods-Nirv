@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using ABI.CCK.Components;
 using ABI_RC.Core.Player;
+using ABI_RC.Systems.IK.SubSystems;
 using ABI_RC.Core.InteractionSystem;
 using HarmonyLib;
 
@@ -19,7 +20,7 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.1.1";
+        public const string versionStr = "2.1.2";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -480,8 +481,12 @@ namespace PortableMirror
                         HarmonyInstance.Patch(typeof(CVR_MenuManager).GetMethod(nameof(CVR_MenuManager.ToggleQuickMenu)), null, new HarmonyMethod(typeof(Main).GetMethod(nameof(QMtoggle), BindingFlags.NonPublic | BindingFlags.Static)));
                         try
                         {//<3 SDraw https://github.com/SDraw/ml_mods_cvr/blob/0ebafccb33d2d2cf8ac2c0c3133a5fd2ace00378/ml_fpt/Main.cs#L37
-                            HarmonyInstance.Patch(typeof(PlayerSetup).GetMethod(nameof(PlayerSetup.ClearAvatar)), null, new HarmonyLib.HarmonyMethod(typeof(Main).GetMethod(nameof(OnAvatarClear_Postfix), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-                            HarmonyInstance.Patch(typeof(PlayerSetup).GetMethod("SetupAvatarGeneral", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic), null, new HarmonyLib.HarmonyMethod(typeof(Main).GetMethod(nameof(OnSetupAvatarGeneral_Postfix), System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)));
+                            //Begin
+                            HarmonyInstance.Patch(typeof(BodySystem).GetMethod(nameof(BodySystem.StartCalibration)), null,
+                                new HarmonyLib.HarmonyMethod(typeof(Main).GetMethod(nameof(OnStartCalibration_Postfix), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
+                            //End
+                            HarmonyInstance.Patch(typeof(BodySystem).GetMethod(nameof(BodySystem.Calibrate)), null,
+                                new HarmonyLib.HarmonyMethod(typeof(Main).GetMethod(nameof(OnCalibrateAvatar_Postfix), System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)));
                             Mirrors._calInit = true;
                         }
                         catch (System.Exception ex) { Main.Logger.Error($"Error for calibration patches\n" + ex.ToString()); }
@@ -506,8 +511,8 @@ namespace PortableMirror
             }
         }
 
-        static void OnAvatarClear_Postfix() => Mirrors.OnCalibrationBegin();
-        static void OnSetupAvatarGeneral_Postfix() => Mirrors.OnCalibrationEnd();
+        static void OnStartCalibration_Postfix() => Mirrors.OnCalibrationBegin();
+        static void OnCalibrateAvatar_Postfix() => Mirrors.OnCalibrationEnd();
 
         private static void QMtoggle(bool __0)
         {
