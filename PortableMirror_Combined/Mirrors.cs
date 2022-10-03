@@ -90,7 +90,10 @@ namespace PortableMirror
                     GameObject othermirror = mirror?.gameObject?.transform?.parent?.gameObject; // Question marks are always the answer
                     //Main.Logger.Msg($"othermirror is null:{othermirror is null}, !=base:{othermirror != _mirrorBase}, !=45:{othermirror != _mirror45}, !=Micro:{othermirror != _mirrorCeiling}, !=trans:{othermirror != _mirrorTrans}");
                     if (othermirror is null || (othermirror != Main._mirrorBase && othermirror != Main._mirror45 && othermirror != Main._mirrorCeiling &&
-                        othermirror != Main._mirrorMicro && othermirror != Main._mirrorTrans))
+                        othermirror != Main._mirrorMicro && othermirror != Main._mirrorTrans) && 
+                        !othermirror.transform.IsChildOf(Main._mirrorBase.transform) && !othermirror.transform.IsChildOf(Main._mirror45.transform) &&
+                        !othermirror.transform.IsChildOf(Main._mirrorCeiling.transform) && !othermirror.transform.IsChildOf(Main._mirrorMicro.transform) &&
+                        !othermirror.transform.IsChildOf(Main._mirrorTrans.transform) )
                     {
                         //Main.Logger.Msg($"setting layers");
                         mirror.m_ReflectLayers = mirror.m_ReflectLayers.value & ~reserved4; //Force all mirrors to not reflect "Mirror/TransparentBackground" - Set all mirrors to exclude reserved4                                                                                             
@@ -124,7 +127,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._base_MirrorState.Value == "MirrorCutout" || Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") SetAllMirrorsToIgnoreShader();
+                if (Main._base_MirrorState.Value == "MirrorCutout" || Main._base_MirrorState.Value == "MirrorTransparent" ||
+                    Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo" ||
+                    Main._base_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 GameObject player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
                 Vector3 pos = player.transform.position;
@@ -183,7 +188,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._45_MirrorState.Value == "MirrorCutout" || Main._45_MirrorState.Value == "MirrorTransparent" || Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") SetAllMirrorsToIgnoreShader();
+                if (Main._45_MirrorState.Value == "MirrorCutout" || Main._45_MirrorState.Value == "MirrorTransparent" ||
+                    Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo" ||
+                    Main._45_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
                 Vector3 pos = player.transform.position;
@@ -235,7 +242,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._ceil_MirrorState.Value == "MirrorCutout" || Main._ceil_MirrorState.Value == "MirrorTransparent" || Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") SetAllMirrorsToIgnoreShader();
+                if (Main._ceil_MirrorState.Value == "MirrorCutout" || Main._ceil_MirrorState.Value == "MirrorTransparent" ||
+                    Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo" ||
+                    Main._ceil_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
 
@@ -282,7 +291,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._micro_MirrorState.Value == "MirrorCutout" || Main._micro_MirrorState.Value == "MirrorTransparent" || Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") SetAllMirrorsToIgnoreShader();
+                if (Main._micro_MirrorState.Value == "MirrorCutout" || Main._micro_MirrorState.Value == "MirrorTransparent" ||
+                    Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo" ||
+                    Main._micro_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
                 Vector3 pos = cam.transform.position;
@@ -339,7 +350,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._trans_MirrorState.Value == "MirrorCutout" || Main._trans_MirrorState.Value == "MirrorTransparent" || Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") SetAllMirrorsToIgnoreShader();
+                if (Main._trans_MirrorState.Value == "MirrorCutout" || Main._trans_MirrorState.Value == "MirrorTransparent" ||
+                    Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo" ||
+                    Main._trans_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer();
                 var cam = Camera.main.gameObject;
                 Vector3 pos = player.transform.position;
