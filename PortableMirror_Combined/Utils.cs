@@ -93,7 +93,19 @@ namespace PortableMirror
             else
                 return x.ToString("F2");
         }
-      
+
+        //https://forum.unity.com/threads/quaternion-smoothdamp.793533/#post-6673789
+        public static Quaternion SmoothDampQuaternion(Quaternion current, Quaternion target, ref Vector3 currentVelocity, float smoothTime)
+        {
+            Vector3 c = current.eulerAngles;
+            Vector3 t = target.eulerAngles;
+            return Quaternion.Euler(
+              Mathf.SmoothDampAngle(c.x, t.x, ref currentVelocity.x, smoothTime),
+              Mathf.SmoothDampAngle(c.y, t.y, ref currentVelocity.y, smoothTime),
+              Mathf.SmoothDampAngle(c.z, t.z, ref currentVelocity.z, smoothTime)
+            );
+        }
+
 
     }
 }

@@ -86,14 +86,20 @@ namespace PortableMirror
                 try
                 {
                     //Main.Logger.Msg($"-----");
-                    //Main.Logger.Msg($"{vrcMirrorReflection.gameObject.name}");
+                    //Main.Logger.Msg($"{mirror.gameObject.name}");
                     GameObject othermirror = mirror?.gameObject?.transform?.parent?.gameObject; // Question marks are always the answer
-                    //Main.Logger.Msg($"othermirror is null:{othermirror is null}, !=base:{othermirror != _mirrorBase}, !=45:{othermirror != _mirror45}, !=Micro:{othermirror != _mirrorCeiling}, !=trans:{othermirror != _mirrorTrans}");
+                    //Main.Logger.Msg($"othermirror is null:{othermirror is null}, !=base:{othermirror != Main._mirrorBase}, !=45:{othermirror != Main._mirror45}," +
+                    //    $" !=Micro:{othermirror != Main._mirrorCeiling}, !=trans:{othermirror != Main._mirrorTrans}");
+                    //Main.Logger.Msg($"is child - base:{othermirror?.transform?.IsChildOf(Main._mirrorBase?.transform)}");
+
+
                     if (othermirror is null || (othermirror != Main._mirrorBase && othermirror != Main._mirror45 && othermirror != Main._mirrorCeiling &&
-                        othermirror != Main._mirrorMicro && othermirror != Main._mirrorTrans) && 
-                        !othermirror.transform.IsChildOf(Main._mirrorBase.transform) && !othermirror.transform.IsChildOf(Main._mirror45.transform) &&
-                        !othermirror.transform.IsChildOf(Main._mirrorCeiling.transform) && !othermirror.transform.IsChildOf(Main._mirrorMicro.transform) &&
-                        !othermirror.transform.IsChildOf(Main._mirrorTrans.transform) )
+                        othermirror != Main._mirrorMicro && othermirror != Main._mirrorTrans &&  
+                        (Main._mirrorBase is null || !othermirror.transform.IsChildOf(Main._mirrorBase.transform)) &&
+                        (Main._mirror45 is null || !othermirror.transform.IsChildOf(Main._mirror45.transform)) &&
+                        (Main._mirrorCeiling is null || !othermirror.transform.IsChildOf(Main._mirrorCeiling.transform)) &&
+                        (Main._mirrorMicro is null || !othermirror.transform.IsChildOf(Main._mirrorMicro.transform)) &&
+                        (Main._mirrorTrans is null || !othermirror.transform.IsChildOf(Main._mirrorTrans.transform))  ))
                     {
                         //Main.Logger.Msg($"setting layers");
                         mirror.m_ReflectLayers = mirror.m_ReflectLayers.value & ~reserved4; //Force all mirrors to not reflect "Mirror/TransparentBackground" - Set all mirrors to exclude reserved4                                                                                             
@@ -658,6 +664,8 @@ namespace PortableMirror
             var cam = Camera.main.gameObject;
             var player = Utils.GetPlayer();
             var mirror = Main._mirrorBase;
+            Vector3 velocity = Vector3.zero;
+            Vector3 velocityRot = Vector3.zero;
             _baseFollowGazeActive = true;
             while (Main._base_followGaze.Value)
             {
@@ -682,8 +690,10 @@ namespace PortableMirror
                 }
                 //_mirrorCal.transform.rotation = tempRot;
                 var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
-                mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
-                mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
+                //mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
+                mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
+                //mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
+                mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
 
                 yield return null;
             }

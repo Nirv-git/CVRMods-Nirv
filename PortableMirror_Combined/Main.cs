@@ -20,7 +20,7 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.1.3";
+        public const string versionStr = "2.1.4";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -37,6 +37,7 @@ namespace PortableMirror
         public static MelonPreferences_Entry<int> QMhighlightColor;
         public static MelonPreferences_Entry<bool> enableGaze;
         public static MelonPreferences_Entry<float> followGazeSpeed;
+        public static MelonPreferences_Entry<float> followGazeTime;
 
         //public static MelonPreferences_Entry<bool> ActionMenu;
 
@@ -136,6 +137,8 @@ namespace PortableMirror
             pickupFrame = MelonPreferences.CreateEntry<bool>("PortableMirror", "pickupFrame", false, "Show frame when mirror is pickupable");
             enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
             followGazeSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeSpeed", .6f, "Follow Gaze Speed");
+            followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 2f, "Follow Gaze Time");
+
             Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "-These options are on the QM also-");///
             usePixelLights = MelonPreferences.CreateEntry<bool>("PortableMirror", "usePixelLights", false, "Use PixelLights for mirrors");
             PickupToHand = MelonPreferences.CreateEntry<bool>("PortableMirror", "PickupToHand", false, "Pickups snap to hand - Global for all mirrors");
