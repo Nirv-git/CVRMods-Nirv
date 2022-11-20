@@ -20,7 +20,7 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.1.4";
+        public const string versionStr = "2.1.5";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -36,10 +36,10 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> QMsmaller;
         public static MelonPreferences_Entry<int> QMhighlightColor;
         public static MelonPreferences_Entry<bool> enableGaze;
-        public static MelonPreferences_Entry<float> followGazeSpeed;
+        //public static MelonPreferences_Entry<float> followGazeSpeed;
         public static MelonPreferences_Entry<float> followGazeTime;
 
-        //public static MelonPreferences_Entry<bool> ActionMenu;
+        public static MelonPreferences_Entry<bool> ActionMenu;
 
 
         public static MelonPreferences_Entry<float> _base_MirrorScaleX;
@@ -57,7 +57,6 @@ namespace PortableMirror
         public static MelonPreferences_Entry<float> TransMirrorTrans;
         //public static MelonPreferences_Entry<bool> MirrorsShowInCamera;
         public static MelonPreferences_Entry<float> MirrorDistAdjAmmount;
-        public static MelonPreferences_Entry<bool> ActionMenu;
         public static MelonPreferences_Entry<bool> amapi_ModsFolder;
         public static MelonPreferences_Entry<float> ColliderDepth;
         public static MelonPreferences_Entry<bool> PickupToHand;
@@ -129,6 +128,8 @@ namespace PortableMirror
             QMposition = MelonPreferences.CreateEntry<int>("PortableMirror", "QMposition", 0, "QM Position (0=Right, 1=Top, 2=Left)");
             QMsmaller = MelonPreferences.CreateEntry<bool>("PortableMirror", "QMsmaller", false, "QM is smaller");
             QMhighlightColor = MelonPreferences.CreateEntry<int>("PortableMirror", "QMhighlightColor", 0, "Enabled color for QM (0=Orange, 1=Yellow, 2=Pink)");
+            //ActionMenu = MelonPreferences.CreateEntry<bool>("PortableMirror", "ActionMenu", true, "Enable Controls on Action Menu (Requires Restart)");
+
             MirrorKeybindEnabled = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorKeybindEnabled", false, "Enabled Mirror Keybind (See ReadMe)");
             Spacer1 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer1", false, "-These are global settings for all portable mirror types-");///
             fixRenderOrder = MelonPreferences.CreateEntry("PortableMirror", "fixRenderOrder", false, "Change render order on mirrors to fix overrendering --Don't use--", "", true);
@@ -136,7 +137,7 @@ namespace PortableMirror
             ColliderDepth = MelonPreferences.CreateEntry<float>("PortableMirror", "ColliderDepth", 0.01f, "Collider Depth");
             pickupFrame = MelonPreferences.CreateEntry<bool>("PortableMirror", "pickupFrame", false, "Show frame when mirror is pickupable");
             enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
-            followGazeSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeSpeed", .6f, "Follow Gaze Speed");
+            //followGazeSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeSpeed", .6f, "Follow Gaze Speed");
             followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 2f, "Follow Gaze Time");
 
             Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "-These options are on the QM also-");///
@@ -145,7 +146,6 @@ namespace PortableMirror
             TransMirrorTrans = MelonPreferences.CreateEntry<float>("PortableMirror", "TransMirrorTrans", .4f, "Transparent Mirror transparency - Higher is more transparent - Global for all mirrors");
 
             //MirrorsShowInCamera = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorsShowInCamera", true, "Mirrors show in Cameras - Global for all mirrors --Don't use--");
-            //ActionMenu = MelonPreferences.CreateEntry<bool>("PortableMirror", "ActionMenu", true, "Enable Controls on Action Menu (Requires Restart)");
 
             MelonPreferences.CreateCategory("PortableMirrorDistDisable", "PortableMirror Distance Disable");
             distanceDisable = MelonPreferences.CreateEntry<bool>("PortableMirrorDistDisable", "distanceDisable", false, "Disable avatars > than a distane from showing in Mirrors");
@@ -236,7 +236,7 @@ namespace PortableMirror
             //{
             //    CustomActionMenu.InitUi();
             //}
-           // else Logger.Msg("ActionMenu is missing, or setting is toggled off in Mod Settings - Not adding controls to ActionMenu");
+            //else Logger.Msg("ActionMenu is missing, or setting is toggled off in Mod Settings - Not adding controls to ActionMenu");
 
         }
         public override void OnPreferencesSaved()
@@ -297,6 +297,7 @@ namespace PortableMirror
                 _mirrorBase.transform.localScale = new Vector3(Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value, 1f);
                 _mirrorBase.transform.position = new Vector3(_mirrorBase.transform.position.x, _mirrorBase.transform.position.y + ((Main._base_MirrorScaleY.Value - _oldMirrorScaleYBase) / 2), _mirrorBase.transform.position.z  );
                 _mirrorBase.transform.position += _mirrorBase.transform.forward * (Main._base_MirrorDistance.Value - _oldMirrorDistance);
+                _mirrorBase.GetOrAddComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
                 _mirrorBase.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
                 _mirrorBase.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
                 if (Main._base_MirrorState.Value == "MirrorCutout" || Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
@@ -335,6 +336,7 @@ namespace PortableMirror
                 _mirror45.transform.position += _mirror45.transform.forward * (Main._45_MirrorDistance.Value - _oldMirrorDistance45);
                 _mirror45.transform.rotation = _mirror45.transform.rotation * Quaternion.AngleAxis(45, Vector3.left);
 
+                _mirror45.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
                 _mirror45.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
                 _mirror45.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
@@ -368,6 +370,7 @@ namespace PortableMirror
                 _mirrorCeiling.transform.localScale = new Vector3(Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value, 1f);
                 _mirrorCeiling.transform.position = new Vector3(_mirrorCeiling.transform.position.x, _mirrorCeiling.transform.position.y + (Main._ceil_MirrorDistance.Value - _oldMirrorDistanceCeiling), _mirrorCeiling.transform.position.z);
 
+                _mirrorCeiling.GetOrAddComponent<BoxCollider>().enabled = Main._ceil_CanPickupMirror.Value;
                 _mirrorCeiling.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
                 _mirrorCeiling.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
@@ -407,6 +410,7 @@ namespace PortableMirror
 
 
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = Main._micro_GrabRange.Value;
+                _mirrorMicro.GetOrAddComponent<BoxCollider>().enabled = Main._micro_CanPickupMirror.Value;
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().enabled = Main._micro_CanPickupMirror.Value;
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
@@ -443,6 +447,7 @@ namespace PortableMirror
                 _mirrorTrans.transform.position = new Vector3(_mirrorTrans.transform.position.x, _mirrorTrans.transform.position.y + ((Main._trans_MirrorScaleY.Value - _oldMirrorScaleYTrans) / 2), _mirrorTrans.transform.position.z);
                 _mirrorTrans.transform.position += _mirrorTrans.transform.forward * (Main._trans_MirrorDistance.Value - _oldMirrorDistanceTrans);
 
+                _mirrorTrans.GetOrAddComponent<BoxCollider>().enabled = Main._trans_CanPickupMirror.Value;
                 _mirrorTrans.GetOrAddComponent<CVRPickupObject>().enabled = Main._trans_CanPickupMirror.Value;      
                 _mirrorTrans.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 

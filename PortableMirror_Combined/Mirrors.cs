@@ -170,6 +170,7 @@ namespace PortableMirror
                 }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._base_CanPickupMirror.Value & Main.pickupFrame.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
@@ -179,9 +180,9 @@ namespace PortableMirror
                 if (Main.fixRenderOrder.Value || Main.usePixelLights.Value) MelonCoroutines.Start(SetOrder(mirror));
                 if (Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror, false));
                 if (Main._base_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(FixMirrorLayer(childMirror, true));
-                if (Main._base_followGaze.Value) MelonCoroutines.Start(followGazeBase());
 
                 Main._mirrorBase = mirror;
+                if (Main._base_followGaze.Value) MelonCoroutines.Start(followGazeBase());
             }
         }
 
@@ -223,6 +224,7 @@ namespace PortableMirror
                 }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._45_CanPickupMirror.Value & Main.pickupFrame.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
@@ -232,9 +234,9 @@ namespace PortableMirror
                 if (Main.fixRenderOrder.Value || Main.usePixelLights.Value) MelonCoroutines.Start(SetOrder(mirror));
                 if (Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror, false));
                 if (Main._45_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(FixMirrorLayer(childMirror, true));
-                if (Main._45_followGaze.Value) MelonCoroutines.Start(followGaze45());
 
                 Main._mirror45 = mirror;
+                if (Main._45_followGaze.Value) MelonCoroutines.Start(followGaze45());
             }
         }
 
@@ -275,6 +277,7 @@ namespace PortableMirror
                 }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<BoxCollider>().enabled = Main._ceil_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._ceil_CanPickupMirror.Value & Main.pickupFrame.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
@@ -334,6 +337,7 @@ namespace PortableMirror
                 }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = Main._micro_GrabRange.Value;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._micro_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<BoxCollider>().enabled = Main._micro_CanPickupMirror.Value;
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
                 if (!Main._micro_AnchorToTracking.Value) mirror.transform.SetParent(null);
@@ -341,9 +345,9 @@ namespace PortableMirror
                 if (Main.fixRenderOrder.Value || Main.usePixelLights.Value) MelonCoroutines.Start(SetOrder(mirror));
                 if (Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror, false));
                 if (Main._micro_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(FixMirrorLayer(childMirror, true));
-                if (Main._micro_followGaze.Value) MelonCoroutines.Start(followGazeMicro());
 
                 Main._mirrorMicro = mirror;
+                if (Main._micro_followGaze.Value) MelonCoroutines.Start(followGazeMicro());
             }
         }
 
@@ -392,6 +396,7 @@ namespace PortableMirror
                 }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._trans_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<BoxCollider>().enabled = Main._trans_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._trans_CanPickupMirror.Value & Main.pickupFrame.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
@@ -401,9 +406,9 @@ namespace PortableMirror
                 if (Main.fixRenderOrder.Value || Main.usePixelLights.Value) MelonCoroutines.Start(SetOrder(mirror));
                 if (Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror, false));
                 if (Main._trans_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(FixMirrorLayer(childMirror, true));
-                if (Main._trans_followGaze.Value) MelonCoroutines.Start(followGazeTrans());
 
                 Main._mirrorTrans = mirror;
+                if (Main._trans_followGaze.Value) MelonCoroutines.Start(followGazeTrans());
             }
         }
 
@@ -660,7 +665,7 @@ namespace PortableMirror
 
         public static IEnumerator followGazeBase()
         {
-            Main.Logger.Msg($"EnterFollowGaze");
+            //Main.Logger.Msg($"EnterFollowGaze");
             var cam = Camera.main.gameObject;
             var player = Utils.GetPlayer();
             var mirror = Main._mirrorBase;
@@ -688,25 +693,23 @@ namespace PortableMirror
                     tempPos = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z) +
                           tempRot * Vector3.forward * (1f + Main._base_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
                 }
-                //_mirrorCal.transform.rotation = tempRot;
-                var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
-                //mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
                 mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
-                //mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
                 mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
 
                 yield return null;
             }
             _baseFollowGazeActive = false;
-            Main.Logger.Msg($"ExitFollowGaze");
+            //Main.Logger.Msg($"ExitFollowGaze");
         }
 
         public static IEnumerator followGaze45()
         {
-            Main.Logger.Msg($"EnterFollowGaze");
+            //Main.Logger.Msg($"EnterFollowGaze");
             var cam = Camera.main.gameObject;
             var player = Utils.GetPlayer();
             var mirror = Main._mirror45;
+            Vector3 velocity = Vector3.zero;
+            Vector3 velocityRot = Vector3.zero;
             _45FollowGazeActive = true;
             while (Main._45_followGaze.Value)
             {
@@ -723,21 +726,23 @@ namespace PortableMirror
                     + tempRot * Vector3.forward * (1f + Main._45_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
                 tempRot = tempRot * Quaternion.AngleAxis(45, Vector3.left);  // Sets the transform's current rotation to a new rotation that rotates 30 degrees around the y-axis(Vector3.up)
 
-                var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
-                mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
-                mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
+
+                mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
+                mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
 
                 yield return null;
             }
             _45FollowGazeActive = false;
-            Main.Logger.Msg($"ExitFollowGaze");
+            //Main.Logger.Msg($"ExitFollowGaze");
         }
 
         public static IEnumerator followGazeMicro()
         {
-            Main.Logger.Msg($"EnterFollowGaze");
+            //Main.Logger.Msg($"EnterFollowGaze");
             var cam = Camera.main.gameObject;
             var mirror = Main._mirrorMicro;
+            Vector3 velocity = Vector3.zero;
+            Vector3 velocityRot = Vector3.zero;
             _microFollowGazeActive = true;
             while (Main._micro_followGaze.Value)
             {
@@ -760,22 +765,23 @@ namespace PortableMirror
                           tempRot * Vector3.forward * (Main._micro_MirrorScaleY.Value + Main._micro_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
                 }
 
-                var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
-                mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
-                mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
+                mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
+                mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
 
                 yield return null;
             }
             _microFollowGazeActive = false;
-            Main.Logger.Msg($"ExitFollowGaze");
+            //Main.Logger.Msg($"ExitFollowGaze");
         }
 
         public static IEnumerator followGazeTrans()
         {
-            Main.Logger.Msg($"EnterFollowGaze");
+            //Main.Logger.Msg($"EnterFollowGaze");
             var cam = Camera.main.gameObject;
             var player = Utils.GetPlayer();
             var mirror = Main._mirrorTrans;
+            Vector3 velocity = Vector3.zero;
+            Vector3 velocityRot = Vector3.zero;
             _transFollowGazeActive = true;
             while (Main._trans_followGaze.Value)
             {
@@ -798,15 +804,19 @@ namespace PortableMirror
                     tempPos = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z) +
                           tempRot * Vector3.forward * (1f + Main._trans_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
                 }
+
+                mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
+                mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
+
                 //_mirrorCal.transform.rotation = tempRot;
-                var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
-                mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
-                mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
+                //var step = Main.followGazeSpeed.Value * Time.deltaTime; // calculate distance to move
+                //mirror.transform.position = Vector3.MoveTowards(mirror.transform.position, tempPos, step);
+                //mirror.transform.rotation = Quaternion.RotateTowards(mirror.transform.rotation, tempRot, step * 40);
 
                 yield return null;
             }
             _transFollowGazeActive = false;
-            Main.Logger.Msg($"ExitFollowGaze");
+            //Main.Logger.Msg($"ExitFollowGaze");
         }
 
     }
