@@ -9,6 +9,7 @@ using System.IO;
 using ABI.CCK;
 using ABI.CCK.Components;
 using ABI_RC.Core.InteractionSystem;
+using ABI_RC.Core.Savior;
 using HarmonyLib;
 
 
@@ -20,7 +21,7 @@ namespace SitLaydown
 
     public class Main : MelonMod
     {
-        public const string versionStr = "0.1";
+        public const string versionStr = "0.2.1";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -39,6 +40,8 @@ namespace SitLaydown
         public static float _DistAdj;
         public static bool rotActive = false;
         public static bool inChair = false;
+
+        public static bool joyMoveActive = false;
 
 
         public override void OnApplicationStart()
@@ -109,6 +112,25 @@ namespace SitLaydown
             yield return new WaitForSeconds(.22f);
             QM.settings.SetActive(value);
         }
+
+        public static IEnumerator JoyMove()
+        {
+            Main.joyMoveActive = true;
+            while (_baseObj != null && joyMoveActive)
+            {
+                //Logger.Msg($"x {CVRInputManager.Instance.movementVector.x}, y {CVRInputManager.Instance.movementVector.y}, z {CVRInputManager.Instance.movementVector.z}");
+                //_baseObj.transform.position +=  new Vector3(CVRInputManager.Instance.movementVector.z * Time.deltaTime, 0.0f,
+                //    CVRInputManager.Instance.movementVector.x * Time.deltaTime);
+                _baseObj.transform.position += _baseObj.transform.forward * (CVRInputManager.Instance.movementVector.z * Time.deltaTime);
+                _baseObj.transform.position += _baseObj.transform.right * (CVRInputManager.Instance.movementVector.x * Time.deltaTime);
+
+                _baseObj.transform.RotateAround(_baseObj.transform.position, Vector3.up, CVRInputManager.Instance.lookVector.x * Time.deltaTime * 5f);
+                //yield return new WaitForSeconds(1f);
+                yield return null;
+            }
+            QM.ParseSettings();
+        }
+
 
         public static void ToggleChair(Boolean enableChair)
         {

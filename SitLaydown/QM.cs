@@ -152,6 +152,14 @@ namespace SitLaydown
                     if(!Main.rotActive & Main.inChair) Main.rotRoutine = MelonCoroutines.Start(Main.HoldRotation());
                 }
                 ));
+                settingsCanvas.transform.Find("Joy-Toggle").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    if (Main.joyMoveActive) Main.joyMoveActive = false;
+                    else if (Main.inChair)
+                        MelonCoroutines.Start(Main.JoyMove());
+                    ParseSettings();
+                }
+                ));
 
 
             }
@@ -190,6 +198,11 @@ namespace SitLaydown
                 settingsCanvas.transform.Find("Rot-Lock").GetComponent<Image>().color = custColor1;
             else
                 settingsCanvas.transform.Find("Rot-Lock").GetComponent<Image>().color = custColor2;
+
+            if (Main.joyMoveActive)
+                settingsCanvas.transform.Find("Joy-Toggle").GetComponent<Image>().color = custColor1;
+            else
+                settingsCanvas.transform.Find("Joy-Toggle").GetComponent<Image>().color = custColor2;
 
             settingsCanvas.transform.Find("Anim-Lay").GetComponent<Image>().color = custColor2;
             settingsCanvas.transform.Find("Anim-SitIdle").GetComponent<Image>().color = custColor2;
