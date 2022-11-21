@@ -138,7 +138,7 @@ namespace PortableMirror
             pickupFrame = MelonPreferences.CreateEntry<bool>("PortableMirror", "pickupFrame", false, "Show frame when mirror is pickupable");
             enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
             //followGazeSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeSpeed", .6f, "Follow Gaze Speed");
-            followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 2f, "Follow Gaze Time");
+            followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Time");
 
             Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "-These options are on the QM also-");///
             usePixelLights = MelonPreferences.CreateEntry<bool>("PortableMirror", "usePixelLights", false, "Use PixelLights for mirrors");
@@ -213,6 +213,15 @@ namespace PortableMirror
             _cal_DelayOff = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "DelayOff", false, "Delay Mirror Deletion for x seconds");
             _cal_DelayOffTime = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "DelayOffTime", 5f, "Delay Mirror Deletion Time");
 
+            _oldMirrorScaleYBase = Main._base_MirrorScaleY.Value;
+            _oldMirrorDistance = Main._base_MirrorDistance.Value;
+            _oldMirrorScaleY45 = Main._45_MirrorScaleY.Value;
+            _oldMirrorDistance45 = Main._45_MirrorDistance.Value;
+            _oldMirrorDistanceCeiling = Main._ceil_MirrorDistance.Value;
+            _oldMirrorScaleYMicro = Main._micro_MirrorScaleY.Value;
+            _oldMirrorDistanceMicro = Main._micro_MirrorDistance.Value;
+            _oldMirrorScaleYTrans = Main._trans_MirrorScaleY.Value;
+            _oldMirrorDistanceTrans = Main._trans_MirrorDistance.Value;
 
             if (MirrorKeybindEnabled.Value)
             { //God help you
