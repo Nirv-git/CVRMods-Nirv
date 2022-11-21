@@ -133,7 +133,7 @@ namespace SitLaydown
                 ));
                 settingsCanvas.transform.Find("Adj-RotLeft").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
-                    if (Main._baseObj != null) Main._baseObj.transform.rotation *= Quaternion.AngleAxis(Main._DistHighPrec ? -1f : -5f, Vector3.up);
+                    if (Main._baseObj != null)  Main._baseObj.transform.rotation *= Quaternion.AngleAxis(Main._DistHighPrec ? -1f : -5f, Vector3.up);
                 }
                 ));
 

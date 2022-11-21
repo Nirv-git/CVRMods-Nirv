@@ -31,6 +31,7 @@ namespace SitLaydown
         public static MelonPreferences_Entry<int> QMhighlightColor;
         public static MelonPreferences_Entry<int> QMtogglePosOffset;
         public static MelonPreferences_Entry<float> DistAdjAmmount;
+        public static MelonPreferences_Entry<float> joyMoveMult, joyRotMult;
         public static MelonPreferences_Entry<bool> holdRotataion;
 
         public static GameObject _baseObj;
@@ -54,6 +55,8 @@ namespace SitLaydown
             SittingAnim = MelonPreferences.CreateEntry("SitLaydown", "SitLaydown", "SitCrossed", "Chair sitting animation");
             DistAdjAmmount = MelonPreferences.CreateEntry<float>("SitLaydown", "DistAdjAmmount", .01f, "High Precision Distance Adjustment");
             holdRotataion = MelonPreferences.CreateEntry<bool>("SitLaydown", "holdRotataion", true, "Hold body in original rotation");
+            joyMoveMult = MelonPreferences.CreateEntry<float>("SitLaydown", "joyMoveMult", 1f, "Joystick movement multiplier");
+            joyRotMult = MelonPreferences.CreateEntry<float>("SitLaydown", "joyRotMult", 10f, "Joystick rotation multiplier");
             QMposition = MelonPreferences.CreateEntry<int>("SitLaydown", "QMposition", 0, "QuickMenu Position (0=Right, 1=Top, 2=Left)");
             QMhighlightColor = MelonPreferences.CreateEntry<int>("SitLaydown", "QMhighlightColor", 0, "Enabled color for QuickMenu items (0=Orange, 1=Yellow, 2=Pink)");
             QMtogglePosOffset = MelonPreferences.CreateEntry<int>("SitLaydown", "QMtogglePosOffset", 0, "Position Offset for settings toggle button (int -3 - 3)");
@@ -121,10 +124,11 @@ namespace SitLaydown
                 //Logger.Msg($"x {CVRInputManager.Instance.movementVector.x}, y {CVRInputManager.Instance.movementVector.y}, z {CVRInputManager.Instance.movementVector.z}");
                 //_baseObj.transform.position +=  new Vector3(CVRInputManager.Instance.movementVector.z * Time.deltaTime, 0.0f,
                 //    CVRInputManager.Instance.movementVector.x * Time.deltaTime);
-                _baseObj.transform.position += _baseObj.transform.forward * (CVRInputManager.Instance.movementVector.z * Time.deltaTime);
-                _baseObj.transform.position += _baseObj.transform.right * (CVRInputManager.Instance.movementVector.x * Time.deltaTime);
+                _baseObj.transform.position += _baseObj.transform.forward * (CVRInputManager.Instance.movementVector.z * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value,0f, 10f);
+                _baseObj.transform.position += _baseObj.transform.right * (CVRInputManager.Instance.movementVector.x * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value, 0f, 10f);
 
-                _baseObj.transform.RotateAround(_baseObj.transform.position, Vector3.up, CVRInputManager.Instance.lookVector.x * Time.deltaTime * 5f);
+                //if(!rotActive) 
+                    _baseObj.transform.RotateAround(_baseObj.transform.position, Vector3.up, CVRInputManager.Instance.lookVector.x * Time.deltaTime * 5f * Mathf.Clamp(joyRotMult.Value, 0f, 10f));
                 //yield return new WaitForSeconds(1f);
                 yield return null;
             }
@@ -170,6 +174,7 @@ namespace SitLaydown
             
             inChair = true;
             if (holdRotataion.Value) rotRoutine = MelonCoroutines.Start(HoldRotation());
+            if (Main.joyMoveActive)  MelonCoroutines.Start(Main.JoyMove());
         }
 
         public static IEnumerator HoldRotation()
