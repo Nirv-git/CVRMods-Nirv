@@ -128,7 +128,7 @@ namespace SitLaydown
                 _baseObj.transform.position += _baseObj.transform.right * (CVRInputManager.Instance.movementVector.x * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value, 0f, 10f);
 
                 //if(!rotActive) 
-                    _baseObj.transform.RotateAround(_baseObj.transform.position, Vector3.up, CVRInputManager.Instance.lookVector.x * Time.deltaTime * 5f * Mathf.Clamp(joyRotMult.Value, 0f, 10f));
+                    _baseObj.transform.RotateAround(_baseObj.transform.position, Vector3.up, CVRInputManager.Instance.lookVector.x * Time.deltaTime * 5f * Mathf.Clamp(joyRotMult.Value, 0f, 30f));
                 //yield return new WaitForSeconds(1f);
                 yield return null;
             }
