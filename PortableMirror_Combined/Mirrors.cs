@@ -21,9 +21,9 @@ namespace PortableMirror
         //PlayerNetwork  = 1 << 10; 
         //MirrorReflection  = 1 << 11; 
         //UiLayer = 1 << 5;
-        public static int reserved4 = 1 << 15;
+        public static int reserved3 = 1 << 14;
         //int optMirrorMask = PlayerNetwork | MirrorReflectionLayer;   //Double check this
-        //int fullMirrorMask = -1 & ~UiLayer & ~PlayerLocal & ~reserved4; //Double check this
+        //int fullMirrorMask = -1 & ~UiLayer & ~PlayerLocal & ~reserved3; //Double check this
 
         public static AssetBundle assetBundle;
         public static GameObject mirrorPrefab, mirrorSettingsPrefab;
@@ -102,7 +102,7 @@ namespace PortableMirror
                         (Main._mirrorTrans is null || !othermirror.transform.IsChildOf(Main._mirrorTrans.transform))  ))
                     {
                         //Main.Logger.Msg($"setting layers");
-                        mirror.m_ReflectLayers = mirror.m_ReflectLayers.value & ~reserved4; //Force all mirrors to not reflect "Mirror/TransparentBackground" - Set all mirrors to exclude reserved4                                                                                             
+                        mirror.m_ReflectLayers = mirror.m_ReflectLayers.value & ~reserved3; //Force all mirrors to not reflect "Mirror/TransparentBackground" - Set all mirrors to exclude reserved3                                                                                             
                     }
                 }
                 catch (System.Exception ex) { Main.Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); }
