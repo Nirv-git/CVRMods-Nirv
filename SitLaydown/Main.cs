@@ -21,7 +21,7 @@ namespace SitLaydown
 
     public class Main : MelonMod
     {
-        public const string versionStr = "0.2.1";
+        public const string versionStr = "0.2.2";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -121,7 +121,11 @@ namespace SitLaydown
             Main.joyMoveActive = true;
             while (_baseObj != null && joyMoveActive)
             {
-                //Logger.Msg($"x {CVRInputManager.Instance.movementVector.x}, y {CVRInputManager.Instance.movementVector.y}, z {CVRInputManager.Instance.movementVector.z}");
+                //Logger.Msg($"move - x {CVRInputManager.Instance.movementVector.x}, y {CVRInputManager.Instance.movementVector.y}, z {CVRInputManager.Instance.movementVector.z}");
+                //Logger.Msg($"look - x {CVRInputManager.Instance.lookVector.x}, y {CVRInputManager.Instance.lookVector.y}");
+                //Logger.Msg($"raw look - x {CVRInputManager.Instance.rawLookVector.x}, y {CVRInputManager.Instance.rawLookVector.y}");
+                //Logger.Msg($"scroll - x {CVRInputManager.Instance.scrollValue}");
+
                 //_baseObj.transform.position +=  new Vector3(CVRInputManager.Instance.movementVector.z * Time.deltaTime, 0.0f,
                 //    CVRInputManager.Instance.movementVector.x * Time.deltaTime);
                 _baseObj.transform.position += _baseObj.transform.forward * (CVRInputManager.Instance.movementVector.z * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value,0f, 10f);
