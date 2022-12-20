@@ -115,11 +115,11 @@ namespace PortableMirror
             yield return new WaitForSeconds(.1f);
             if (child)
             {
-                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = 33792; //Layers 10 (PlayerNetwork) & 15 (layer for shader)
-                mirrorBase.GetChild(0).GetComponent<CVRMirror>().m_ReflectLayers = 33024; //Layers 8 (Playerlocal) & 15 (layer for shader)
+                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = 17408; //Layers 10 (PlayerNetwork) & 14 (layer for shader)  //{(1 << 10) | (1 << 14)}
+                mirrorBase.GetChild(0).GetComponent<CVRMirror>().m_ReflectLayers = 16640; //Layers 8 (Playerlocal) & 14 (layer for shader)  //{(1 << 8) | (1 << 14)}
             }
             else
-                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = 33024; //Layers 8 (Playerlocal) & 15 (layer for shader)
+                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = 16640; //Layers 8 (Playerlocal) & 14 (layer for shader)
         }
 
         
