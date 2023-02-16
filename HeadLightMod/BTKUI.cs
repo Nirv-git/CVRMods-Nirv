@@ -75,6 +75,16 @@ namespace HeadLightMod
                 buttonIntenMinus.OnPress += () =>
                 {
                     Main.Config.lightIntensity = Utils.Clamp(Main.Config.lightIntensity - .1f, 0, 1000); Main.UpdateLight(); SetSettingsSub();
+                };          
+                var buttonRangePlus = catSettings1.AddButton("Range +", "SizePlus", "Increase Range");
+                buttonRangePlus.OnPress += () =>
+                {
+                    Main.Config.lightRange += 1f; Main.UpdateLight(); SetSettingsSub();
+                };
+                var buttonRangeMinus = catSettings2.AddButton("Range -", "SizeMinus", "Lower Range");
+                buttonRangeMinus.OnPress += () =>
+                {
+                    Main.Config.lightRange = Utils.Clamp(Main.Config.lightRange - 1f, 0, 2000); Main.UpdateLight(); SetSettingsSub();
                 };
                 var buttonAnglePlus = catSettings1.AddButton("Angle +", "AnglePlus", "Widen Angle");
                 buttonAnglePlus.OnPress += () =>
@@ -86,30 +96,20 @@ namespace HeadLightMod
                 {
                     Main.Config.lightSpotAngle = Utils.Clamp(Main.Config.lightSpotAngle - 5f, 0, 2000); Main.UpdateLight(); SetSettingsSub();
                 };
-                var buttonRangePlus = catSettings1.AddButton("Range +", "SizePlus", "Increase Range");
-                buttonRangePlus.OnPress += () =>
-                {
-                    Main.Config.lightRange += 1f; Main.UpdateLight(); SetSettingsSub();
-                };
-                var buttonRangeMinus = catSettings2.AddButton("Range -", "SizeMinus", "Lower Range");
-                buttonRangeMinus.OnPress += () =>
-                {
-                    Main.Config.lightRange = Utils.Clamp(Main.Config.lightRange - 1f, 0, 2000); Main.UpdateLight(); SetSettingsSub();
-                };
                 var buttonResetIntense = catSettings3.AddButton("Reset Brightness", "Reset", "Reset Brightness");
                 buttonResetIntense.OnPress += () =>
                 {
                     Main.Config.lightIntensity = 1f; Main.UpdateLight(); SetSettingsSub();
                 };
-                var buttonResetAngle = catSettings3.AddButton("Reset Angle", "Reset", "Reset Angle");
-                buttonResetAngle.OnPress += () =>
-                {
-                    Main.Config.lightSpotAngle = 40f; Main.UpdateLight(); SetSettingsSub();
-                };
                 var buttonResetRange = catSettings3.AddButton("Reset Range", "Reset", "Reset Range");
                 buttonResetRange.OnPress += () =>
                 {
                     Main.Config.lightRange = 10f; Main.UpdateLight(); SetSettingsSub();
+                };
+                var buttonResetAngle = catSettings3.AddButton("Reset Angle", "Reset", "Reset Angle");
+                buttonResetAngle.OnPress += () =>
+                {
+                    Main.Config.lightSpotAngle = 40f; Main.UpdateLight(); SetSettingsSub();
                 };
 
                 var toggleSpotPoint = catSettings1.AddToggle("Point/Spot", "False-Spot Light | True-Point Light", Main.Config.lightType == LightType.Point);
