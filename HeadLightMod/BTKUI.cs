@@ -42,24 +42,25 @@ namespace HeadLightMod
             loadAssets();
 
             var cat = QuickMenuAPI.MiscTabPage.AddCategory("Head Light", "HeadLightMod");
-            var toggle = cat.AddToggle("Toggle Light", "Enable/disables head mounted light", !Main.baseObj?.Equals(null) ?? false);
+            var toggle = cat.AddToggle("Toggle Light", "Enable/disables head mounted light", false);
             toggle.OnValueUpdated += action =>
             {
                 Main.ToggleLight(action);
             };
-
             var subPageSettings = cat.AddPage("Settings", "Settings", "Settings for light", "HeadLightMod");
             var subPageColors = cat.AddPage("Colors", "flashLightColors", "Colors for light", "HeadLightMod");
 
+            subPageColors.MenuTitle = "Headlight Color";
             subPageSettings.MenuTitle = "Headlight Settings";
+
             void SetSettingsSub()
             {
                 subPageSettings.MenuSubtitle = $"Intensity:{Utils.NumFormat(Main.Config.lightIntensity)}" +
                     $" Range:{Utils.NumFormat(Main.Config.lightRange)} SpotAngle:{Utils.NumFormat(Main.Config.lightSpotAngle)}" +
                     $" Spot/Point:{(Main.Config.lightType == LightType.Point ? "Point" : "Spot")}";
             }
-            subPageColors.MenuTitle = "Headlight Color";
             SetSettingsSub();
+
             var catSettings1 = subPageSettings.AddCategory("");
             var catSettings2 = subPageSettings.AddCategory("");
             var catSettings3 = subPageSettings.AddCategory("");    
