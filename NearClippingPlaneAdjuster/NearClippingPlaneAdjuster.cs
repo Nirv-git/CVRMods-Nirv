@@ -113,7 +113,7 @@ namespace NearClipPlaneAdj
             if (screenCamera is null) return;
             float oldvalue = screenCamera.nearClipPlane;
             screenCamera.nearClipPlane = value;
-            if (printMsg) Logger.Msg($"Nearplane chnaged. Old: {oldvalue}, New: {value} {(keybindsEnabled.Value ? "- Keyboard Hotkeys: '[' - 0.0001, ']' - 0.05" : "")}");
+            if (printMsg) Logger.Msg($"Nearplane Old: {oldvalue}, New: {value} {(keybindsEnabled.Value ? "- Keyboard Hotkeys: '[' - 0.0001, ']' - 0.05" : "")}");
             oldNearClip = screenCamera.nearClipPlane;
         }
         
