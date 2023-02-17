@@ -55,7 +55,7 @@ Includes an option to adjust the Nearclipping Plane up to 0.05. This was suggest
 * Keyboard Shortcuts - Enables keyboard shortcuts to set your clipping plane to the smallest or largest values.  **[** for 0.001 and  **]** for 0.05
 * Smaller Default - Sets a smaller value on World Change - 0.001 vs 0.01   
 
-# LocalHeadLightMod
+# HeadLightMod
 Requires [BTKUILib](https://api.cvrmg.com/v1/mods/download/113)
   
 This mod adds a standalone headlight to your player. Included are options to swap between a Spot/Point light source and adjust the brightness, angle, range and color. 
