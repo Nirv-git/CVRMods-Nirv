@@ -9,7 +9,19 @@ using System.IO;
 using ABI.CCK.Components;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.InteractionSystem;
-
+using System;
+using System.Linq;
+using System.Collections;
+using System.Reflection;
+using MelonLoader;
+using UnityEngine;
+using System.Collections.Generic;
+using System.IO;
+using ABI.CCK;
+using ABI.CCK.Components;
+using ABI_RC.Core.InteractionSystem;
+using ABI_RC.Core.Savior;
+using HarmonyLib;
 
 namespace PortableMirror
 {
@@ -21,6 +33,8 @@ namespace PortableMirror
         //PlayerNetwork  = 1 << 10; 
         //MirrorReflection  = 1 << 11; 
         //UiLayer = 1 << 5;
+        public static int water = 1 << 4; // Layer Mirror is on
+        public static int notwater = -1 & water;
         public static int reserved3 = 1 << 14;
         //int optMirrorMask = PlayerNetwork | MirrorReflectionLayer;   //Double check this
         //int fullMirrorMask = -1 & ~UiLayer & ~PlayerLocal & ~reserved3; //Double check this
@@ -144,7 +158,7 @@ namespace PortableMirror
                 pos.y += (Main._base_MirrorScaleY.Value - 1) / 2;
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
-                mirror.transform.localScale = new Vector3(Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value, 1f);
+                mirror.transform.localScale = new Vector3(Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value, 0.05f);
                 mirror.name = "PortableMirror";
 
                 if (Main._base_PositionOnView.Value)
@@ -183,6 +197,8 @@ namespace PortableMirror
 
                 Main._mirrorBase = mirror;
                 if (Main._base_followGaze.Value) MelonCoroutines.Start(followGazeBase());
+                MelonCoroutines.Start(pickupBase());
+
             }
         }
 
@@ -205,7 +221,7 @@ namespace PortableMirror
                 pos.y += (Main._45_MirrorScaleY.Value - 1) / 2;
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
-                mirror.transform.localScale = new Vector3(Main._45_MirrorScaleX.Value, Main._45_MirrorScaleY.Value, 1f);
+                mirror.transform.localScale = new Vector3(Main._45_MirrorScaleX.Value, Main._45_MirrorScaleY.Value, 0.05f);
                 mirror.name = "PortableMirror45";
 
                 mirror.transform.position = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z); //Set to player height instead of centered on camera
@@ -263,7 +279,7 @@ namespace PortableMirror
                 mirror.transform.position = pos;
                 mirror.transform.rotation = Quaternion.Euler(-90f, cam.transform.rotation.eulerAngles.y, cam.transform.rotation.eulerAngles.z);
                 //mirror.transform.rotation = Quaternion.AngleAxis(90, Vector3.left);  // Sets the transform's current rotation to a new rotation that rotates 90 degrees around the y-axis(Vector3.up)
-                mirror.transform.localScale = new Vector3(Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value, 1f);
+                mirror.transform.localScale = new Vector3(Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value, 0.05f);
                 mirror.name = "PortableMirrorCeiling";
 
                 var childMirror = mirror.transform.Find(Main._ceil_MirrorState.Value);
@@ -309,7 +325,7 @@ namespace PortableMirror
                 //pos.y += Main._micro_MirrorScaleY.Value / 4;///This will need turning
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
-                mirror.transform.localScale = new Vector3(Main._micro_MirrorScaleX.Value, Main._micro_MirrorScaleY.Value, 1f);
+                mirror.transform.localScale = new Vector3(Main._micro_MirrorScaleX.Value, Main._micro_MirrorScaleY.Value, 0.05f);
                 mirror.name = "PortableMirrorMicro";
 
                 if (Main._micro_PositionOnView.Value)
@@ -370,7 +386,7 @@ namespace PortableMirror
                 pos.y += (Main._trans_MirrorScaleY.Value - 1) / 2;
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
-                mirror.transform.localScale = new Vector3(Main._trans_MirrorScaleX.Value, Main._trans_MirrorScaleY.Value, 1f);
+                mirror.transform.localScale = new Vector3(Main._trans_MirrorScaleX.Value, Main._trans_MirrorScaleY.Value, 0.05f);
                 mirror.name = "PortableMirrorTrans";
 
                 if (Main._trans_PositionOnView.Value)
@@ -459,7 +475,7 @@ namespace PortableMirror
                 pos.y += .5f;
                 pos.y += (mirrorHeight - 1) / 2;
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
-                mirror.transform.localScale = new Vector3(mirrorHeight * 1.5f * .666f * Main._cal_MirrorScale.Value, mirrorHeight * 1.5f * Main._cal_MirrorScale.Value, 1f);
+                mirror.transform.localScale = new Vector3(mirrorHeight * 1.5f * .666f * Main._cal_MirrorScale.Value, mirrorHeight * 1.5f * Main._cal_MirrorScale.Value, 0.05f);
                 mirror.name = "PortableMirrorCal";
 
                 mirror.transform.position = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z); //Set to player height instead of centered on camera
@@ -663,8 +679,88 @@ namespace PortableMirror
 
         //Calibration mirror -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+        public static IEnumerator pickupBase()
+        {
+            if (!MetaPort.Instance.isUsingVr) yield break;
+
+            var held = false;
+            var setCol = false;
+            var mirror = Main._mirrorBase;
+
+            GameObject rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
+            Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward);
+            RaycastHit hit;
+
+            while (Main.grabTest.Value)
+            {
+                if (mirror?.Equals(null) ?? true)  yield break; 
+                
+                if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
+                {
+                    Main.Logger.Msg("interactRightDown");
+
+                    mirror.GetComponent<BoxCollider>().enabled = true;
+                    setCol = true;
+                    
+                    if (Physics.Raycast(ray, out hit, 1000f, notwater))
+                    {
+                        if (hit.transform.gameObject == mirror || hit.transform.gameObject.transform.IsChildOf(mirror.transform))
+                        {
+                            Main.Logger.Msg("Raycast");
+
+                            if (!held)
+                            {
+                                mirror.transform.SetParent(rightCon.transform, true);
+                                held = true;
+                            }
+                            
+
+                            //Joystick Forward/Back
+                            mirror.transform.position += mirror.transform.forward * (CVRInputManager.Instance.movementVector.z * Time.deltaTime) * Mathf.Clamp(Main.grabTestSpeed.Value, 0f, 10f);    
+                        }
+                    }
+                    else if (held)
+                    {
+                        if (!Main._base_AnchorToTracking.Value) mirror.transform.SetParent(null);
+                        else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
+                        held = false;
+                    }
+                }
+                else
+                {
+                    if(setCol) mirror.GetComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
+                }
+
+
+                Main.Logger.Msg($"CVRInputManager.Instance.movementVector.z {CVRInputManager.Instance.movementVector.z}");
+                Main.Logger.Msg($"CVRInputManager.Instance.movementVector.z {CVRInputManager.Instance.movementVector.z}");
+                Main.Logger.Msg($"CVRInputManager.Instance.interactLeftValue {CVRInputManager.Instance.interactLeftValue}");
+                Main.Logger.Msg($"CVRInputManager.Instance.interactRightValue {CVRInputManager.Instance.interactRightValue}");
+
+                Main.Logger.Msg($"CVRInputManager.Instance.gripRightDown {CVRInputManager.Instance.gripRightDown}");
+                Main.Logger.Msg($"CVRInputManager.Instance.gripRightValue {CVRInputManager.Instance.gripRightValue}");
+
+
+
+                yield return new WaitForSeconds(1f);
+
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
         public static IEnumerator followGazeBase()
         {
+            bool waitToSettle = false;
             //Main.Logger.Msg($"EnterFollowGaze");
             var cam = Camera.main.gameObject;
             var player = Utils.GetPlayer();
@@ -693,8 +789,16 @@ namespace PortableMirror
                     tempPos = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z) +
                           tempRot * Vector3.forward * (1f + Main._base_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
                 }
-                mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
-                mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
+                var distScale = Vector3.Distance(cam.transform.position, mirror.transform.position);
+                if ( Vector3.Distance(mirror.transform.position, tempPos) > Main.followGazeDeadBand.Value * distScale || waitToSettle)
+                {
+                    waitToSettle = true;
+                    mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
+                    mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
+                    if (Vector3.Distance(mirror.transform.position, tempPos) < Main.followGazeDeadBandSettle.Value * distScale)
+                        waitToSettle = false;
+                } 
+                
 
                 yield return null;
             }

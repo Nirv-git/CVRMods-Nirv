@@ -38,6 +38,13 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> enableGaze;
         //public static MelonPreferences_Entry<float> followGazeSpeed;
         public static MelonPreferences_Entry<float> followGazeTime;
+        public static MelonPreferences_Entry<float> followGazeDeadBand;
+        public static MelonPreferences_Entry<float> followGazeDeadBandSettle;
+
+        public static MelonPreferences_Entry<bool> grabTest;
+        public static MelonPreferences_Entry<float> grabTestSpeed;
+
+
 
         public static MelonPreferences_Entry<bool> ActionMenu;
 
@@ -139,6 +146,10 @@ namespace PortableMirror
             enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
             //followGazeSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeSpeed", .6f, "Follow Gaze Speed");
             followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Time");
+            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand", 5f, "Follow Gaze DeadBand");
+            followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle", 1f, "Follow Gaze DeadBand Settle");
+            grabTest = MelonPreferences.CreateEntry<bool>("PortableMirror", "grabTest", false, "grabTest");
+            grabTestSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", .5f, "grabTestSpeed");
 
             Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "-These options are on the QM also-");///
             usePixelLights = MelonPreferences.CreateEntry<bool>("PortableMirror", "usePixelLights", false, "Use PixelLights for mirrors");
@@ -303,7 +314,7 @@ namespace PortableMirror
                         MelonCoroutines.Start(Mirrors.followGazeBase());
 
                 _mirrorBase.transform.SetParent(null);
-                _mirrorBase.transform.localScale = new Vector3(Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value, 1f);
+                _mirrorBase.transform.localScale = new Vector3(Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value, 0.05f);
                 _mirrorBase.transform.position = new Vector3(_mirrorBase.transform.position.x, _mirrorBase.transform.position.y + ((Main._base_MirrorScaleY.Value - _oldMirrorScaleYBase) / 2), _mirrorBase.transform.position.z  );
                 _mirrorBase.transform.position += _mirrorBase.transform.forward * (Main._base_MirrorDistance.Value - _oldMirrorDistance);
                 _mirrorBase.GetOrAddComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
@@ -339,7 +350,7 @@ namespace PortableMirror
                         MelonCoroutines.Start(Mirrors.followGaze45());
 
                 _mirror45.transform.SetParent(null);
-                _mirror45.transform.localScale = new Vector3(Main._45_MirrorScaleX.Value, Main._45_MirrorScaleY.Value, 1f);
+                _mirror45.transform.localScale = new Vector3(Main._45_MirrorScaleX.Value, Main._45_MirrorScaleY.Value, 0.05f);
                 _mirror45.transform.rotation = _mirror45.transform.rotation * Quaternion.AngleAxis(-45, Vector3.left);
                 _mirror45.transform.position = new Vector3(_mirror45.transform.position.x, _mirror45.transform.position.y + ((Main._45_MirrorScaleY.Value - _oldMirrorScaleY45)/2.5f), _mirror45.transform.position.z  );
                 _mirror45.transform.position += _mirror45.transform.forward * (Main._45_MirrorDistance.Value - _oldMirrorDistance45);
@@ -376,7 +387,7 @@ namespace PortableMirror
             if (_mirrorCeiling != null && Utils.GetPlayer() != null)
             {
                 _mirrorCeiling.transform.SetParent(null);
-                _mirrorCeiling.transform.localScale = new Vector3(Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value, 1f);
+                _mirrorCeiling.transform.localScale = new Vector3(Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value, 0.05f);
                 _mirrorCeiling.transform.position = new Vector3(_mirrorCeiling.transform.position.x, _mirrorCeiling.transform.position.y + (Main._ceil_MirrorDistance.Value - _oldMirrorDistanceCeiling), _mirrorCeiling.transform.position.z);
 
                 _mirrorCeiling.GetOrAddComponent<BoxCollider>().enabled = Main._ceil_CanPickupMirror.Value;
@@ -413,7 +424,7 @@ namespace PortableMirror
                         MelonCoroutines.Start(Mirrors.followGazeMicro());
 
                 _mirrorMicro.transform.SetParent(null);
-                _mirrorMicro.transform.localScale = new Vector3(Main._micro_MirrorScaleX.Value, Main._micro_MirrorScaleY.Value, 1f);
+                _mirrorMicro.transform.localScale = new Vector3(Main._micro_MirrorScaleX.Value, Main._micro_MirrorScaleY.Value, 0.05f);
                 _mirrorMicro.transform.position = new Vector3(_mirrorMicro.transform.position.x, _mirrorMicro.transform.position.y + ((Main._micro_MirrorScaleY.Value - _oldMirrorScaleYMicro) / 2), _mirrorMicro.transform.position.z);
                 _mirrorMicro.transform.position += _mirrorMicro.transform.forward * (Main._micro_MirrorDistance.Value - _oldMirrorDistanceMicro);
 
@@ -452,7 +463,7 @@ namespace PortableMirror
                         MelonCoroutines.Start(Mirrors.followGazeTrans());
 
                 _mirrorTrans.transform.SetParent(null);
-                _mirrorTrans.transform.localScale = new Vector3(Main._trans_MirrorScaleX.Value, Main._trans_MirrorScaleY.Value, 1f);
+                _mirrorTrans.transform.localScale = new Vector3(Main._trans_MirrorScaleX.Value, Main._trans_MirrorScaleY.Value, 0.05f);
                 _mirrorTrans.transform.position = new Vector3(_mirrorTrans.transform.position.x, _mirrorTrans.transform.position.y + ((Main._trans_MirrorScaleY.Value - _oldMirrorScaleYTrans) / 2), _mirrorTrans.transform.position.z);
                 _mirrorTrans.transform.position += _mirrorTrans.transform.forward * (Main._trans_MirrorDistance.Value - _oldMirrorDistanceTrans);
 
