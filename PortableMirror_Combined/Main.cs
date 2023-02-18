@@ -333,7 +333,7 @@ namespace PortableMirror
                 }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 _mirrorBase.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
-                if (Main._base_AnchorToTracking.Value) _mirrorBase.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
+                if (Main._base_AnchorToTracking.Value) _mirrorBase.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
                 _mirrorBase.transform.Find("Frame").gameObject.SetActive(_base_CanPickupMirror.Value & pickupFrame.Value);
                 if (Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
@@ -373,7 +373,7 @@ namespace PortableMirror
                 }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 _mirror45.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
-                if (Main._45_AnchorToTracking.Value) _mirror45.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
+                if (Main._45_AnchorToTracking.Value) _mirror45.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
                 _mirror45.transform.Find("Frame").gameObject.SetActive(_45_CanPickupMirror.Value & pickupFrame.Value);
                 if (Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
@@ -407,7 +407,7 @@ namespace PortableMirror
                 }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
                 _mirrorCeiling.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
-                if (Main._ceil_AnchorToTracking.Value)  _mirrorCeiling.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
+                if (Main._ceil_AnchorToTracking.Value)  _mirrorCeiling.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
                 _mirrorCeiling.transform.Find("Frame").gameObject.SetActive(_ceil_CanPickupMirror.Value & pickupFrame.Value);
                 if (Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
@@ -446,7 +446,7 @@ namespace PortableMirror
                     childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
                 }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 8;
-                if (Main._micro_AnchorToTracking.Value) _mirrorMicro.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
+                if (Main._micro_AnchorToTracking.Value) _mirrorMicro.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
                 if (Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._micro_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
@@ -484,7 +484,7 @@ namespace PortableMirror
                 }
                 //childMirror.gameObject.layer = Main.MirrorsShowInCamera.Value ? 4 : 10;
                 _mirrorTrans.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
-                if (Main._trans_AnchorToTracking.Value) _mirrorTrans.transform.SetParent(GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]").transform, true);
+                if (Main._trans_AnchorToTracking.Value) _mirrorTrans.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
                 _mirrorTrans.transform.Find("Frame").gameObject.SetActive(_trans_CanPickupMirror.Value & pickupFrame.Value);
                 if (Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
