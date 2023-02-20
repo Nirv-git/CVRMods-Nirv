@@ -11,6 +11,7 @@ using ABI_RC.Core.Player;
 using ABI_RC.Systems.IK.SubSystems;
 using ABI_RC.Core.InteractionSystem;
 using HarmonyLib;
+using ABI_RC.Core.Savior;
 
 [assembly: MelonInfo(typeof(PortableMirror.Main), "PortableMirrorMod", PortableMirror.Main.versionStr, "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
@@ -317,8 +318,8 @@ namespace PortableMirror
                 _mirrorBase.transform.localScale = new Vector3(Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value, 0.05f);
                 _mirrorBase.transform.position = new Vector3(_mirrorBase.transform.position.x, _mirrorBase.transform.position.y + ((Main._base_MirrorScaleY.Value - _oldMirrorScaleYBase) / 2), _mirrorBase.transform.position.z  );
                 _mirrorBase.transform.position += _mirrorBase.transform.forward * (Main._base_MirrorDistance.Value - _oldMirrorDistance);
-                _mirrorBase.GetOrAddComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
-                _mirrorBase.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
+                _mirrorBase.GetOrAddComponent<BoxCollider>().enabled = false;
+                _mirrorBase.GetOrAddComponent<CVRPickupObject>().enabled = false;
                 _mirrorBase.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
                 if (Main._base_MirrorState.Value == "MirrorCutout" || Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
                 for (int i = 0; i < _mirrorBase.transform.childCount; i++)
@@ -338,6 +339,16 @@ namespace PortableMirror
                 _mirrorBase.transform.Find("Frame").gameObject.SetActive(_base_CanPickupMirror.Value & pickupFrame.Value);
                 if (Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._base_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
+
+                if (MetaPort.Instance.isUsingVr)
+                {
+                    if (Main._base_CanPickupMirror.Value) MelonCoroutines.Start(Mirrors.pickupBase());
+                }
+                else
+                {
+                    _mirrorBase.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
+                    _mirrorBase.GetOrAddComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
+                }
             }
 
             _oldMirrorScaleYBase = Main._base_MirrorScaleY.Value;

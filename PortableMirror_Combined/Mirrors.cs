@@ -9,19 +9,7 @@ using System.IO;
 using ABI.CCK.Components;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.InteractionSystem;
-using System;
-using System.Linq;
-using System.Collections;
-using System.Reflection;
-using MelonLoader;
-using UnityEngine;
-using System.Collections.Generic;
-using System.IO;
-using ABI.CCK;
-using ABI.CCK.Components;
-using ABI_RC.Core.InteractionSystem;
 using ABI_RC.Core.Savior;
-using HarmonyLib;
 
 namespace PortableMirror
 {
@@ -183,8 +171,8 @@ namespace PortableMirror
                     childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
                 }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
-                mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
-                mirror.GetOrAddComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<CVRPickupObject>().enabled = false; // Main._base_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<BoxCollider>().enabled = false; // Main._base_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._base_CanPickupMirror.Value & Main.pickupFrame.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
@@ -197,7 +185,15 @@ namespace PortableMirror
 
                 Main._mirrorBase = mirror;
                 if (Main._base_followGaze.Value) MelonCoroutines.Start(followGazeBase());
-                MelonCoroutines.Start(pickupBase());
+                if (MetaPort.Instance.isUsingVr)
+                {
+                    if (Main._base_CanPickupMirror.Value) MelonCoroutines.Start(pickupBase());
+                }
+                else
+                {
+                    mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
+                    mirror.GetOrAddComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
+                }
 
             }
         }
@@ -682,68 +678,59 @@ namespace PortableMirror
 
         public static IEnumerator pickupBase()
         {
-            if (!MetaPort.Instance.isUsingVr) yield break;
-
             var held = false;
             var setCol = false;
             var mirror = Main._mirrorBase;
 
             GameObject rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
-            Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward);
-            RaycastHit hit;
 
-            while (Main.grabTest.Value)
+            while (Main._base_CanPickupMirror.Value)
             {
                 if (mirror?.Equals(null) ?? true)  yield break; 
                 
                 if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
                 {
                     Main.Logger.Msg("interactRightDown");
-
                     mirror.GetComponent<BoxCollider>().enabled = true;
                     setCol = true;
-                    
+                    Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward);
+                    RaycastHit hit;
                     if (Physics.Raycast(ray, out hit, 1000f, notwater))
                     {
-                        if (hit.transform.gameObject == mirror || hit.transform.gameObject.transform.IsChildOf(mirror.transform))
+                        if (hit.transform.gameObject == mirror)// || hit.transform.gameObject.transform.IsChildOf(mirror.transform))
                         {
                             Main.Logger.Msg("Raycast");
-
                             if (!held)
                             {
                                 mirror.transform.SetParent(rightCon.transform, true);
                                 held = true;
                             }
-                            
-
                             //Joystick Forward/Back
                             mirror.transform.position += mirror.transform.forward * (CVRInputManager.Instance.movementVector.z * Time.deltaTime) * Mathf.Clamp(Main.grabTestSpeed.Value, 0f, 10f);    
                         }
-                    }
-                    else if (held)
+                    }  
+                }
+                else
+                {
+                    if (setCol) mirror.GetComponent<BoxCollider>().enabled = false;
+                    if (held)
                     {
                         if (!Main._base_AnchorToTracking.Value) mirror.transform.SetParent(null);
                         else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                         held = false;
                     }
                 }
-                else
-                {
-                    if(setCol) mirror.GetComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
-                }
 
+                //Main.Logger.Msg($"CVRInputManager.Instance.movementVector.z {CVRInputManager.Instance.movementVector.z}");
+                //Main.Logger.Msg($"CVRInputManager.Instance.movementVector.z {CVRInputManager.Instance.movementVector.z}");
+                //Main.Logger.Msg($"CVRInputManager.Instance.interactLeftValue {CVRInputManager.Instance.interactLeftValue}");
+                //Main.Logger.Msg($"CVRInputManager.Instance.interactRightValue {CVRInputManager.Instance.interactRightValue}");
 
-                Main.Logger.Msg($"CVRInputManager.Instance.movementVector.z {CVRInputManager.Instance.movementVector.z}");
-                Main.Logger.Msg($"CVRInputManager.Instance.movementVector.z {CVRInputManager.Instance.movementVector.z}");
-                Main.Logger.Msg($"CVRInputManager.Instance.interactLeftValue {CVRInputManager.Instance.interactLeftValue}");
-                Main.Logger.Msg($"CVRInputManager.Instance.interactRightValue {CVRInputManager.Instance.interactRightValue}");
+                //Main.Logger.Msg($"CVRInputManager.Instance.gripRightDown {CVRInputManager.Instance.gripRightDown}");
+                //Main.Logger.Msg($"CVRInputManager.Instance.gripRightValue {CVRInputManager.Instance.gripRightValue}");
 
-                Main.Logger.Msg($"CVRInputManager.Instance.gripRightDown {CVRInputManager.Instance.gripRightDown}");
-                Main.Logger.Msg($"CVRInputManager.Instance.gripRightValue {CVRInputManager.Instance.gripRightValue}");
-
-
-
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(.5f);
+                //yield return null;
 
             }
 
