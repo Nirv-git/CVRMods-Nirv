@@ -42,8 +42,8 @@ namespace PortableMirror
         public static MelonPreferences_Entry<float> followGazeDeadBand;
         public static MelonPreferences_Entry<float> followGazeDeadBandSettle;
 
-        public static MelonPreferences_Entry<bool> grabTest;
-        public static MelonPreferences_Entry<float> grabTestSpeed;
+        public static MelonPreferences_Entry<bool> customGrab_en;
+        public static MelonPreferences_Entry<float> customGrabSpeed;
 
 
 
@@ -149,8 +149,9 @@ namespace PortableMirror
             followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Time");
             followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand", 5f, "Follow Gaze DeadBand");
             followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle", 1f, "Follow Gaze DeadBand Settle");
-            grabTest = MelonPreferences.CreateEntry<bool>("PortableMirror", "grabTest", false, "grabTest");
-            grabTestSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", .5f, "grabTestSpeed");
+
+            customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", true, "Use custom mirror pickup in VR");
+            customGrabSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", 5f, "grabTestSpeed");
 
             Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "-These options are on the QM also-");///
             usePixelLights = MelonPreferences.CreateEntry<bool>("PortableMirror", "usePixelLights", false, "Use PixelLights for mirrors");
@@ -214,7 +215,7 @@ namespace PortableMirror
             _trans_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorTrans", "followGaze", false, "Follow Gaze Enabled");
 
             MelonPreferences.CreateCategory("PortableMirrorCal", "PortableMirror Calibration");
-            _cal_enable = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "MirrorEnable", true, "Enable Mirror when Calibrating");
+            _cal_enable = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "MirrorEnable2", false, "Enable Mirror when Calibrating");
             _cal_MirrorScale = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "MirrorScale", 1f, "MirrorScale");
             _cal_MirrorDistanceScale = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "MirrorDistanceScale", 1f, "MirrorDistanceScale");
             _cal_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorCal", "MirrorState", "MirrorCutoutSolo", "Mirror Type");
@@ -258,7 +259,7 @@ namespace PortableMirror
             //    CustomActionMenu.InitUi();
             //}
             //else Logger.Msg("ActionMenu is missing, or setting is toggled off in Mod Settings - Not adding controls to ActionMenu");
-
+            MelonCoroutines.Start(WaitForLocalPlayer());
         }
         public override void OnPreferencesSaved()
         {
@@ -340,7 +341,7 @@ namespace PortableMirror
                 if (Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._base_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
 
-                if (MetaPort.Instance.isUsingVr)
+                if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
                     if (Main._base_CanPickupMirror.Value) MelonCoroutines.Start(Mirrors.pickupBase());
                 }
@@ -548,6 +549,13 @@ namespace PortableMirror
                     QM.ParseSettings();
                     break;
             }
+        }
+
+        IEnumerator WaitForLocalPlayer()
+        {
+            while (PlayerSetup.Instance == null)
+                yield return null;
+            CVRInputManager.Instance.gameObject.AddComponent<InputSVR>();
         }
 
         static void OnStartCalibration_Postfix() => Mirrors.OnCalibrationBegin();

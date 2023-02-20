@@ -11,6 +11,7 @@ using ABI_RC.Core.Player;
 using ABI_RC.Core.InteractionSystem;
 using ABI_RC.Core.Savior;
 
+
 namespace PortableMirror
 {
 
@@ -185,7 +186,7 @@ namespace PortableMirror
 
                 Main._mirrorBase = mirror;
                 if (Main._base_followGaze.Value) MelonCoroutines.Start(followGazeBase());
-                if (MetaPort.Instance.isUsingVr)
+                if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
                     if (Main._base_CanPickupMirror.Value) MelonCoroutines.Start(pickupBase());
                 }
@@ -406,7 +407,7 @@ namespace PortableMirror
                     childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                     childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
                 }
-                mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
+                mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 300f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._trans_CanPickupMirror.Value;
                 mirror.GetOrAddComponent<BoxCollider>().enabled = Main._trans_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._trans_CanPickupMirror.Value & Main.pickupFrame.Value);
@@ -675,22 +676,25 @@ namespace PortableMirror
 
         //Calibration mirror -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
         public static IEnumerator pickupBase()
         {
             var held = false;
             var setCol = false;
             var mirror = Main._mirrorBase;
 
+
+            //InputSVR isv = new InputSVR(); isv.Start();
+            //InputSVR.Start();
             GameObject rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
 
             while (Main._base_CanPickupMirror.Value)
             {
-                if (mirror?.Equals(null) ?? true)  yield break; 
-                
+                if (mirror?.Equals(null) ?? true)  yield break;
+
                 if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
                 {
-                    Main.Logger.Msg("interactRightDown");
+
+                    //Main.Logger.Msg("interactRightDown");
                     mirror.GetComponent<BoxCollider>().enabled = true;
                     setCol = true;
                     Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward);
@@ -699,16 +703,23 @@ namespace PortableMirror
                     {
                         if (hit.transform.gameObject == mirror)// || hit.transform.gameObject.transform.IsChildOf(mirror.transform))
                         {
-                            Main.Logger.Msg("Raycast");
+                            //Main.Logger.Msg("Raycast");
                             if (!held)
                             {
                                 mirror.transform.SetParent(rightCon.transform, true);
                                 held = true;
                             }
                             //Joystick Forward/Back
-                            mirror.transform.position += mirror.transform.forward * (CVRInputManager.Instance.movementVector.z * Time.deltaTime) * Mathf.Clamp(Main.grabTestSpeed.Value, 0f, 10f);    
+                            //Main.Logger.Msg($"InputSVR.GetVRLookVector().y {isv.GetVRLookVector().y}");
+
+                           
                         }
-                    }  
+                    }
+                    if (held)
+                    {
+                        //Main.Logger.Msg($"x {InputSVR.GetVRLookVector().x} y {InputSVR.GetVRLookVector().y}");
+                        mirror.transform.position += mirror.transform.forward * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 1f);
+                    }
                 }
                 else
                 {
@@ -720,19 +731,25 @@ namespace PortableMirror
                         held = false;
                     }
                 }
+                
+                //InputSVR isv = new InputSVR(); 
+                //Main.Logger.Msg($"x {isv.GetVRLookVector().x} y {isv.GetVRLookVector().y}");
+                // Main.Logger.Msg($"x {InputSVR.GetVRLookVector().x} y {InputSVR.GetVRLookVector().y}");
+                // Main.Logger.Msg($"CVRInputManager.Instance.movementVector.y {CVRInputManager.Instance.lookVector.y}");
+                // Main.Logger.Msg($"CVRInputManager.Instance.movementVector.x {CVRInputManager.Instance.lookVector.x}");
 
-                //Main.Logger.Msg($"CVRInputManager.Instance.movementVector.z {CVRInputManager.Instance.movementVector.z}");
-                //Main.Logger.Msg($"CVRInputManager.Instance.movementVector.z {CVRInputManager.Instance.movementVector.z}");
+
                 //Main.Logger.Msg($"CVRInputManager.Instance.interactLeftValue {CVRInputManager.Instance.interactLeftValue}");
                 //Main.Logger.Msg($"CVRInputManager.Instance.interactRightValue {CVRInputManager.Instance.interactRightValue}");
 
                 //Main.Logger.Msg($"CVRInputManager.Instance.gripRightDown {CVRInputManager.Instance.gripRightDown}");
                 //Main.Logger.Msg($"CVRInputManager.Instance.gripRightValue {CVRInputManager.Instance.gripRightValue}");
 
-                yield return new WaitForSeconds(.5f);
-                //yield return null;
+                //yield return new WaitForSeconds(.5f);
+                yield return null;
 
             }
+            Main.Logger.Msg($"x-end");
 
 
         }
