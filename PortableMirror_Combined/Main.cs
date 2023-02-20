@@ -21,12 +21,11 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.1.6";
+        public const string versionStr = "2.1.7";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
 
-        public static MelonPreferences_Entry<bool> MirrorKeybindEnabled;
         public static MelonPreferences_Entry<bool> Spacer1;
         public static MelonPreferences_Entry<bool> Spacer2;
         public static MelonPreferences_Entry<bool> fixRenderOrder;
@@ -39,15 +38,18 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> enableGaze;
         //public static MelonPreferences_Entry<float> followGazeSpeed;
         public static MelonPreferences_Entry<float> followGazeTime;
+
+        public static MelonPreferences_Entry<bool> followGazeDeadBand_en;
         public static MelonPreferences_Entry<float> followGazeDeadBand;
         public static MelonPreferences_Entry<float> followGazeDeadBandSettle;
+        public static MelonPreferences_Entry<float> followGazeDeadBandSeconds;
 
         public static MelonPreferences_Entry<bool> customGrab_en;
         public static MelonPreferences_Entry<float> customGrabSpeed;
 
 
 
-        public static MelonPreferences_Entry<bool> ActionMenu;
+        //public static MelonPreferences_Entry<bool> ActionMenu;
 
 
         public static MelonPreferences_Entry<float> _base_MirrorScaleX;
@@ -65,7 +67,7 @@ namespace PortableMirror
         public static MelonPreferences_Entry<float> TransMirrorTrans;
         //public static MelonPreferences_Entry<bool> MirrorsShowInCamera;
         public static MelonPreferences_Entry<float> MirrorDistAdjAmmount;
-        public static MelonPreferences_Entry<bool> amapi_ModsFolder;
+        //public static MelonPreferences_Entry<bool> amapi_ModsFolder;
         public static MelonPreferences_Entry<float> ColliderDepth;
         public static MelonPreferences_Entry<bool> PickupToHand;
 
@@ -138,7 +140,6 @@ namespace PortableMirror
             QMhighlightColor = MelonPreferences.CreateEntry<int>("PortableMirror", "QMhighlightColor", 0, "Enabled color for QM (0=Orange, 1=Yellow, 2=Pink)");
             //ActionMenu = MelonPreferences.CreateEntry<bool>("PortableMirror", "ActionMenu", true, "Enable Controls on Action Menu (Requires Restart)");
 
-            MirrorKeybindEnabled = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorKeybindEnabled", false, "Enabled Mirror Keybind (See ReadMe)");
             Spacer1 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer1", false, "-These are global settings for all portable mirror types-");///
             fixRenderOrder = MelonPreferences.CreateEntry("PortableMirror", "fixRenderOrder", false, "Change render order on mirrors to fix overrendering --Don't use--", "", true);
             MirrorDistAdjAmmount = MelonPreferences.CreateEntry<float>("PortableMirror", "MirrorDistAdjAmmount", .05f, "High Precision Distance Adjustment");
@@ -147,11 +148,13 @@ namespace PortableMirror
             enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
             //followGazeSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeSpeed", .6f, "Follow Gaze Speed");
             followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Time");
-            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand", 5f, "Follow Gaze DeadBand");
-            followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle", 1f, "Follow Gaze DeadBand Settle");
+            followGazeDeadBand_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "followGazeDeadBand_en", true, "Follow Gaze DeadBand Enabled");
+            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand", 1f, "Follow Gaze DeadBand Break Distance");
+            followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle", 0.05f, "Follow Gaze DeadBand Settle Distance");
+            followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", 2f, "Follow Gaze DeadBand Settle Seconds (0 to disable)");
 
             customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", true, "Use custom mirror pickup in VR");
-            customGrabSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", 5f, "grabTestSpeed");
+            customGrabSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", 5f, "Custom pickup push/pull speed");
 
             Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "-These options are on the QM also-");///
             usePixelLights = MelonPreferences.CreateEntry<bool>("PortableMirror", "usePixelLights", false, "Use PixelLights for mirrors");
@@ -235,24 +238,6 @@ namespace PortableMirror
             _oldMirrorDistanceMicro = Main._micro_MirrorDistance.Value;
             _oldMirrorScaleYTrans = Main._trans_MirrorScaleY.Value;
             _oldMirrorDistanceTrans = Main._trans_MirrorDistance.Value;
-
-            if (MirrorKeybindEnabled.Value)
-            { //God help you
-                Logger.Msg($"[Num1] -> Toggle portable mirror" +
-                    $"\n[Num2] -> Toggle 45 mirror" +
-                    $"\n[Num3] -> Toggle ceiling mirror" +
-                    $"\n[Num*] -> Toggle micro mirror" +
-                    $"\n[Num4] -> Portable Mirror Distance -" +
-                    $"\n[Num7] -> Portable Mirror Distance +" +
-                    $"\n[Num8] -> 45 Mirror Distance -" +
-                    $"\n[Num/] -> 45 Mirror Distance +" +
-                    $"\n[Num6] -> Ceiling Mirror Distance -" +
-                    $"\n[Num9] -> Ceiling Mirror Distance +" +
-                    $"\n[NumEnter] -> Toggle Pickup on All" +
-                    $"\n[Num+] -> Mirror Size + on All" +
-                    $"\n[Num-] -> Mirror Size - on All" +
-                    $"\n[Num.] -> Toggle position on view for base and micro mirrors");
-            }
 
             //if (MelonHandler.Mods.Any(m => m.Info.Name == "ActionMenu") && ActionMenu.Value)
             //{
@@ -574,116 +559,6 @@ namespace PortableMirror
         }
 
 
-        public override void OnUpdate()
-        {
-            if (Main.MirrorKeybindEnabled.Value)
-            {//God help you
-                // Toggle portable mirror
-                if ( Utils.GetKeyDown(KeyCode.Keypad1))
-                {
-                    Mirrors.ToggleMirror();
-                }
-                if ( Utils.GetKeyDown(KeyCode.Keypad2))
-                {
-                    Mirrors.ToggleMirror45();
-                }
-                if ( Utils.GetKeyDown(KeyCode.Keypad3))
-                {
-                    Mirrors.ToggleMirrorCeiling();
-                }
-                if ( Utils.GetKeyDown(KeyCode.KeypadMultiply))
-                {
-                    Mirrors.ToggleMirrorMicro();
-                }
-                if ( Utils.GetKeyDown(KeyCode.KeypadEnter))
-                {
-                    var en = !_base_CanPickupMirror.Value;
-                    Main._base_CanPickupMirror.Value = en;
-                    Main._45_CanPickupMirror.Value = en;
-                    Main._ceil_CanPickupMirror.Value = en;
-                    Main._micro_CanPickupMirror.Value = en;
-                    OnPreferencesSaved();
-                }
-                if ( Utils.GetKeyDown(KeyCode.Keypad4))
-                {
-                    Main._base_MirrorDistance.Value -= Main._mirrorDistAdj;
-                    OnPreferencesSaved();
-                }
-                if ( Utils.GetKeyDown(KeyCode.Keypad7))
-                {
-                    Main._base_MirrorDistance.Value += Main._mirrorDistAdj;
-                    OnPreferencesSaved();
-                }
-                if ( Utils.GetKeyDown(KeyCode.Keypad8))
-                {
-                    Main._45_MirrorDistance.Value -= Main._mirrorDistAdj;
-                    OnPreferencesSaved();
-                }
-                if ( Utils.GetKeyDown(KeyCode.KeypadDivide))
-                {
-                    Main._45_MirrorDistance.Value += Main._mirrorDistAdj;
-                    OnPreferencesSaved();
-                }
-                if ( Utils.GetKeyDown(KeyCode.Keypad6))
-                {
-                    Main._ceil_MirrorDistance.Value -= Main._mirrorDistAdj;
-                    OnPreferencesSaved();
-                }
-                if ( Utils.GetKeyDown(KeyCode.Keypad9))
-                {
-                    Main._ceil_MirrorDistance.Value += Main._mirrorDistAdj;
-                    OnPreferencesSaved();
-                }
-
-                //All Bigger/Smaller
-                if ( Utils.GetKeyDown(KeyCode.KeypadPlus))
-                {
-                    Main._base_MirrorScaleX.Value += .25f;
-                    Main._base_MirrorScaleY.Value += .25f;
-                    Main._45_MirrorScaleX.Value += .25f;
-                    Main._45_MirrorScaleY.Value += .25f;
-                    Main._ceil_MirrorScaleX.Value += .25f;
-                    Main._ceil_MirrorScaleZ.Value += .25f;
-                    Main._micro_MirrorScaleX.Value += .01f;
-                    Main._micro_MirrorScaleY.Value += .01f;
-                    OnPreferencesSaved();
-                }
-                if ( Utils.GetKeyDown(KeyCode.KeypadMinus))
-                {
-
-                    if (Main._base_MirrorScaleX.Value > .25 && Main._base_MirrorScaleY.Value > .25)
-                    {
-                        Main._base_MirrorScaleX.Value -= .25f;
-                        Main._base_MirrorScaleY.Value -= .25f;
-                    }
-                    if (Main._45_MirrorScaleX.Value > .25 && Main._45_MirrorScaleY.Value > .25)
-                    {
-                        Main._45_MirrorScaleX.Value -= .25f;
-                        Main._45_MirrorScaleY.Value -= .25f;
-                    }
-                    if (Main._ceil_MirrorScaleX.Value > .25 && Main._ceil_MirrorScaleZ.Value > .25)
-                    {
-                        Main._ceil_MirrorScaleX.Value -= .25f;
-                        Main._ceil_MirrorScaleZ.Value -= .25f;
-                    }
-
-                    if (Main._micro_MirrorScaleX.Value > .02 && Main._micro_MirrorScaleY.Value > .02)
-                    {
-                        Main._micro_MirrorScaleX.Value -= .01f;
-                        Main._micro_MirrorScaleY.Value -= .01f;
-                    }
-                    OnPreferencesSaved();
-                }
-
-                if ( Utils.GetKeyDown(KeyCode.KeypadPeriod))
-                {
-
-                    _base_PositionOnView.Value = !_base_PositionOnView.Value;
-                    _micro_PositionOnView.Value = !_micro_PositionOnView.Value;
-                    OnPreferencesSaved();
-                }
-            }
-        }
         public static float _mirrorDistAdj;
         public static bool _mirrorDistHighPrec = false;
         public static bool _AllPickupable = false;

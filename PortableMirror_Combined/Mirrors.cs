@@ -682,9 +682,6 @@ namespace PortableMirror
             var setCol = false;
             var mirror = Main._mirrorBase;
 
-
-            //InputSVR isv = new InputSVR(); isv.Start();
-            //InputSVR.Start();
             GameObject rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
 
             while (Main._base_CanPickupMirror.Value)
@@ -693,7 +690,6 @@ namespace PortableMirror
 
                 if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
                 {
-
                     //Main.Logger.Msg("interactRightDown");
                     mirror.GetComponent<BoxCollider>().enabled = true;
                     setCol = true;
@@ -709,14 +705,10 @@ namespace PortableMirror
                                 mirror.transform.SetParent(rightCon.transform, true);
                                 held = true;
                             }
-                            //Joystick Forward/Back
-                            //Main.Logger.Msg($"InputSVR.GetVRLookVector().y {isv.GetVRLookVector().y}");
-
-                           
                         }
                     }
                     if (held)
-                    {
+                    {//Joystick Forward/Back
                         //Main.Logger.Msg($"x {InputSVR.GetVRLookVector().x} y {InputSVR.GetVRLookVector().y}");
                         mirror.transform.position += mirror.transform.forward * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 1f);
                     }
@@ -731,27 +723,10 @@ namespace PortableMirror
                         held = false;
                     }
                 }
-                
-                //InputSVR isv = new InputSVR(); 
-                //Main.Logger.Msg($"x {isv.GetVRLookVector().x} y {isv.GetVRLookVector().y}");
-                // Main.Logger.Msg($"x {InputSVR.GetVRLookVector().x} y {InputSVR.GetVRLookVector().y}");
-                // Main.Logger.Msg($"CVRInputManager.Instance.movementVector.y {CVRInputManager.Instance.lookVector.y}");
-                // Main.Logger.Msg($"CVRInputManager.Instance.movementVector.x {CVRInputManager.Instance.lookVector.x}");
-
-
-                //Main.Logger.Msg($"CVRInputManager.Instance.interactLeftValue {CVRInputManager.Instance.interactLeftValue}");
-                //Main.Logger.Msg($"CVRInputManager.Instance.interactRightValue {CVRInputManager.Instance.interactRightValue}");
-
-                //Main.Logger.Msg($"CVRInputManager.Instance.gripRightDown {CVRInputManager.Instance.gripRightDown}");
-                //Main.Logger.Msg($"CVRInputManager.Instance.gripRightValue {CVRInputManager.Instance.gripRightValue}");
 
                 //yield return new WaitForSeconds(.5f);
                 yield return null;
-
             }
-            Main.Logger.Msg($"x-end");
-
-
         }
 
 
@@ -765,6 +740,7 @@ namespace PortableMirror
         public static IEnumerator followGazeBase()
         {
             bool waitToSettle = false;
+            float settleSeconds = 0f;
             //Main.Logger.Msg($"EnterFollowGaze");
             var cam = Camera.main.gameObject;
             var player = Utils.GetPlayer();
@@ -793,16 +769,39 @@ namespace PortableMirror
                     tempPos = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z) +
                           tempRot * Vector3.forward * (1f + Main._base_MirrorDistance.Value); //Set to player height instead of centered on camera, then move in forward direction of camera
                 }
-                var distScale = Vector3.Distance(cam.transform.position, mirror.transform.position);
-                if ( Vector3.Distance(mirror.transform.position, tempPos) > Main.followGazeDeadBand.Value * distScale || waitToSettle)
+                if (Main.followGazeDeadBand_en.Value)
                 {
-                    waitToSettle = true;
+                    var distScale = Vector3.Distance(cam.transform.position, mirror.transform.position);
+                    if (Vector3.Distance(mirror.transform.position, tempPos) > Main.followGazeDeadBand.Value * distScale || waitToSettle)
+                    {
+                        waitToSettle = true;
+                        mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
+                        mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
+                        if (Vector3.Distance(mirror.transform.position, tempPos) < Main.followGazeDeadBandSettle.Value * distScale)
+                        {
+                            if(Main.followGazeDeadBandSeconds.Value != 0)
+                            {
+                                if (settleSeconds == 0)
+                                    settleSeconds = Time.time + Main.followGazeDeadBandSeconds.Value;
+                                else
+                                {
+                                    if (settleSeconds < Time.time)
+                                    {
+                                        settleSeconds = 0;
+                                        waitToSettle = false;
+                                    }
+                                }
+                            } 
+                            else
+                                waitToSettle = false;
+                        }
+                    }
+                }
+                else
+                {
                     mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
                     mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
-                    if (Vector3.Distance(mirror.transform.position, tempPos) < Main.followGazeDeadBandSettle.Value * distScale)
-                        waitToSettle = false;
-                } 
-                
+                }
 
                 yield return null;
             }
