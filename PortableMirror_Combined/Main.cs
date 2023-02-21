@@ -36,21 +36,17 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> QMsmaller;
         public static MelonPreferences_Entry<int> QMhighlightColor;
         public static MelonPreferences_Entry<bool> enableGaze;
-        //public static MelonPreferences_Entry<float> followGazeSpeed;
         public static MelonPreferences_Entry<float> followGazeTime;
 
         public static MelonPreferences_Entry<bool> followGazeDeadBand_en;
         public static MelonPreferences_Entry<float> followGazeDeadBand;
+        public static MelonPreferences_Entry<float> followGazeDeadBandBreakTime;
+
         public static MelonPreferences_Entry<float> followGazeDeadBandSettle;
         public static MelonPreferences_Entry<float> followGazeDeadBandSeconds;
 
         public static MelonPreferences_Entry<bool> customGrab_en;
         public static MelonPreferences_Entry<float> customGrabSpeed;
-
-
-
-        //public static MelonPreferences_Entry<bool> ActionMenu;
-
 
         public static MelonPreferences_Entry<float> _base_MirrorScaleX;
         public static MelonPreferences_Entry<float> _base_MirrorScaleY;
@@ -138,7 +134,6 @@ namespace PortableMirror
             QMposition = MelonPreferences.CreateEntry<int>("PortableMirror", "QMposition", 0, "QM Position (0=Right, 1=Top, 2=Left)");
             QMsmaller = MelonPreferences.CreateEntry<bool>("PortableMirror", "QMsmaller", false, "QM is smaller");
             QMhighlightColor = MelonPreferences.CreateEntry<int>("PortableMirror", "QMhighlightColor", 0, "Enabled color for QM (0=Orange, 1=Yellow, 2=Pink)");
-            //ActionMenu = MelonPreferences.CreateEntry<bool>("PortableMirror", "ActionMenu", true, "Enable Controls on Action Menu (Requires Restart)");
 
             Spacer1 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer1", false, "-These are global settings for all portable mirror types-");///
             fixRenderOrder = MelonPreferences.CreateEntry("PortableMirror", "fixRenderOrder", false, "Change render order on mirrors to fix overrendering --Don't use--", "", true);
@@ -146,12 +141,12 @@ namespace PortableMirror
             ColliderDepth = MelonPreferences.CreateEntry<float>("PortableMirror", "ColliderDepth", 0.01f, "Collider Depth");
             pickupFrame = MelonPreferences.CreateEntry<bool>("PortableMirror", "pickupFrame", false, "Show frame when mirror is pickupable");
             enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
-            //followGazeSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeSpeed", .6f, "Follow Gaze Speed");
-            followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Time");
-            followGazeDeadBand_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "followGazeDeadBand_en", true, "Follow Gaze DeadBand Enabled");
-            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand", 1f, "Follow Gaze DeadBand Break Distance");
-            followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle", 0.05f, "Follow Gaze DeadBand Settle Distance");
-            followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", 2f, "Follow Gaze DeadBand Settle Seconds (0 to disable)");
+            followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Movement Speed");
+            followGazeDeadBand_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "followGazeDeadBand_en", true, "Follow Gaze DeadBand - Enabled");
+            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand", 1f, "Follow Gaze DeadBand - Break Distance");
+            followGazeDeadBandBreakTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandBreakTime", 5f, "Follow Gaze DeadBand - Seconds to wait after break (0 to disable)");
+            followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle", 0.05f, "Follow Gaze DeadBand - Settle Distance");
+            followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", 1f, "Follow Gaze DeadBand - Settle Seconds (0 to disable)");
 
             customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", true, "Use custom mirror pickup in VR");
             customGrabSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", 5f, "Custom pickup push/pull speed");
@@ -328,7 +323,7 @@ namespace PortableMirror
 
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
-                    if (Main._base_CanPickupMirror.Value) MelonCoroutines.Start(Mirrors.pickupBase());
+                    if (Main._base_CanPickupMirror.Value && !Mirrors._baseGrabActive) MelonCoroutines.Start(Mirrors.pickupBase());
                 }
                 else
                 {

@@ -37,6 +37,7 @@ namespace PortableMirror
         public static Dictionary<GameObject, int> calObjects = new Dictionary<GameObject, int>();
 
         public static bool _baseFollowGazeActive, _45FollowGazeActive, _transFollowGazeActive, _microFollowGazeActive;
+        public static bool _baseGrabActive;
 
         public static void loadAssets()
         {//https://github.com/ddakebono/BTKSASelfPortrait/blob/master/BTKSASelfPortrait.cs
@@ -681,6 +682,8 @@ namespace PortableMirror
             var held = false;
             var setCol = false;
             var mirror = Main._mirrorBase;
+            var cam = Camera.main.gameObject;
+            _baseGrabActive = true;
 
             GameObject rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
 
@@ -709,8 +712,14 @@ namespace PortableMirror
                     }
                     if (held)
                     {//Joystick Forward/Back
-                        //Main.Logger.Msg($"x {InputSVR.GetVRLookVector().x} y {InputSVR.GetVRLookVector().y}");
-                        mirror.transform.position += mirror.transform.forward * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 1f);
+                     //Main.Logger.Msg($"x {InputSVR.GetVRLookVector().x} y {InputSVR.GetVRLookVector().y}");
+                        Vector3 direction = (mirror.transform.position - cam.transform.position).normalized;
+                        var tempPos = mirror.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
+                        var distanceAfter = Vector3.Distance(tempPos, cam.transform.position);
+                        var distanceBefore = Vector3.Distance(mirror.transform.position, cam.transform.position);
+                        var inputY = InputSVR.GetVRLookVector().y;
+                        if (!(distanceAfter >= distanceBefore && inputY < 0F))
+                            mirror.transform.position += direction * Mathf.Clamp(distanceBefore/2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
                     }
                 }
                 else
@@ -727,20 +736,14 @@ namespace PortableMirror
                 //yield return new WaitForSeconds(.5f);
                 yield return null;
             }
+            _baseGrabActive = false;
         }
-
-
-
-
-
-
-
-
 
         public static IEnumerator followGazeBase()
         {
             bool waitToSettle = false;
             float settleSeconds = 0f;
+            float breakSeconds = 0f;
             //Main.Logger.Msg($"EnterFollowGaze");
             var cam = Camera.main.gameObject;
             var player = Utils.GetPlayer();
@@ -774,26 +777,44 @@ namespace PortableMirror
                     var distScale = Vector3.Distance(cam.transform.position, mirror.transform.position);
                     if (Vector3.Distance(mirror.transform.position, tempPos) > Main.followGazeDeadBand.Value * distScale || waitToSettle)
                     {
-                        waitToSettle = true;
-                        mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
-                        mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
-                        if (Vector3.Distance(mirror.transform.position, tempPos) < Main.followGazeDeadBandSettle.Value * distScale)
+                        if (Main.followGazeDeadBandBreakTime.Value != 0)
                         {
-                            if(Main.followGazeDeadBandSeconds.Value != 0)
+                            if (breakSeconds == 0)
+                                breakSeconds = Time.time + Main.followGazeDeadBandBreakTime.Value;
+                            else
                             {
-                                if (settleSeconds == 0)
-                                    settleSeconds = Time.time + Main.followGazeDeadBandSeconds.Value;
-                                else
+                                if (breakSeconds < Time.time)
                                 {
-                                    if (settleSeconds < Time.time)
+                                    breakSeconds = 0;
+                                    waitToSettle = true;
+                                }
+                            }
+                        }
+                        else
+                            waitToSettle = true;
+
+                        if (waitToSettle)
+                        {
+                            mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
+                            mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
+                            if (Vector3.Distance(mirror.transform.position, tempPos) < Main.followGazeDeadBandSettle.Value * distScale)
+                            {
+                                if (Main.followGazeDeadBandSeconds.Value != 0)
+                                {
+                                    if (settleSeconds == 0)
+                                        settleSeconds = Time.time + Main.followGazeDeadBandSeconds.Value;
+                                    else
                                     {
-                                        settleSeconds = 0;
-                                        waitToSettle = false;
+                                        if (settleSeconds < Time.time)
+                                        {
+                                            settleSeconds = 0;
+                                            waitToSettle = false;
+                                        }
                                     }
                                 }
-                            } 
-                            else
-                                waitToSettle = false;
+                                else
+                                    waitToSettle = false;
+                            }
                         }
                     }
                 }
