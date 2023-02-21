@@ -126,7 +126,23 @@ namespace PortableMirror
                 mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = 16640; //Layers 8 (Playerlocal) & 14 (layer for shader)
         }
 
-        
+
+        public static void FixFrame(GameObject mirror, float ScaleX, float ScaleY)
+        {
+            var FrameCon = mirror.transform.Find("Frame");
+            //Top
+            FrameCon.transform.Find("Plane").localPosition = new Vector3(0f, (.5f + (0.01f / ScaleY)), 0.01f); 
+            FrameCon.transform.Find("Plane").localScale = new Vector3((0.1f + (0.0045f / ScaleX)), 1f, (0.0025f / ScaleY));
+            //Bottom
+            FrameCon.transform.Find("Plane (1)").localPosition = new Vector3(0f, (-.5f - (0.01f / ScaleY)), 0.01f);
+            FrameCon.transform.Find("Plane (1)").localScale = new Vector3((0.1f + (0.0045f / ScaleX)), 1f, (0.0025f / ScaleY));
+            //Left
+            FrameCon.transform.Find("Plane (2)").localPosition = new Vector3((-.5f - (0.01f / ScaleX)), 0f, 0.01f);
+            FrameCon.transform.Find("Plane (2)").localScale = new Vector3((0.0025f / ScaleX), 1f, (0.1f + (0.0045f / ScaleY)));
+            //Right
+            FrameCon.transform.Find("Plane (3)").localPosition = new Vector3((.5f + (0.01f / ScaleX)), 0f, 0.01f);
+            FrameCon.transform.Find("Plane (3)").localScale = new Vector3((0.0025f / ScaleX), 1f, (0.1f + (0.0045f / ScaleY)));
+        }
 
         public static void ToggleMirror()
         {
@@ -176,6 +192,7 @@ namespace PortableMirror
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = false; // Main._base_CanPickupMirror.Value;
                 mirror.GetOrAddComponent<BoxCollider>().enabled = false; // Main._base_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._base_CanPickupMirror.Value & Main.pickupFrame.Value);
+                FixFrame(mirror, Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
                 mirror.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
@@ -240,6 +257,7 @@ namespace PortableMirror
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
                 mirror.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._45_CanPickupMirror.Value & Main.pickupFrame.Value);
+                FixFrame(mirror, Main._45_MirrorScaleX.Value, Main._45_MirrorScaleY.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
                 mirror.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
@@ -293,6 +311,7 @@ namespace PortableMirror
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
                 mirror.GetOrAddComponent<BoxCollider>().enabled = Main._ceil_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._ceil_CanPickupMirror.Value & Main.pickupFrame.Value);
+                FixFrame(mirror, Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
                 mirror.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
@@ -412,6 +431,7 @@ namespace PortableMirror
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._trans_CanPickupMirror.Value;
                 mirror.GetOrAddComponent<BoxCollider>().enabled = Main._trans_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._trans_CanPickupMirror.Value & Main.pickupFrame.Value);
+                FixFrame(mirror, Main._trans_MirrorScaleX.Value, Main._trans_MirrorScaleY.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
                 mirror.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
                 mirror.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, Main.ColliderDepth.Value);
@@ -686,23 +706,19 @@ namespace PortableMirror
             _baseGrabActive = true;
 
             GameObject rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
-
             while (Main._base_CanPickupMirror.Value)
             {
                 if (mirror?.Equals(null) ?? true)  yield break;
-
                 if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
                 {
-                    //Main.Logger.Msg("interactRightDown");
                     mirror.GetComponent<BoxCollider>().enabled = true;
                     setCol = true;
                     Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward);
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit, 1000f, notwater))
                     {
-                        if (hit.transform.gameObject == mirror)// || hit.transform.gameObject.transform.IsChildOf(mirror.transform))
+                        if (hit.transform.gameObject == mirror)
                         {
-                            //Main.Logger.Msg("Raycast");
                             if (!held)
                             {
                                 mirror.transform.SetParent(rightCon.transform, true);
@@ -712,7 +728,6 @@ namespace PortableMirror
                     }
                     if (held)
                     {//Joystick Forward/Back
-                     //Main.Logger.Msg($"x {InputSVR.GetVRLookVector().x} y {InputSVR.GetVRLookVector().y}");
                         Vector3 direction = (mirror.transform.position - cam.transform.position).normalized;
                         var tempPos = mirror.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
                         var distanceAfter = Vector3.Distance(tempPos, cam.transform.position);
@@ -732,7 +747,6 @@ namespace PortableMirror
                         held = false;
                     }
                 }
-
                 //yield return new WaitForSeconds(.5f);
                 yield return null;
             }
@@ -758,9 +772,7 @@ namespace PortableMirror
                 var pos = player.transform.position;
                 pos.y += .5f;
                 pos.y += (Main._base_MirrorScaleY.Value - 1) / 2;
-
                 Quaternion tempRot; Vector3 tempPos;
-
                 if (Main._base_PositionOnView.Value)
                 {
                     tempRot = cam.transform.rotation;

@@ -318,6 +318,7 @@ namespace PortableMirror
                 if (Main._base_AnchorToTracking.Value) _mirrorBase.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
                 _mirrorBase.transform.Find("Frame").gameObject.SetActive(_base_CanPickupMirror.Value & pickupFrame.Value);
+                Mirrors.FixFrame(_mirrorBase, Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value);
                 if (Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._base_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
 
@@ -368,6 +369,7 @@ namespace PortableMirror
                 if (Main._45_AnchorToTracking.Value) _mirror45.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
                 _mirror45.transform.Find("Frame").gameObject.SetActive(_45_CanPickupMirror.Value & pickupFrame.Value);
+                Mirrors.FixFrame(_mirror45, Main._45_MirrorScaleX.Value, Main._45_MirrorScaleY.Value);
                 if (Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._45_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
 
@@ -402,6 +404,7 @@ namespace PortableMirror
                 if (Main._ceil_AnchorToTracking.Value)  _mirrorCeiling.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
                 _mirrorCeiling.transform.Find("Frame").gameObject.SetActive(_ceil_CanPickupMirror.Value & pickupFrame.Value);
+                Mirrors.FixFrame(_mirrorCeiling, Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value);
                 if (Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._ceil_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
 
@@ -479,6 +482,7 @@ namespace PortableMirror
                 if (Main._trans_AnchorToTracking.Value) _mirrorTrans.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                 if (fixRenderOrder.Value || usePixelLights.Value) MelonCoroutines.Start(Mirrors.SetOrder(childMirror.gameObject));
                 _mirrorTrans.transform.Find("Frame").gameObject.SetActive(_trans_CanPickupMirror.Value & pickupFrame.Value);
+                Mirrors.FixFrame(_mirrorTrans, Main._trans_MirrorScaleX.Value, Main._trans_MirrorScaleY.Value);
                 if (Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._trans_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
 
