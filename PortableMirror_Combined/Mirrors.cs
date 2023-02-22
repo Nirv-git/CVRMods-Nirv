@@ -202,18 +202,20 @@ namespace PortableMirror
                 if (Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror, false));
                 if (Main._base_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(FixMirrorLayer(childMirror, true));
 
-                Main._mirrorBase = mirror;
+
                 if (Main._base_followGaze.Value) MelonCoroutines.Start(followGazeBase());
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
+
                     if (Main._base_CanPickupMirror.Value) MelonCoroutines.Start(pickupBase());
                 }
                 else
                 {
+
                     mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
                     mirror.GetOrAddComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
                 }
-
+                Main._mirrorBase = mirror;
             }
         }
 
@@ -267,8 +269,9 @@ namespace PortableMirror
                 if (Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror, false));
                 if (Main._45_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(FixMirrorLayer(childMirror, true));
 
-                Main._mirror45 = mirror;
                 if (Main._45_followGaze.Value) MelonCoroutines.Start(followGaze45());
+                Main._mirror45 = mirror;
+
             }
         }
 
@@ -441,8 +444,9 @@ namespace PortableMirror
                 if (Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror, false));
                 if (Main._trans_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(FixMirrorLayer(childMirror, true));
 
-                Main._mirrorTrans = mirror;
                 if (Main._trans_followGaze.Value) MelonCoroutines.Start(followGazeTrans());
+                Main._mirrorTrans = mirror;
+
             }
         }
 

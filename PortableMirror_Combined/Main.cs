@@ -135,7 +135,7 @@ namespace PortableMirror
             QMsmaller = MelonPreferences.CreateEntry<bool>("PortableMirror", "QMsmaller", false, "QM is smaller");
             QMhighlightColor = MelonPreferences.CreateEntry<int>("PortableMirror", "QMhighlightColor", 0, "Enabled color for QM (0=Orange, 1=Yellow, 2=Pink)");
 
-            Spacer1 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer1", false, "-These are global settings for all portable mirror types-");///
+            Spacer1 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer1", false, "--These are global settings for all portable mirror types--");///
             fixRenderOrder = MelonPreferences.CreateEntry("PortableMirror", "fixRenderOrder", false, "Change render order on mirrors to fix overrendering --Don't use--", "", true);
             MirrorDistAdjAmmount = MelonPreferences.CreateEntry<float>("PortableMirror", "MirrorDistAdjAmmount", .05f, "High Precision Distance Adjustment");
             ColliderDepth = MelonPreferences.CreateEntry<float>("PortableMirror", "ColliderDepth", 0.01f, "Collider Depth");
@@ -151,7 +151,7 @@ namespace PortableMirror
             customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", true, "Use custom mirror pickup in VR");
             customGrabSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", 5f, "Custom pickup push/pull speed");
 
-            Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "-These options are on the QM also-");///
+            Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "--These options are on the QM also--");///
             usePixelLights = MelonPreferences.CreateEntry<bool>("PortableMirror", "usePixelLights", false, "Use PixelLights for mirrors");
             PickupToHand = MelonPreferences.CreateEntry<bool>("PortableMirror", "PickupToHand", false, "Pickups snap to hand - Global for all mirrors");
             TransMirrorTrans = MelonPreferences.CreateEntry<float>("PortableMirror", "TransMirrorTrans", .4f, "Transparent Mirror transparency - Higher is more transparent - Global for all mirrors");
@@ -234,11 +234,6 @@ namespace PortableMirror
             _oldMirrorScaleYTrans = Main._trans_MirrorScaleY.Value;
             _oldMirrorDistanceTrans = Main._trans_MirrorDistance.Value;
 
-            //if (MelonHandler.Mods.Any(m => m.Info.Name == "ActionMenu") && ActionMenu.Value)
-            //{
-            //    CustomActionMenu.InitUi();
-            //}
-            //else Logger.Msg("ActionMenu is missing, or setting is toggled off in Mod Settings - Not adding controls to ActionMenu");
             MelonCoroutines.Start(WaitForLocalPlayer());
         }
         public override void OnPreferencesSaved()
