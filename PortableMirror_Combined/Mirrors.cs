@@ -29,7 +29,7 @@ namespace PortableMirror
         //int fullMirrorMask = -1 & ~UiLayer & ~PlayerLocal & ~reserved3; //Double check this
 
         public static AssetBundle assetBundle;
-        public static GameObject mirrorPrefab, mirrorSettingsPrefab;
+        public static GameObject mirrorPrefab, mirrorSettingsPrefab, pickupLine;
 
         public static object calDelayRoutine, waitForMeasureRoutine, calDelayRoutineOff;
         public static bool _calInit = false;
@@ -201,7 +201,7 @@ namespace PortableMirror
                 if (Main.fixRenderOrder.Value || Main.usePixelLights.Value) MelonCoroutines.Start(SetOrder(mirror));
                 if (Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror, false));
                 if (Main._base_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(FixMirrorLayer(childMirror, true));
-
+                Main._mirrorBase = mirror;
 
                 if (Main._base_followGaze.Value) MelonCoroutines.Start(followGazeBase());
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
@@ -215,7 +215,6 @@ namespace PortableMirror
                     mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._base_CanPickupMirror.Value;
                     mirror.GetOrAddComponent<BoxCollider>().enabled = Main._base_CanPickupMirror.Value;
                 }
-                Main._mirrorBase = mirror;
             }
         }
 
@@ -701,55 +700,84 @@ namespace PortableMirror
 
         //Calibration mirror -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+        private static void SetupLineRender()
+        {
+            if (pickupLine.Equals(null)) //usePickupLine
+            {
+                GameObject rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
+                GameObject myLine = new GameObject();
+                myLine.name = "PortMirrorPickupLine";
+                myLine.transform.SetParent(rightCon.transform);
+                myLine.transform.localPosition = Vector3.zero;
+                myLine.transform.localRotation = Quaternion.identity;
+                myLine.AddComponent<LineRenderer>();
+                LineRenderer lr = myLine.GetComponent<LineRenderer>();
+                lr.material = new Material(Shader.Find("Particles/Standard Unlit"));
+                lr.useWorldSpace = false;
+                lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                lr.receiveShadows = false;
+                lr.startColor = new Color(1f, 0f, 1f);
+                lr.endColor = new Color(.58f, .219f, 1f);
+                lr.startWidth = .005f;
+                lr.endWidth = 0.001f;
+                lr.SetPosition(0, Vector3.zero);
+                lr.SetPosition(1, new Vector3(0f, 1f, 0f));
+
+                pickupLine = myLine;
+            }
+        }
+
         public static IEnumerator pickupBase()
         {
+            _baseGrabActive = true;
+
             var held = false;
             var setCol = false;
             var mirror = Main._mirrorBase;
+            var rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
+            SetupLineRender();
             var cam = Camera.main.gameObject;
-            _baseGrabActive = true;
+            //Is this always the right cam?
+            Main.Logger.Msg($"Camera.main.gameObject {Camera.main.gameObject.name}");
 
-            GameObject rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
             while (Main._base_CanPickupMirror.Value)
             {
                 if (mirror?.Equals(null) ?? true)  yield break;
                 if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
                 {
-                    mirror.GetComponent<BoxCollider>().enabled = true;
-                    setCol = true;
-                    Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward);
-                    RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, 1000f, notwater))
+                    pickupLine.SetActive(Main.customGrabLine.Value);
+                    setCol = true; mirror.GetComponent<BoxCollider>().enabled = true;
+                    Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward); RaycastHit hit;
+                    if (Physics.Raycast(ray, out hit, 1000f, notwater) && !held)
                     {
                         if (hit.transform.gameObject == mirror)
-                        {
                             if (!held)
                             {
                                 mirror.transform.SetParent(rightCon.transform, true);
                                 held = true;
                             }
-                        }
                     }
                     if (held)
                     {//Joystick Forward/Back
                         Vector3 direction = (mirror.transform.position - cam.transform.position).normalized;
                         var tempPos = mirror.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
-                        var distanceAfter = Vector3.Distance(tempPos, cam.transform.position);
-                        var distanceBefore = Vector3.Distance(mirror.transform.position, cam.transform.position);
+                        var distanceBefore = Vector3.Distance(mirror.transform.position, cam.transform.position); var distanceAfter = Vector3.Distance(tempPos, cam.transform.position);
                         var inputY = InputSVR.GetVRLookVector().y;
                         if (!(distanceAfter >= distanceBefore && inputY < 0F))
-                            mirror.transform.position += direction * Mathf.Clamp(distanceBefore/2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
+                            mirror.transform.position += direction * Mathf.Clamp(distanceBefore / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
                     }
                 }
                 else
                 {
-                    if (setCol) mirror.GetComponent<BoxCollider>().enabled = false;
+                    pickupLine.SetActive(false);
+                    if (setCol) { setCol = false; mirror.GetComponent<BoxCollider>().enabled = false; }
                     if (held)
                     {
                         if (!Main._base_AnchorToTracking.Value) mirror.transform.SetParent(null);
                         else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
                         held = false;
-                    }
+                    } 
                 }
                 //yield return new WaitForSeconds(.5f);
                 yield return null;

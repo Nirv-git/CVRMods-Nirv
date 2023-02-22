@@ -46,6 +46,8 @@ namespace PortableMirror
         public static MelonPreferences_Entry<float> followGazeDeadBandSeconds;
 
         public static MelonPreferences_Entry<bool> customGrab_en;
+        public static MelonPreferences_Entry<bool> customGrabLine;
+
         public static MelonPreferences_Entry<float> customGrabSpeed;
 
         public static MelonPreferences_Entry<float> _base_MirrorScaleX;
@@ -150,6 +152,7 @@ namespace PortableMirror
 
             customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", true, "Use custom mirror pickup in VR");
             customGrabSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", 5f, "Custom pickup push/pull speed");
+            customGrabLine = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrabLine", true, "Custom pickup line");
 
             Spacer2 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer2", false, "--These options are on the QM also--");///
             usePixelLights = MelonPreferences.CreateEntry<bool>("PortableMirror", "usePixelLights", false, "Use PixelLights for mirrors");
