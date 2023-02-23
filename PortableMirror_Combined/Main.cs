@@ -111,17 +111,6 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> _trans_PositionOnView;
         public static MelonPreferences_Entry<bool> _trans_followGaze;
 
-        public static MelonPreferences_Entry<bool> _cal_enable;
-        public static MelonPreferences_Entry<float> _cal_MirrorScale;
-        public static MelonPreferences_Entry<float> _cal_MirrorDistanceScale;
-        public static MelonPreferences_Entry<string> _cal_MirrorState;
-        public static MelonPreferences_Entry<bool> _cal_AlwaysInFront;
-        public static MelonPreferences_Entry<bool> _cal_DelayMirror;
-        public static MelonPreferences_Entry<float> _cal_DelayMirrorTime;
-        public static MelonPreferences_Entry<bool> _cal_DelayOff;
-        public static MelonPreferences_Entry<float> _cal_DelayOffTime;
-        public static MelonPreferences_Entry<bool> _cal_hideOthers;
-
         public static MelonPreferences_Entry<bool> distanceDisable;
         public static MelonPreferences_Entry<float> distanceValue;
         public static MelonPreferences_Entry<float> distanceUpdateInit;
@@ -227,19 +216,7 @@ namespace PortableMirror
             _trans_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-CanPickupMirror", false, "^Can Pickup Mirror");
             _trans_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-PositionOnView", false, "^Position mirror based on view angle");
             _trans_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-AnchorToTracking", false, "^Mirror Follows You");
-            _trans_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-followGaze", false, "^Follow Gaze Enabled");
-
-            MelonPreferences.CreateCategory("PortableMirrorCal", "PortableMirror Calibration");
-            _cal_enable = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "MirrorEnable2", false, "Enable Mirror when Calibrating");
-            _cal_MirrorScale = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "MirrorScale", 1f, "MirrorScale");
-            _cal_MirrorDistanceScale = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "MirrorDistanceScale", 1f, "MirrorDistanceScale");
-            _cal_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorCal", "MirrorState", "MirrorCutoutSolo", "Mirror Type");
-            //_cal_AlwaysInFront = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "AlwaysInFront", false, "Mirror is always infront of where you are looking");
-            _cal_DelayMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "DelayMirror2", true, "Delay Mirror Creation for x seconds");
-            _cal_DelayMirrorTime = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "DelayMirrorTime", 1f, "Delay Mirror Time");
-            _cal_hideOthers = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "hideOthers", true, "Hide other mirrors while calibrating");
-            _cal_DelayOff = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "DelayOff", false, "Delay Mirror Deletion for x seconds");
-            _cal_DelayOffTime = MelonPreferences.CreateEntry<float>("PortableMirrorCal", "DelayOffTime", 5f, "Delay Mirror Deletion Time");
+            _trans_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-followGaze", false, "^Follow Gaze Enabled");  
 
             _oldMirrorScaleYBase = Main._base_MirrorScaleY.Value;
             _oldMirrorDistance = Main._base_MirrorDistance.Value;
@@ -437,8 +414,8 @@ namespace PortableMirror
 
 
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = Main._micro_GrabRange.Value;
-                _mirrorMicro.GetOrAddComponent<BoxCollider>().enabled = Main._micro_CanPickupMirror.Value;
-                _mirrorMicro.GetOrAddComponent<CVRPickupObject>().enabled = Main._micro_CanPickupMirror.Value;
+                _mirrorMicro.GetOrAddComponent<BoxCollider>().enabled = false;
+                _mirrorMicro.GetOrAddComponent<CVRPickupObject>().enabled = false;
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
                 if (Main._micro_MirrorState.Value == "MirrorCutout" || Main._micro_MirrorState.Value == "MirrorTransparent" || Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
@@ -458,6 +435,16 @@ namespace PortableMirror
                 if (Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._micro_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
 
+
+                if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
+                {
+                    if (Main._micro_CanPickupMirror.Value && !Mirrors._microGrabActive) MelonCoroutines.Start(Mirrors.pickupMicro());
+                }
+                else
+                {
+                    _mirrorBase.GetOrAddComponent<CVRPickupObject>().enabled = Main._micro_CanPickupMirror.Value;
+                    _mirrorBase.GetOrAddComponent<BoxCollider>().enabled = Main._micro_CanPickupMirror.Value;
+                }
             }
             _oldMirrorScaleYMicro = Main._micro_MirrorScaleY.Value;
             _oldMirrorDistanceMicro = Main._micro_MirrorDistance.Value;
@@ -515,17 +502,6 @@ namespace PortableMirror
                     {
                         OnPreferencesSaved();
                         HarmonyInstance.Patch(typeof(CVR_MenuManager).GetMethod(nameof(CVR_MenuManager.ToggleQuickMenu)), null, new HarmonyMethod(typeof(Main).GetMethod(nameof(QMtoggle), BindingFlags.NonPublic | BindingFlags.Static)));
-                        try
-                        {//<3 SDraw https://github.com/SDraw/ml_mods_cvr/blob/0ebafccb33d2d2cf8ac2c0c3133a5fd2ace00378/ml_fpt/Main.cs#L37
-                            //Begin
-                            HarmonyInstance.Patch(typeof(BodySystem).GetMethod(nameof(BodySystem.StartCalibration)), null,
-                                new HarmonyLib.HarmonyMethod(typeof(Main).GetMethod(nameof(OnStartCalibration_Postfix), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)));
-                            //End
-                            HarmonyInstance.Patch(typeof(BodySystem).GetMethod(nameof(BodySystem.Calibrate)), null,
-                                new HarmonyLib.HarmonyMethod(typeof(Main).GetMethod(nameof(OnCalibrateAvatar_Postfix), System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)));
-                            Mirrors._calInit = true;
-                        }
-                        catch (System.Exception ex) { Main.Logger.Error($"Error for calibration patches\n" + ex.ToString()); }
 
                         firstload = false;
                         //Logger.Msg("default" + buildIndex);
@@ -554,8 +530,6 @@ namespace PortableMirror
             CVRInputManager.Instance.gameObject.AddComponent<InputSVR>();
         }
 
-        static void OnStartCalibration_Postfix() => Mirrors.OnCalibrationBegin();
-        static void OnCalibrateAvatar_Postfix() => Mirrors.OnCalibrationEnd();
 
         private static void QMtoggle(bool __0)
         {
