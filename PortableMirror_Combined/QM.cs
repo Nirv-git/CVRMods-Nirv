@@ -265,13 +265,6 @@ namespace PortableMirror
                     ParseSettings();
                 }
                 ));
-                settingsCanvas.transform.Find("45-Grab-Cust").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
-                {
-                    Main._45_CanPickupMirror.Value = !Main._45_CanPickupMirror.Value;
-                    Main main = new Main(); main.OnPreferencesSaved();
-                    ParseSettings();
-                }
-                ));
                 settingsCanvas.transform.Find("45-ToTracking").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     if (!Main._45_AnchorToTracking.Value)
@@ -572,6 +565,13 @@ namespace PortableMirror
                 }
                 ));
                 settingsCanvas.transform.Find("Trans-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main._trans_CanPickupMirror.Value = !Main._trans_CanPickupMirror.Value;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
+                }
+                ));
+                settingsCanvas.transform.Find("Trans-Grab-Cust").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     Main._trans_CanPickupMirror.Value = !Main._trans_CanPickupMirror.Value;
                     Main main = new Main(); main.OnPreferencesSaved();
