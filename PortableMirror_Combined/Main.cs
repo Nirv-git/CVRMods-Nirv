@@ -146,7 +146,7 @@ namespace PortableMirror
             followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Movement Speed");
             followGazeDeadBand_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "followGazeDeadBand_en", true, "Follow Gaze DeadBand - Enabled");
             followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand", 1f, "Follow Gaze DeadBand - Break Distance");
-            followGazeDeadBandBreakTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandBreakTime", 5f, "Follow Gaze DeadBand - Seconds to wait after break (0 to disable)");
+            followGazeDeadBandBreakTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandBreakTime", 4f, "Follow Gaze DeadBand - Seconds to wait after break (0 to disable)");
             followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle", 0.05f, "Follow Gaze DeadBand - Settle Distance");
             followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", 1f, "Follow Gaze DeadBand - Settle Seconds (0 to disable)");
 
