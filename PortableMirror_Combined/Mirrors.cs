@@ -852,19 +852,23 @@ namespace PortableMirror
                 }
                 if (Main.followGazeDeadBand_en.Value)
                 {
-                    var distScale = Vector3.Distance(cam.transform.position, mirror.transform.position);
-                    if (Vector3.Distance(mirror.transform.position, tempPos) > Main.followGazeDeadBand.Value * distScale || waitToSettle)
+                    var angleDif = Quaternion.Angle(mirror.transform.rotation, tempRot);
+                    Main.Logger.Msg($"angleDif {angleDif}, dist {Vector3.Distance(mirror.transform.position, tempPos)}");
+                    if (angleDif > Main.followGazeDeadBand.Value || waitToSettle)
                     {
-                        if (Main.followGazeDeadBandBreakTime.Value != 0)
+                        if (Main.followGazeDeadBandBreakTime.Value != 0 && !waitToSettle)
                         {
                             if (breakSeconds == 0)
                                 breakSeconds = Time.time + Main.followGazeDeadBandBreakTime.Value;
                             else
                             {
+                                Main.Logger.Msg($"breakSeconds {breakSeconds}, Time.time {Time.time}");
                                 if (breakSeconds < Time.time)
                                 {
+                                    Main.Logger.Msg($"broke");
                                     breakSeconds = 0;
                                     waitToSettle = true;
+
                                 }
                             }
                         }
@@ -875,7 +879,7 @@ namespace PortableMirror
                         {
                             mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
                             mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
-                            if (Vector3.Distance(mirror.transform.position, tempPos) < Main.followGazeDeadBandSettle.Value * distScale)
+                            if (angleDif < Main.followGazeDeadBandSettle.Value)
                             {
                                 if (Main.followGazeDeadBandSeconds.Value != 0)
                                 {
@@ -893,14 +897,19 @@ namespace PortableMirror
                                 else
                                     waitToSettle = false;
                             }
+                            else
+                                settleSeconds = 0f;
                         }
                     }
+                    else
+                        breakSeconds = 0;
                 }
                 else
                 {
                     mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
                     mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
                 }
+                //yield return new WaitForSeconds(.5f);
 
                 yield return null;
             }

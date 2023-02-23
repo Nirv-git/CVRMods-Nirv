@@ -145,9 +145,9 @@ namespace PortableMirror
             enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
             followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Movement Speed");
             followGazeDeadBand_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "followGazeDeadBand_en", true, "Follow Gaze DeadBand - Enabled");
-            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand", 1f, "Follow Gaze DeadBand - Break Distance");
+            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand2", 60f, "Follow Gaze DeadBand - Break Angle");
             followGazeDeadBandBreakTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandBreakTime", 4f, "Follow Gaze DeadBand - Seconds to wait after break (0 to disable)");
-            followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle", 0.05f, "Follow Gaze DeadBand - Settle Distance");
+            followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle2", 1f, "Follow Gaze DeadBand - Settle Angle");
             followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", 1f, "Follow Gaze DeadBand - Settle Seconds (0 to disable)");
 
             customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", true, "Use custom mirror pickup in VR");
