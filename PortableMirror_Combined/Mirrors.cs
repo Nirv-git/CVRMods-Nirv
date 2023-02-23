@@ -817,8 +817,6 @@ namespace PortableMirror
                 }
             }
         }
-
-
         public static IEnumerator followGazeBase()
         {
             bool waitToSettle = false;
@@ -853,64 +851,50 @@ namespace PortableMirror
                 if (Main.followGazeDeadBand_en.Value)
                 {
                     var angleDif = Quaternion.Angle(mirror.transform.rotation, tempRot);
-                    Main.Logger.Msg($"angleDif {angleDif}, dist {Vector3.Distance(mirror.transform.position, tempPos)}");
-                    if (angleDif > Main.followGazeDeadBand.Value || waitToSettle)
-                    {
-                        if (Main.followGazeDeadBandBreakTime.Value != 0 && !waitToSettle)
+                    if (angleDif > Main.followGazeDeadBand.Value && !waitToSettle)
+                    { //Is the player looking far enough away from mirror? If so check how long, or just instantly try to resettle the mirror
+                        if (Main.followGazeDeadBandBreakTime.Value > 0)
                         {
                             if (breakSeconds == 0)
                                 breakSeconds = Time.time + Main.followGazeDeadBandBreakTime.Value;
                             else
                             {
-                                Main.Logger.Msg($"breakSeconds {breakSeconds}, Time.time {Time.time}");
-                                if (breakSeconds < Time.time)
-                                {
-                                    Main.Logger.Msg($"broke");
-                                    breakSeconds = 0;
-                                    waitToSettle = true;
-
-                                }
+                                if (breakSeconds < Time.time) { breakSeconds = 0; waitToSettle = true; }
                             }
                         }
                         else
                             waitToSettle = true;
-
-                        if (waitToSettle)
+                    }
+                    else //If no longer looking away, reset timer
+                        breakSeconds = 0;
+                    if (waitToSettle)
+                    {
+                        mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
+                        mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
+                        if (angleDif < Main.followGazeDeadBandSettle.Value)
                         {
-                            mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
-                            mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
-                            if (angleDif < Main.followGazeDeadBandSettle.Value)
+                            if (Main.followGazeDeadBandSeconds.Value > 0)
                             {
-                                if (Main.followGazeDeadBandSeconds.Value != 0)
-                                {
-                                    if (settleSeconds == 0)
-                                        settleSeconds = Time.time + Main.followGazeDeadBandSeconds.Value;
-                                    else
-                                    {
-                                        if (settleSeconds < Time.time)
-                                        {
-                                            settleSeconds = 0;
-                                            waitToSettle = false;
-                                        }
-                                    }
-                                }
+                                if (settleSeconds == 0)
+                                    settleSeconds = Time.time + Main.followGazeDeadBandSeconds.Value;
                                 else
-                                    waitToSettle = false;
+                                {
+                                    if (settleSeconds < Time.time) { settleSeconds = 0; waitToSettle = false; }
+                                }
                             }
                             else
-                                settleSeconds = 0f;
+                                waitToSettle = false;
                         }
+                        else
+                            settleSeconds = 0f;
                     }
-                    else
-                        breakSeconds = 0;
+                    
                 }
                 else
                 {
                     mirror.transform.position = Vector3.SmoothDamp(mirror.transform.position, tempPos, ref velocity, Main.followGazeTime.Value);
                     mirror.transform.rotation = Utils.SmoothDampQuaternion(mirror.transform.rotation, tempRot, ref velocityRot, Main.followGazeTime.Value);
                 }
-                //yield return new WaitForSeconds(.5f);
-
                 yield return null;
             }
             _baseFollowGazeActive = false;

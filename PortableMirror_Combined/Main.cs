@@ -26,8 +26,10 @@ namespace PortableMirror
 
         public static bool firstload = true;
 
-        public static MelonPreferences_Entry<bool> Spacer1;
-        public static MelonPreferences_Entry<bool> Spacer2;
+        public static MelonPreferences_Entry<bool> Spacer1, Spacer2, Spacer3, Spacer4;
+        public static MelonPreferences_Entry<bool> SpacerMisc, SpacerMisc2, SpacerMisc3;
+        public static MelonPreferences_Entry<bool> SpacerMiscBase, SpacerMisc45, SpacerMiscCeil, SpacerMiscMicro, SpacerMiscTrans;
+
         public static MelonPreferences_Entry<bool> fixRenderOrder;
         public static MelonPreferences_Entry<bool> usePixelLights;
         public static MelonPreferences_Entry<bool> QMstartMax;
@@ -102,6 +104,7 @@ namespace PortableMirror
         public static MelonPreferences_Entry<float> _trans_MirrorScaleY;
         public static MelonPreferences_Entry<float> _trans_MirrorDistance;
         public static MelonPreferences_Entry<string> _trans_MirrorState;
+        public static MelonPreferences_Entry<bool> _trans_MirrorDefState;
         public static MelonPreferences_Entry<bool> _trans_CanPickupMirror;
         public static MelonPreferences_Entry<bool> _trans_enableTrans;
         public static MelonPreferences_Entry<bool> _trans_AnchorToTracking;
@@ -139,13 +142,13 @@ namespace PortableMirror
 
             Spacer1 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer1", false, "--These are global settings for all portable mirror types--");///
             fixRenderOrder = MelonPreferences.CreateEntry("PortableMirror", "fixRenderOrder", false, "Change render order on mirrors to fix overrendering --Don't use--", "", true);
-            MirrorDistAdjAmmount = MelonPreferences.CreateEntry<float>("PortableMirror", "MirrorDistAdjAmmount", .05f, "High Precision Distance Adjustment");
+            MirrorDistAdjAmmount = MelonPreferences.CreateEntry<float>("PortableMirror", "MirrorDistAdjAmmount", .05f, "High Precision Distance Adjustment Value");
             ColliderDepth = MelonPreferences.CreateEntry<float>("PortableMirror", "ColliderDepth", 0.01f, "Collider Depth");
             pickupFrame = MelonPreferences.CreateEntry<bool>("PortableMirror", "pickupFrame", false, "Show frame when mirror is pickupable");
             enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
             followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Movement Speed");
-            followGazeDeadBand_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "followGazeDeadBand_en", true, "Follow Gaze DeadBand - Enabled");
-            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand2", 60f, "Follow Gaze DeadBand - Break Angle");
+            followGazeDeadBand_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "followGazeDeadBand_en", true, "Follow Gaze DeadBand - Enabled (Base Mirror Only)");
+            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand2", 45f, "Follow Gaze DeadBand - Break Angle");
             followGazeDeadBandBreakTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandBreakTime", 4f, "Follow Gaze DeadBand - Seconds to wait after break (0 to disable)");
             followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle2", 1f, "Follow Gaze DeadBand - Settle Angle");
             followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", 1f, "Follow Gaze DeadBand - Settle Seconds (0 to disable)");
@@ -160,60 +163,71 @@ namespace PortableMirror
             TransMirrorTrans = MelonPreferences.CreateEntry<float>("PortableMirror", "TransMirrorTrans", .4f, "Transparent Mirror transparency - Higher is more transparent - Global for all mirrors");
 
             //MirrorsShowInCamera = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorsShowInCamera", true, "Mirrors show in Cameras - Global for all mirrors --Don't use--");
+            Spacer3 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer3", false, "--PortableMirror Distance Disable--");///
+            //MelonPreferences.CreateCategory("PortableMirrorDistDisable", "PortableMirror Distance Disable");
+            distanceDisable = MelonPreferences.CreateEntry<bool>("PortableMirror", "distanceDisable", false, "Disable avatars > than a distance from showing in Mirrors");
+            distanceValue = MelonPreferences.CreateEntry<float>("PortableMirror", "distanceValue", 3f, "Disable Distance in meteres");
+            distanceUpdateInit = MelonPreferences.CreateEntry<float>("PortableMirror", "distanceUpdateInit", .5f, "Disable Update interval");
 
-            MelonPreferences.CreateCategory("PortableMirrorDistDisable", "PortableMirror Distance Disable");
-            distanceDisable = MelonPreferences.CreateEntry<bool>("PortableMirrorDistDisable", "distanceDisable", false, "Disable avatars > than a distane from showing in Mirrors");
-            distanceValue = MelonPreferences.CreateEntry<float>("PortableMirrorDistDisable", "distanceValue", 3f, "Distance in meteres");
-            distanceUpdateInit = MelonPreferences.CreateEntry<float>("PortableMirrorDistDisable", "distanceUpdateInit", .5f, "Update interval");
+            //MelonPreferences.CreateCategory("PortableMirrorMisc", "Base-PortableMirror Base");
+            MelonPreferences.CreateCategory("PortableMirrorMisc", "PortableMirror Misc Settings");
+            SpacerMisc = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "SpacerMisc", false, "--These are all the settings behind the individual mirror types--");///
+            SpacerMisc2 = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "SpacerMisc2", false, "--Settings starting with a * are unique to that mirror--");///
+            SpacerMisc3 = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "SpacerMisc3", false, "--Settings starting with a ^ are adjustable with the QuickMenu UI--");///
 
-            MelonPreferences.CreateCategory("PortableMirrorBase", "PortableMirror Base");
-            _base_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorBase", "MirrorScaleX", 2f, "Mirror Scale X");
-            _base_MirrorScaleY = MelonPreferences.CreateEntry<float>("PortableMirrorBase", "MirrorScaleY", 3f, "Mirror Scale Y");
-            _base_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorBase", "MirrorDistance", 0f, "Mirror Distance");
-            _base_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorBase", "MirrorState", "MirrorFull", "Mirror Type (MirrorFull or MirrorOpt)");
-            _base_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorBase", "CanPickupMirror", false, "Can Pickup Mirror");
-            _base_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorBase", "PositionOnView", false, "Position mirror based on view angle");
-            _base_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorBase", "AnchorToTracking", false, "Mirror Follows You");
-            _base_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorBase", "followGaze", false, "Follow Gaze Enabled");
+            SpacerMiscBase = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "SpacerMiscBase", false, "--Base Mirror--");
+            _base_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Base-MirrorScaleX", 2f, "^Mirror Scale X");
+            _base_MirrorScaleY = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Base-MirrorScaleY", 3f, "^Mirror Scale Y");
+            _base_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Base-MirrorDistance", 0f, "^Mirror Distance");
+            _base_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorMisc", "Base-MirrorState", "MirrorFull", "^Mirror Type (MirrorFull or MirrorOpt)");
+            _base_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Base-CanPickupMirror", false, "^Can Pickup Mirror");
+            _base_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Base-PositionOnView", false, "^Position mirror based on view angle");
+            _base_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Base-AnchorToTracking", false, "^Mirror Follows You");
+            _base_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Base-followGaze", false, "^Follow Gaze Enabled");
 
-            MelonPreferences.CreateCategory("PortableMirror45", "PortableMirror 45 Degree");
-            _45_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirror45", "MirrorScaleX", 5f, "Mirror Scale X");
-            _45_MirrorScaleY = MelonPreferences.CreateEntry<float>("PortableMirror45", "MirrorScaleY", 4f, "Mirror Scale Y");
-            _45_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirror45", "MirrorDistance", 0f, "Mirror Distance");
-            _45_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirror45", "MirrorState", "MirrorFull", "Mirror Type (MirrorFull or MirrorOpt)");
-            _45_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirror45", "CanPickupMirror", false, "Can Pickup 45 Mirror");
-            _45_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirror45", "AnchorToTracking", false, "Mirror Follows You");
-            _45_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirror45", "followGaze", false, "Follow Gaze Enabled");
+            //MelonPreferences.CreateCategory("PortableMirror45", "45-PortableMirror 45 Degree");
+            SpacerMisc45 = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "SpacerMisc45", false, "--45 Mirror--");
+            _45_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "45-MirrorScaleX", 5f, "^Mirror Scale X");
+            _45_MirrorScaleY = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "45-MirrorScaleY", 4f, "^Mirror Scale Y");
+            _45_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "45-MirrorDistance", 0f, "^Mirror Distance");
+            _45_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorMisc", "45-MirrorState", "MirrorFull", "^Mirror Type (MirrorFull or MirrorOpt)");
+            _45_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "45-CanPickupMirror", false, "^Can Pickup 45 Mirror");
+            _45_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "45-AnchorToTracking", false, "^Mirror Follows You");
+            _45_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "45-followGaze", false, "^Follow Gaze Enabled");
 
-            MelonPreferences.CreateCategory("PortableMirrorCeiling", "PortableMirror Ceiling");
-            _ceil_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorCeiling", "MirrorScaleX", 5f, "Mirror Scale X");
-            _ceil_MirrorScaleZ = MelonPreferences.CreateEntry<float>("PortableMirrorCeiling", "MirrorScaleZ", 5f, "Mirror Scale Z");
-            _ceil_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorCeiling", "MirrorDistance", 2, "Mirror Distance");
-            _ceil_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorCeiling", "MirrorState", "MirrorFull", "Mirror Type (MirrorFull or MirrorOpt)");
-            _ceil_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorCeiling", "CanPickupMirror", false, "Can Pickup Ceiling Mirror");
-            _ceil_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorCeiling", "AnchorToTracking", false, "Mirror Follows You");
+            //MelonPreferences.CreateCategory("PortableMirrorMisc", "Ceil-PortableMirror Ceiling");
+            SpacerMiscCeil = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "SpacerMiscCeil", false, "--Ceiling Mirror--");
+            _ceil_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Ceil-MirrorScaleX", 5f, "^Mirror Scale X");
+            _ceil_MirrorScaleZ = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Ceil-MirrorScaleZ", 5f, "^Mirror Scale Z");
+            _ceil_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Ceil-MirrorDistance", 2, "^Mirror Distance");
+            _ceil_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorMisc", "Ceil-MirrorState", "MirrorFull", "^Mirror Type (MirrorFull or MirrorOpt)");
+            _ceil_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Ceil-CanPickupMirror", false, "^Can Pickup Ceiling Mirror");
+            _ceil_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Ceil-AnchorToTracking", false, "^Mirror Follows You");
 
-            MelonPreferences.CreateCategory("PortableMirrorMicro", "PortableMirror Micro");
-            _micro_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorMicro", "MirrorScaleX", .05f, "Mirror Scale X");
-            _micro_MirrorScaleY = MelonPreferences.CreateEntry<float>("PortableMirrorMicro", "MirrorScaleY", .1f, "Mirror Scale Y");
-            _micro_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorMicro", "MirrorDistance", 0f, "Mirror Distance");
-            _micro_GrabRange = MelonPreferences.CreateEntry<float>("PortableMirrorMicro", "GrabRange", .1f, "GrabRange");
-            _micro_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorMicro", "MirrorState", "MirrorFull", "Mirror Type (MirrorFull or MirrorOpt)");
-            _micro_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorMicro", "CanPickupMirror", false, "Can Pickup MirrorMicro");
-            _micro_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorMicro", "PositionOnView", false, "Position mirror based on view angle");
-            _micro_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorMicro", "AnchorToTracking", false, "Mirror Follows You");
-            _micro_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorMicro", "followGaze", false, "Follow Gaze Enabled");
+            //MelonPreferences.CreateCategory(""PortableMirrorMisc", "Micro-PortableMirror Micro");
+            SpacerMiscMicro = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "SpacerMiscMicro", false, "--Micro Mirror--");
+            _micro_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Micro-MirrorScaleX", .05f, "^Mirror Scale X");
+            _micro_MirrorScaleY = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Micro-MirrorScaleY", .1f, "^Mirror Scale Y");
+            _micro_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Micro-MirrorDistance", 0f, "^Mirror Distance");
+            _micro_GrabRange = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Micro-GrabRange", .1f, "* GrabRange");
+            _micro_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorMisc", "Micro-MirrorState", "MirrorFull", "^Mirror Type (MirrorFull or MirrorOpt)");
+            _micro_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Micro-CanPickupMirror", false, "^Can Pickup MirrorMicro");
+            _micro_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Micro-PositionOnView", false, "^Position mirror based on view angle");
+            _micro_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Micro-AnchorToTracking", false, "^Mirror Follows You");
+            _micro_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Micro-followGaze", false, "^Follow Gaze Enabled");
 
-            MelonPreferences.CreateCategory("PortableMirrorTrans", "PortableMirror Transparent");
-            _trans_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorTrans", "MirrorScaleX", 5f, "Mirror Scale X");
-            _trans_MirrorScaleY = MelonPreferences.CreateEntry<float>("PortableMirrorTrans", "MirrorScaleY", 3f, "Mirror Scale Y");
-            _trans_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorTrans", "MirrorDistance", 0f, "Mirror Distance");
-            _trans_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorTrans", "MirrorState", "MirrorTransparent", "Mirror Type - Resets to Transparent on load");
-            _trans_MirrorState.Value = "MirrorTransparent"; //Force to Transparent every load
-            _trans_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorTrans", "CanPickupMirror", false, "Can Pickup Mirror");
-            _trans_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorTrans", "PositionOnView", false, "Position mirror based on view angle");
-            _trans_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorTrans", "AnchorToTracking", false, "Mirror Follows You");
-            _trans_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorTrans", "followGaze", false, "Follow Gaze Enabled");
+            //MelonPreferences.CreateCategory("PortableMirrorMisc", "Trans-PortableMirror Transparent");
+            SpacerMiscTrans = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "SpacerMiscTrans", false, "--Trans Mirror--");
+            _trans_MirrorScaleX = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Trans-MirrorScaleX", 5f, "^Mirror Scale X");
+            _trans_MirrorScaleY = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Trans-MirrorScaleY", 3f, "^Mirror Scale Y");
+            _trans_MirrorDistance = MelonPreferences.CreateEntry<float>("PortableMirrorMisc", "Trans-MirrorDistance", 0f, "^Mirror Distance");
+            _trans_MirrorState = MelonPreferences.CreateEntry<string>("PortableMirrorMisc", "Trans-MirrorState", "MirrorTransparent", "^Mirror Type - Resets to below setting on load");
+            _trans_MirrorDefState = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-MirrorDefState", true, "* Default type | True-Trans False-Cutout ");
+            _trans_MirrorState.Value = _trans_MirrorDefState.Value ? "MirrorTransparent" : "MirrorCutout"; //Force to Transparent every load
+            _trans_CanPickupMirror = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-CanPickupMirror", false, "^Can Pickup Mirror");
+            _trans_PositionOnView = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-PositionOnView", false, "^Position mirror based on view angle");
+            _trans_AnchorToTracking = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-AnchorToTracking", false, "^Mirror Follows You");
+            _trans_followGaze = MelonPreferences.CreateEntry<bool>("PortableMirrorMisc", "Trans-followGaze", false, "^Follow Gaze Enabled");
 
             MelonPreferences.CreateCategory("PortableMirrorCal", "PortableMirror Calibration");
             _cal_enable = MelonPreferences.CreateEntry<bool>("PortableMirrorCal", "MirrorEnable2", false, "Enable Mirror when Calibrating");
