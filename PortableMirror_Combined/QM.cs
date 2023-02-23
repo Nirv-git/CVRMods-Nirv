@@ -2,6 +2,7 @@
 using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
+using ABI_RC.Core.Savior;
 
 namespace PortableMirror
 {
@@ -154,6 +155,13 @@ namespace PortableMirror
                     ParseSettings();
                 }
                 ));
+                settingsCanvas.transform.Find("Base-Grab-Cust").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main._base_CanPickupMirror.Value = !Main._base_CanPickupMirror.Value;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
+                }
+                ));
                 settingsCanvas.transform.Find("Base-ToTracking").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     if (!Main._base_AnchorToTracking.Value)
@@ -251,6 +259,13 @@ namespace PortableMirror
                 }
                 ));
                 settingsCanvas.transform.Find("45-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main._45_CanPickupMirror.Value = !Main._45_CanPickupMirror.Value;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
+                }
+                ));
+                settingsCanvas.transform.Find("45-Grab-Cust").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     Main._45_CanPickupMirror.Value = !Main._45_CanPickupMirror.Value;
                     Main main = new Main(); main.OnPreferencesSaved();
@@ -445,6 +460,13 @@ namespace PortableMirror
                 }
                 ));
                 settingsCanvas.transform.Find("Micro-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main._micro_CanPickupMirror.Value = !Main._micro_CanPickupMirror.Value;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
+                }
+                ));
+                settingsCanvas.transform.Find("Micro-Grab-Cust").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     Main._micro_CanPickupMirror.Value = !Main._micro_CanPickupMirror.Value;
                     Main main = new Main(); main.OnPreferencesSaved();
@@ -1073,6 +1095,27 @@ namespace PortableMirror
                 settingsCanvas.transform.Find("Trans-Grab").GetComponent<Image>().color = custColor1;
             else
                 settingsCanvas.transform.Find("Trans-Grab").GetComponent<Image>().color = custColor2;
+            //Grab Custom
+            if (Main._base_CanPickupMirror.Value)
+                settingsCanvas.transform.Find("Base-Grab-Cust").GetComponent<Image>().color = custColor1;
+            else
+                settingsCanvas.transform.Find("Base-Grab-Cust").GetComponent<Image>().color = custColor2;
+            if (Main._micro_CanPickupMirror.Value)
+                settingsCanvas.transform.Find("Micro-Grab-Cust").GetComponent<Image>().color = custColor1;
+            else
+                settingsCanvas.transform.Find("Micro-Grab-Cust").GetComponent<Image>().color = custColor2;
+            if (Main._trans_CanPickupMirror.Value)
+                settingsCanvas.transform.Find("Trans-Grab-Cust").GetComponent<Image>().color = custColor1;
+            else
+                settingsCanvas.transform.Find("Trans-Grab-Cust").GetComponent<Image>().color = custColor2;
+            //
+            bool custGrab = MetaPort.Instance.isUsingVr && Main._base_followGaze.Value;
+            settingsCanvas.transform.Find("Base-Grab").gameObject.SetActive(!custGrab);
+            settingsCanvas.transform.Find("Base-Grab-Cust").gameObject.SetActive(custGrab);
+            settingsCanvas.transform.Find("Micro-Grab").gameObject.SetActive(!custGrab);
+            settingsCanvas.transform.Find("Micro-Grab-Cust").gameObject.SetActive(custGrab);
+            //settingsCanvas.transform.Find("Trans-Grab").gameObject.SetActive(!custGrab);
+            //settingsCanvas.transform.Find("Trans-Grab-Cust").gameObject.SetActive(custGrab);
 
             //ToTracking
             if (Main._base_AnchorToTracking.Value)

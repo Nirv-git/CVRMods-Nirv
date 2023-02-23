@@ -142,7 +142,7 @@ namespace PortableMirror
             followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle2", 1f, "Follow Gaze DeadBand - Settle Angle");
             followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", 1f, "Follow Gaze DeadBand - Settle Seconds (0 to disable)");
 
-            customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", true, "Use custom mirror pickup in VR");
+            customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", true, "Use custom mirror pickup in VR (Base+Micro mirrors)");
             customGrabSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", 5f, "Custom pickup push/pull speed");
             customGrabLine = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrabLine", true, "Custom pickup line");
 
