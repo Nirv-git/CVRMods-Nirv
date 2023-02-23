@@ -740,83 +740,50 @@ namespace PortableMirror
         }
         
         public static IEnumerator pickupBase()
-        { //Make generic, two inputse are  Main._mirrorBase and _base_CanPickupMirror and Main._base_AnchorToTracking
+        { 
             _baseGrabActive = true;
-
-            var held = false;
-            var setCol = false;
             var mirror = Main._mirrorBase;
             var rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
             SetupLineRender();
-            //var cam = Camera.main.gameObject;
-            //Is this always the right cam?
-            Main.Logger.Msg($"base Camera.main.gameObject {Camera.main.gameObject.name}");
-
             while (Main._base_CanPickupMirror.Value)
             {
-                if (mirror?.Equals(null) ?? true)  yield break;
-                if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
-                {
-                    pickupLine.SetActive(Main.customGrabLine.Value);
-                    setCol = true; mirror.GetComponent<BoxCollider>().enabled = true;
-                    Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward); RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, 1000f, notwater) && !held)
-                    {
-                        if (hit.transform.gameObject == mirror)
-                            {
-                                mirror.transform.SetParent(rightCon.transform, true);
-                                held = true;
-                            }
-                    }
-                    if (held)
-                    {//Joystick Forward/Back
-                        Vector3 direction = rightCon.transform.forward;
-                        var tempPos = mirror.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
-                        var distanceBefore = Vector3.Distance(mirror.transform.position, rightCon.transform.position); var distanceAfter = Vector3.Distance(tempPos, rightCon.transform.position);
-                        var inputY = InputSVR.GetVRLookVector().y;
-                        if (!(distanceAfter >= distanceBefore && inputY < 0F))
-                            mirror.transform.position += direction * Mathf.Clamp(distanceBefore / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
-                    }
-                }
-                else
-                {
-                    pickupLine.SetActive(false);
-                    if (setCol) { setCol = false; mirror.GetComponent<BoxCollider>().enabled = false; }
-                    if (held)
-                    {
-                        if (!Main._base_AnchorToTracking.Value) mirror.transform.SetParent(null);
-                        else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
-                        held = false;
-                    } 
-                }
-                //yield return new WaitForSeconds(.5f);
+                if (mirror?.Equals(null) ?? true) yield break;
+                pickupObj(mirror, rightCon, ref Main._micro_AnchorToTracking);
                 yield return null;
             }
             _baseGrabActive = false;
         }
 
         public static IEnumerator pickupMicro()
-        { //Make generic, two inputse are  Main._mirrorBase and _base_CanPickupMirror
+        { 
             _microGrabActive = true;
-
-            var held = false;
-            var setCol = false;
             var mirror = Main._mirrorMicro;
             var rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
             SetupLineRender();
-            //var cam = Camera.main.gameObject;
-            //Is this always the right cam?
-            Main.Logger.Msg($"micro Camera.main.gameObject {Camera.main.gameObject.name}");
-
             while (Main._micro_CanPickupMirror.Value)
             {
                 if (mirror?.Equals(null) ?? true) yield break;
-                if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
+                pickupObj(mirror, rightCon, ref Main._micro_AnchorToTracking);
+                yield return null;
+            }
+            _microGrabActive = false;
+        }
+
+
+
+        public static void pickupObj(GameObject mirror, GameObject rightCon, ref MelonPreferences_Entry<bool> anchorToTracking)
+        { 
+            var held = false;
+            var setCol = false;
+            if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
+            {
+                pickupLine.SetActive(Main.customGrabLine.Value);
+                setCol = true; mirror.GetComponent<BoxCollider>().enabled = true;
+                Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward); RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 1000f, notwater))
                 {
-                    pickupLine.SetActive(Main.customGrabLine.Value);
-                    setCol = true; mirror.GetComponent<BoxCollider>().enabled = true;
-                    Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward); RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit, 1000f, notwater) && !held)
+                    pickupLine.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0f, hit.distance, 0f));
+                    if (!held)
                     {
                         if (hit.transform.gameObject == mirror)
                         {
@@ -824,32 +791,33 @@ namespace PortableMirror
                             held = true;
                         }
                     }
-                    if (held)
+                    else
                     {//Joystick Forward/Back
                         Vector3 direction = rightCon.transform.forward;
                         var tempPos = mirror.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
-                        var distanceBefore = Vector3.Distance(mirror.transform.position, rightCon.transform.position); var distanceAfter = Vector3.Distance(tempPos, rightCon.transform.position);
+                        var moveDistance = Vector3.Distance(tempPos, mirror.transform.position);
                         var inputY = InputSVR.GetVRLookVector().y;
-                        if (!(distanceAfter >= distanceBefore && inputY < 0F))
-                            mirror.transform.position += direction * Mathf.Clamp(distanceBefore / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
+                        Main.Logger.Msg($"hit.distance {hit.distance}, moveDistance {moveDistance}, inputY {inputY}");
+                        if (!(hit.distance - moveDistance <= 0f && inputY < 0F))
+                            mirror.transform.position += direction * Mathf.Clamp(hit.distance / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
                     }
                 }
                 else
-                {
-                    pickupLine.SetActive(false);
-                    if (setCol) { setCol = false; mirror.GetComponent<BoxCollider>().enabled = false; }
-                    if (held)
-                    {
-                        if (!Main._micro_AnchorToTracking.Value) mirror.transform.SetParent(null);
-                        else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
-                        held = false;
-                    }
-                }
-                //yield return new WaitForSeconds(.5f);
-                yield return null;
+                    pickupLine.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0f, 1f, 0f));
             }
-            _microGrabActive = false;
+            else
+            {
+                pickupLine.SetActive(false);
+                if (setCol) { setCol = false; mirror.GetComponent<BoxCollider>().enabled = false; }
+                if (held)
+                {
+                    if (!anchorToTracking.Value) mirror.transform.SetParent(null);
+                    else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
+                    held = false;
+                }
+            }
         }
+
 
         public static IEnumerator followGazeBase()
         {
