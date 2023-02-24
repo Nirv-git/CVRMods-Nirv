@@ -134,15 +134,15 @@ namespace PortableMirror
             MirrorDistAdjAmmount = MelonPreferences.CreateEntry<float>("PortableMirror", "MirrorDistAdjAmmount", .05f, "High Precision Distance Adjustment Value");
             ColliderDepth = MelonPreferences.CreateEntry<float>("PortableMirror", "ColliderDepth", 0.001f, "Collider Depth");
             pickupFrame = MelonPreferences.CreateEntry<bool>("PortableMirror", "pickupFrame", false, "Show frame when mirror is pickupable");
-            enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", true, "Enable 'Follow Gaze' by clicking Anchor to Tracking button twice");
-            followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "Follow Gaze Movement Speed");
-            followGazeDeadBand_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "followGazeDeadBand_en", true, "Follow Gaze DeadBand - Enabled (Base Mirror Only)");
-            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand2", 60f, "Follow Gaze DeadBand - Break Angle");
-            followGazeDeadBandBreakTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandBreakTime", 3f, "Follow Gaze DeadBand - Seconds to wait after break (0 to disable)");
-            followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle2", 3f, "Follow Gaze DeadBand - Settle Angle");
-            followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", .5f, "Follow Gaze DeadBand - Settle Seconds (0 to disable)");
+            enableGaze = MelonPreferences.CreateEntry<bool>("PortableMirror", "enableGaze", false, "Enable 'Follow Gaze' (FG) by clicking Anchor to Tracking button twice");
+            followGazeTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeTime", 0.5f, "FG Movement Speed");
+            followGazeDeadBand_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "followGazeDeadBand_en", true, "FG DeadBand - Enabled (Base Mirror Only)");
+            followGazeDeadBand = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBand2", 60f, "FG DeadBand - Break Angle");
+            followGazeDeadBandBreakTime = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandBreakTime", 3f, "FG DeadBand - Seconds to wait after break (0 to disable)");
+            followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle2", 3f, "FG DeadBand - Settle Angle");
+            followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", .5f, "FG DeadBand - Settle Seconds (0 to disable)");
 
-            customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", true, "Use custom mirror pickup in VR (Base+Micro mirrors)");
+            customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", false, "Use custom mirror pickup in VR (Base/Micro/Trans mirrors)");
             customGrabSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", 5f, "Custom pickup push/pull speed");
             customGrabLine = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrabLine", true, "Custom pickup line");
 
@@ -155,7 +155,7 @@ namespace PortableMirror
             //Spacer3 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer3", false, "--PortableMirror Distance Disable--");///
             //MelonPreferences.CreateCategory("PortableMirrorDistDisable", "PortableMirror Distance Disable");
             distanceDisable = MelonPreferences.CreateEntry<bool>("PortableMirror", "distanceDisable", false, "Disable avatars > than a distance from showing in Mirrors");
-            distanceValue = MelonPreferences.CreateEntry<float>("PortableMirror", "distanceValue", 3f, "Disable Distance in meteres");
+            distanceValue = MelonPreferences.CreateEntry<float>("PortableMirror", "distanceValue", 3f, "Disable Distance in meters");
             distanceUpdateInit = MelonPreferences.CreateEntry<float>("PortableMirror", "distanceUpdateInit", .5f, "Disable Update interval");
 
             //MelonPreferences.CreateCategory("PortableMirrorMisc", "Base-PortableMirror Base");
