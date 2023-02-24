@@ -494,10 +494,11 @@ namespace PortableMirror
             var mirror = Main._mirrorBase;
             var rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
             SetupLineRender();
-            while (Main._base_CanPickupMirror.Value)
+            var held = false;
+            var setCol = false;
+            while (Main._base_CanPickupMirror.Value && (!mirror?.Equals(null) ?? false))
             {
-                if (mirror?.Equals(null) ?? true) yield break;
-                pickupObj(mirror, rightCon, ref Main._micro_AnchorToTracking);
+                pickupObj(mirror, rightCon, ref Main._micro_AnchorToTracking, ref setCol, ref held);
                 yield return null;
             }
             _baseGrabActive = false;
@@ -509,10 +510,11 @@ namespace PortableMirror
             var mirror = Main._mirrorMicro;
             var rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
             SetupLineRender();
-            while (Main._micro_CanPickupMirror.Value)
+            var held = false;
+            var setCol = false;
+            while (Main._micro_CanPickupMirror.Value && (!mirror?.Equals(null) ?? false))
             {
-                if (mirror?.Equals(null) ?? true) yield break;
-                pickupObj(mirror, rightCon, ref Main._micro_AnchorToTracking);
+                pickupObj(mirror, rightCon, ref Main._micro_AnchorToTracking, ref setCol, ref held);
                 yield return null;
             }
             _microGrabActive = false;
@@ -520,10 +522,9 @@ namespace PortableMirror
 
 
 
-        public static void pickupObj(GameObject mirror, GameObject rightCon, ref MelonPreferences_Entry<bool> anchorToTracking)
+        public static void pickupObj(GameObject mirror, GameObject rightCon, ref MelonPreferences_Entry<bool> anchorToTracking, ref bool setCol, ref bool held)
         { 
-            var held = false;
-            var setCol = false;
+            
             if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
             {
                 pickupLine.SetActive(Main.customGrabLine.Value);
@@ -546,13 +547,13 @@ namespace PortableMirror
                         var tempPos = mirror.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
                         var moveDistance = Vector3.Distance(tempPos, mirror.transform.position);
                         var inputY = InputSVR.GetVRLookVector().y;
-                        Main.Logger.Msg($"hit.distance {hit.distance}, moveDistance {moveDistance}, inputY {inputY}");
+                        //Main.Logger.Msg($"hit.distance {hit.distance}, moveDistance {moveDistance}, inputY {inputY}");
                         if (!(hit.distance - moveDistance <= 0f && inputY < 0F))
                             mirror.transform.position += direction * Mathf.Clamp(hit.distance / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
                     }
                 }
                 else
-                    pickupLine.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0f, 1f, 0f));
+                { pickupLine.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0f, 1f, 0f)); }
             }
             else
             {

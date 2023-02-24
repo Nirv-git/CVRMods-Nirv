@@ -1109,7 +1109,7 @@ namespace PortableMirror
             else
                 settingsCanvas.transform.Find("Trans-Grab-Cust").GetComponent<Image>().color = custColor2;
             //
-            bool custGrab = MetaPort.Instance.isUsingVr && Main._base_followGaze.Value;
+            bool custGrab = MetaPort.Instance.isUsingVr && Main.customGrab_en.Value;
             settingsCanvas.transform.Find("Base-Grab").gameObject.SetActive(!custGrab);
             settingsCanvas.transform.Find("Base-Grab-Cust").gameObject.SetActive(custGrab);
             settingsCanvas.transform.Find("Micro-Grab").gameObject.SetActive(!custGrab);
