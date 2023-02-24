@@ -37,7 +37,7 @@ namespace PortableMirror
         public static Dictionary<GameObject, int> calObjects = new Dictionary<GameObject, int>();
 
         public static bool _baseFollowGazeActive, _45FollowGazeActive, _transFollowGazeActive, _microFollowGazeActive;
-        public static bool _baseGrabActive, _microGrabActive;
+        public static bool _baseGrabActive, _microGrabActive, _transGrabActive;
 
         public static void loadAssets()
         {//https://github.com/ddakebono/BTKSASelfPortrait/blob/master/BTKSASelfPortrait.cs
@@ -188,7 +188,7 @@ namespace PortableMirror
                     childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                     childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
                 }
-                mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
+                mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 300f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = false; // Main._base_CanPickupMirror.Value;
                 mirror.GetOrAddComponent<BoxCollider>().enabled = false; // Main._base_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._base_CanPickupMirror.Value & Main.pickupFrame.Value);
@@ -254,7 +254,7 @@ namespace PortableMirror
                     childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                     childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
                 }
-                mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
+                mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3000f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
                 mirror.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._45_CanPickupMirror.Value & Main.pickupFrame.Value);
@@ -309,7 +309,7 @@ namespace PortableMirror
                     childMirror.GetComponent<Renderer>().material.SetFloat("_Transparency", Main.TransMirrorTrans.Value);
                     childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
                 }
-                mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3f;
+                mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3000f;
                 mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
                 mirror.GetOrAddComponent<BoxCollider>().enabled = Main._ceil_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._ceil_CanPickupMirror.Value & Main.pickupFrame.Value);
@@ -441,8 +441,8 @@ namespace PortableMirror
                     childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
                 }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 300f;
-                mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._trans_CanPickupMirror.Value;
-                mirror.GetOrAddComponent<BoxCollider>().enabled = Main._trans_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<CVRPickupObject>().enabled = false;
+                mirror.GetOrAddComponent<BoxCollider>().enabled = false;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._trans_CanPickupMirror.Value & Main.pickupFrame.Value);
                 FixFrame(mirror, Main._trans_MirrorScaleX.Value, Main._trans_MirrorScaleY.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
@@ -457,6 +457,17 @@ namespace PortableMirror
                 if (Main._trans_followGaze.Value) MelonCoroutines.Start(followGazeTrans());
                 Main._mirrorTrans = mirror;
 
+                if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
+                {
+
+                    if (Main._trans_CanPickupMirror.Value) MelonCoroutines.Start(pickupTrans());
+                }
+                else
+                {
+
+                    mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._trans_CanPickupMirror.Value;
+                    mirror.GetOrAddComponent<BoxCollider>().enabled = Main._trans_CanPickupMirror.Value;
+                }
             }
         }
 
@@ -488,6 +499,7 @@ namespace PortableMirror
             }
         }
         
+        //Could I have made this all just one Coroutine that handled all pickups, yes! But that is later me's issue
         public static IEnumerator pickupBase()
         { 
             _baseGrabActive = true;
@@ -498,7 +510,7 @@ namespace PortableMirror
             var setCol = false;
             while (Main._base_CanPickupMirror.Value && (!mirror?.Equals(null) ?? false))
             {
-                pickupObj(mirror, rightCon, ref Main._micro_AnchorToTracking, ref setCol, ref held);
+                pickupObj(mirror, rightCon, ref Main._base_AnchorToTracking, ref setCol, ref held);
                 yield return null;
             }
             _baseGrabActive = false;
@@ -518,6 +530,22 @@ namespace PortableMirror
                 yield return null;
             }
             _microGrabActive = false;
+        }
+
+        public static IEnumerator pickupTrans()
+        {
+            _transGrabActive = true;
+            var mirror = Main._mirrorTrans;
+            var rightCon = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight");
+            SetupLineRender();
+            var held = false;
+            var setCol = false;
+            while (Main._trans_CanPickupMirror.Value && (!mirror?.Equals(null) ?? false))
+            {
+                pickupObj(mirror, rightCon, ref Main._trans_AnchorToTracking, ref setCol, ref held);
+                yield return null;
+            }
+            _transGrabActive = false;
         }
 
 

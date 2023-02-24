@@ -1114,8 +1114,8 @@ namespace PortableMirror
             settingsCanvas.transform.Find("Base-Grab-Cust").gameObject.SetActive(custGrab);
             settingsCanvas.transform.Find("Micro-Grab").gameObject.SetActive(!custGrab);
             settingsCanvas.transform.Find("Micro-Grab-Cust").gameObject.SetActive(custGrab);
-            //settingsCanvas.transform.Find("Trans-Grab").gameObject.SetActive(!custGrab);
-            //settingsCanvas.transform.Find("Trans-Grab-Cust").gameObject.SetActive(custGrab);
+            settingsCanvas.transform.Find("Trans-Grab").gameObject.SetActive(!custGrab);
+            settingsCanvas.transform.Find("Trans-Grab-Cust").gameObject.SetActive(custGrab);
 
             //ToTracking
             if (Main._base_AnchorToTracking.Value)
