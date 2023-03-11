@@ -38,6 +38,8 @@ namespace PortableMirror
 
         public static bool _baseFollowGazeActive, _45FollowGazeActive, _transFollowGazeActive, _microFollowGazeActive;
         public static bool _baseGrabActive, _microGrabActive, _transGrabActive;
+        public static bool _globalHeld = false;
+
 
         public static void loadAssets()
         {//https://github.com/ddakebono/BTKSASelfPortrait/blob/master/BTKSASelfPortrait.cs
@@ -500,6 +502,7 @@ namespace PortableMirror
         }
         
         //Could I have made this all just one Coroutine that handled all pickups, yes! But that is later me's issue
+        //Later me, is going to fix that, I swear
         public static IEnumerator pickupBase()
         { 
             _baseGrabActive = true;
@@ -513,6 +516,8 @@ namespace PortableMirror
                 pickupObj(mirror, rightCon, ref Main._base_AnchorToTracking, ref setCol, ref held);
                 yield return null;
             }
+            if (held) { _globalHeld = false; }
+            pickupLine.SetActive(false);
             _baseGrabActive = false;
         }
 
@@ -529,6 +534,8 @@ namespace PortableMirror
                 pickupObj(mirror, rightCon, ref Main._micro_AnchorToTracking, ref setCol, ref held);
                 yield return null;
             }
+            if (held) { _globalHeld = false; }
+            pickupLine.SetActive(false);
             _microGrabActive = false;
         }
 
@@ -545,43 +552,47 @@ namespace PortableMirror
                 pickupObj(mirror, rightCon, ref Main._trans_AnchorToTracking, ref setCol, ref held);
                 yield return null;
             }
+            if (held) { _globalHeld = false; }
+            pickupLine.SetActive(false);
             _transGrabActive = false;
         }
 
 
-
         public static void pickupObj(GameObject mirror, GameObject rightCon, ref MelonPreferences_Entry<bool> anchorToTracking, ref bool setCol, ref bool held)
         { 
-            
-            if (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
+            if(_globalHeld && !held ) return;
+            if (!held ? CVRInputManager.Instance.interactRightValue > .5f : CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
             {
-                pickupLine.SetActive(Main.customGrabLine.Value);
-                setCol = true; mirror.GetComponent<BoxCollider>().enabled = true;
+                setCol = true; var col = mirror.GetComponent<BoxCollider>(); col.enabled = true;
                 Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward); RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1000f, notwater))
+                if (col.Raycast(ray, out hit, 1000f))
                 {
+                    pickupLine.SetActive(Main.customGrabLine.Value);
                     pickupLine.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0f, hit.distance, 0f));
-                    if (!held)
-                    {
-                        if (hit.transform.gameObject == mirror)
+                    if (held || CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
+                    {               
+                        if (!held)
                         {
                             mirror.transform.SetParent(rightCon.transform, true);
-                            held = true;
+                            held = true; _globalHeld = true;
                         }
-                    }
-                    else
-                    {//Joystick Forward/Back
-                        Vector3 direction = rightCon.transform.forward;
-                        var tempPos = mirror.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
-                        var moveDistance = Vector3.Distance(tempPos, mirror.transform.position);
-                        var inputY = InputSVR.GetVRLookVector().y;
-                        //Main.Logger.Msg($"hit.distance {hit.distance}, moveDistance {moveDistance}, inputY {inputY}");
-                        if (!(hit.distance - moveDistance <= 0f && inputY < 0F))
-                            mirror.transform.position += direction * Mathf.Clamp(hit.distance / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
+                        else
+                        {//Joystick Forward/Back
+                            Vector3 direction = rightCon.transform.forward;
+                            var tempPos = mirror.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
+                            var moveDistance = Vector3.Distance(tempPos, mirror.transform.position);
+                            var inputY = InputSVR.GetVRLookVector().y;
+                            //Main.Logger.Msg($"hit.distance {hit.distance}, moveDistance {moveDistance}, inputY {inputY}");
+                            if (!(hit.distance - moveDistance <= 0f && inputY < 0F))
+                                mirror.transform.position += direction * Mathf.Clamp(hit.distance / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
+                        }
+                    
                     }
                 }
                 else
-                { pickupLine.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0f, 1f, 0f)); }
+                {
+                    pickupLine.SetActive(false);
+                }
             }
             else
             {
@@ -591,7 +602,7 @@ namespace PortableMirror
                 {
                     if (!anchorToTracking.Value) mirror.transform.SetParent(null);
                     else mirror.transform.SetParent(GameObject.Find("_PLAYERLOCAL").transform, true);
-                    held = false;
+                    held = false; _globalHeld = false;
                 }
             }
         }
