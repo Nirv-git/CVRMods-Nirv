@@ -147,3 +147,9 @@ You can access the settings with the BTKUI Misc page
 ![image](https://user-images.githubusercontent.com/81605232/226430837-04d0b56f-f5d3-4a0f-97c3-5abb203e8915.png)
    
 ![image](https://user-images.githubusercontent.com/81605232/141375999-974173df-b6ca-4b5c-9350-88589d3e8106.png)
+
+# IKpresets
+Provides an alternative menu for editing IK settings, includes options for automatically loading IK settings for specific avatars and 16 general slots to store presets. 
+  
+You can access the settings with the BTKUI Misc page
+![image](https://user-images.githubusercontent.com/81605232/226432554-af50ec94-3e17-4f32-97ec-a52052a81828.png)
