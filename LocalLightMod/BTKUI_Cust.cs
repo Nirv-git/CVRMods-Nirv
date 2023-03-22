@@ -107,6 +107,14 @@ namespace LocalLightMod
                 SelectSpecific();
             };
             var delConfirm = cat.AddPage("Delete All Lights", "Delete", "Delete All Lights", "LocalLightMod");
+            delConfirm.AddCategory("");
+            delConfirm.AddCategory("");
+            delConfirm.AddCategory("");
+            delConfirm.AddCategory("");
+            delConfirm.AddCategory("");
+            delConfirm.AddCategory("");
+            delConfirm.AddCategory("");
+            delConfirm.AddCategory("");
             var delcat = delConfirm.AddCategory("");
             delcat.AddButton("Delete All Lights", "Delete", "Delete All Lights").OnPress += () =>
             {
@@ -369,6 +377,7 @@ namespace LocalLightMod
         private static void CustomColorSelect()
         {
             var page = pageCustomColors;
+            page.ClearChildren();
             page.MenuTitle = "Light Color";
             var catColors = page.AddCategory("Colors");
             void SetCustomColorsSub()
