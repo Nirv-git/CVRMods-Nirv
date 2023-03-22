@@ -1,5 +1,6 @@
 ﻿using System;
 using MelonLoader;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -637,7 +638,7 @@ namespace IKpresetsMod
             //};
 
             foreach (System.Collections.Generic.KeyValuePair<string, (bool, bool, bool, bool, bool, bool, int, int, int, int, int, int, int, int, float, bool, string)>
-                slot in SaveSlots.AvatarGetSaved())
+                slot in SaveSlots.AvatarGetSaved().Reverse())
             {
                 string label = $"{slot.Value.Item17} - {slot.Key}";
                 var cat = page.AddCategory(label);
