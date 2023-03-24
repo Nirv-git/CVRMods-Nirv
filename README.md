@@ -82,7 +82,8 @@ This mod requires [UI Expansion Kit](https://api.cvrmg.com/v1/mods/download/90)
 
 You can manually change the near clipping plane using the buttons in the UIX Mod Settings panel
 ![image](https://user-images.githubusercontent.com/81605232/219507900-2d4dd6c1-f53c-46be-9704-807655c47e65.png)   
-Or you can use the BTKUI Misc page. 
+Or using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)     
+![image](https://user-images.githubusercontent.com/81605232/227616814-d0807e41-f3c0-4b23-990a-2c1315f40fe0.png)       
 *There is a MelonPref to disable the mod from putting buttons here, if you desire.* 
 ![image](https://user-images.githubusercontent.com/81605232/219508687-ae13dd0e-7dbc-49f9-a8ce-ed7cc120cf2c.png)
 
@@ -100,10 +101,9 @@ Requires [BTKUILib](https://api.cvrmg.com/v1/mods/download/113)
   
 This mod adds a standalone headlight to your player. Included are options to swap between a Spot/Point light source and adjust the brightness, angle, range and color. 
 
-You can open the HeadLight Menu with the BTKUI Misc page.
-
+You can open the HeadLight Menu using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)      
+![image](https://user-images.githubusercontent.com/81605232/227616814-d0807e41-f3c0-4b23-990a-2c1315f40fe0.png)    
 ![image](https://user-images.githubusercontent.com/81605232/219509246-f255fd77-3edc-462b-b472-ce7e80a1dcbc.png)
-
 
 
 # SitLaydownMod
@@ -143,13 +143,15 @@ Have you ever thought 'This world's lighting sucks' or 'Its too dark' well I hav
   
   Now you may think 'just use props!' and that is true, but sometimes you want more control or the world doesn't allow them.
   
-You can access the settings with the BTKUI Misc page
-![image](https://user-images.githubusercontent.com/81605232/226430837-04d0b56f-f5d3-4a0f-97c3-5abb203e8915.png)
+You can access the settings using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)      
+![image](https://user-images.githubusercontent.com/81605232/227616814-d0807e41-f3c0-4b23-990a-2c1315f40fe0.png)    
+![image](https://user-images.githubusercontent.com/81605232/226430837-04d0b56f-f5d3-4a0f-97c3-5abb203e8915.png)    
    
-![image](https://user-images.githubusercontent.com/81605232/141375999-974173df-b6ca-4b5c-9350-88589d3e8106.png)
+![image](https://user-images.githubusercontent.com/81605232/141375999-974173df-b6ca-4b5c-9350-88589d3e8106.png)    
 
 # IKpresets
 Provides an alternative menu for editing IK settings, includes options for automatically loading IK settings for specific avatars and 16 general slots to store presets. 
   
-You can access the settings with the BTKUI Misc page
-![image](https://user-images.githubusercontent.com/81605232/226432554-af50ec94-3e17-4f32-97ec-a52052a81828.png)
+You can access the settings using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)               
+![image](https://user-images.githubusercontent.com/81605232/227616814-d0807e41-f3c0-4b23-990a-2c1315f40fe0.png)     
+![image](https://user-images.githubusercontent.com/81605232/226432554-af50ec94-3e17-4f32-97ec-a52052a81828.png)  
