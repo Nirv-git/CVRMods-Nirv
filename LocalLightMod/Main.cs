@@ -20,7 +20,7 @@ namespace LocalLightMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5";
+        public const string versionStr = "0.5.1";
 
         public static class Config
         {
@@ -50,6 +50,7 @@ namespace LocalLightMod
         private const string catagory = "LocalLightMod";
         public static MelonPreferences_Category cat;
 
+        public static MelonPreferences_Entry<bool> useNirvMiscPage;
         public static MelonPreferences_Entry<bool> loadDefaults;
         public static MelonPreferences_Entry<bool> textureLights;
         public static MelonPreferences_Entry<bool> updateActiveWithChange;
@@ -63,6 +64,7 @@ namespace LocalLightMod
 
             cat = MelonPreferences.CreateCategory(catagory, "Local Light Mod");
 
+            useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
             loadDefaults = MelonPreferences.CreateEntry(catagory, nameof(loadDefaults), false, "Load Slot 1 as Default");
             textureLights = MelonPreferences.CreateEntry(catagory, nameof(textureLights), true, "Texture Lights with Name");
             updateActiveWithChange = MelonPreferences.CreateEntry(catagory, nameof(updateActiveWithChange), false, "Update active light with every change");

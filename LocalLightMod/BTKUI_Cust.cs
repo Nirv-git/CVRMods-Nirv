@@ -14,6 +14,7 @@ namespace LocalLightMod
     {
         public static void loadAssets()
         {
+            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.NirvMisc.png"));
             QuickMenuAPI.PrepareIcon("LocalLightMod", "Settings", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Settings.png"));
             QuickMenuAPI.PrepareIcon("LocalLightMod", "AngleMinus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.AngleMinus.png"));
             QuickMenuAPI.PrepareIcon("LocalLightMod", "AnglePlus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.AnglePlus.png"));
@@ -89,7 +90,18 @@ namespace LocalLightMod
             pageCustomColors = new Page("LocalLightMod", "Light - Colors", false);
             HackRegisterRoot(pageCustomColors);
 
-            var cat = QuickMenuAPI.MiscTabPage.AddCategory("Local Lights", "LocalLightMod");
+            Category cat = null;
+            if (Main.useNirvMiscPage.Value)
+            {
+                var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                page.MenuTitle = "Nirv Misc Page";
+                page.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
+                cat = page.AddCategory("Local Lights", "LocalLightMod");
+            }
+            else
+            {
+                cat = QuickMenuAPI.MiscTabPage.AddCategory("Local Lights", "LocalLightMod");
+            }
             cat.AddButton("Create Light", "LightOn", "Create a new light with current settings").OnPress += () =>
             {
                 Main.CreateLight();

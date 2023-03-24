@@ -17,9 +17,10 @@ namespace NearClipPlaneAdj
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.6";
+        public const string versionStr = "0.6.1";
         public static MelonLogger.Instance Logger;
 
+        public static MelonPreferences_Entry<bool> useNirvMiscPage;
         public static MelonPreferences_Entry<bool> changeClipOnLoad;
         public static MelonPreferences_Entry<bool> keybindsEnabled;
         public static MelonPreferences_Entry<bool> smallerDefault;
@@ -37,6 +38,7 @@ namespace NearClipPlaneAdj
             Logger = new MelonLogger.Instance("NearClipPlaneAdj", ConsoleColor.DarkYellow);
 
             MelonPreferences.CreateCategory("NearClipAdj", "NearClipPlane Adjuster");
+            useNirvMiscPage = MelonPreferences.CreateEntry("NearClipAdj", nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
             changeClipOnLoad = MelonPreferences.CreateEntry<bool>("NearClipAdj", "changeClipOnLoad", true, "Change NearClip on world load");
             keybindsEnabled = MelonPreferences.CreateEntry<bool>("NearClipAdj", "Keyboard", true, "Keyboard Shortcuts: '[' - 0.0001, ']' - 0.05");
             smallerDefault = MelonPreferences.CreateEntry<bool>("NearClipAdj", "SmallerDefault", false, "Smaller Default Nearclip on World Change - 0.001 vs 0.01");

@@ -19,6 +19,7 @@ namespace IKpresetsMod
     {
         public static void loadAssets()
         {
+            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.NirvMisc.png"));
             QuickMenuAPI.PrepareIcon("IKpresets", "ConfigIK", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.ConfigIK.png"));
             QuickMenuAPI.PrepareIcon("IKpresets", "IKSaveLoad", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.IKSaveLoad.png"));
             QuickMenuAPI.PrepareIcon("IKpresets", "Load", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Load.png"));
@@ -65,8 +66,18 @@ namespace IKpresetsMod
             HackRegisterRoot(pageEditSlotName);
             pageAvatarSaveLoad = new Page("IKpresets", "IK Presets - Avatar Slots", false);
             HackRegisterRoot(pageAvatarSaveLoad);
-
-            var cat = QuickMenuAPI.MiscTabPage.AddCategory("IK Presets", "IKpresets");
+            Category cat = null;
+            if (Main.useNirvMiscPage.Value)
+            {
+                var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                page.MenuTitle = "Nirv Misc Page";
+                page.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
+                cat = page.AddCategory("IK Presets", "IKpresets");
+            }
+            else
+            {
+                cat = QuickMenuAPI.MiscTabPage.AddCategory("IK Presets", "IKpresets");
+            }
             cat.AddButton("Edit current values", "ConfigIK", "Edit current IK settings. Same options as in the big menu").OnPress += () =>
             {
                 EditSettings();

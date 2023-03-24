@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.IO;
 using BTKUILib;
+using BTKUILib.UIObjects;
 using System.Collections.Generic;
 
 namespace HeadLightMod
@@ -10,6 +11,7 @@ namespace HeadLightMod
     {
         public static void loadAssets()
         {
+            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("HeadLightMod.Icons.NirvMisc.png"));
             QuickMenuAPI.PrepareIcon("HeadLightMod", "Settings", Assembly.GetExecutingAssembly().GetManifestResourceStream("HeadLightMod.Icons.Settings.png"));
             QuickMenuAPI.PrepareIcon("HeadLightMod", "flashLightColors", Assembly.GetExecutingAssembly().GetManifestResourceStream("HeadLightMod.Icons.flashLight.png"));
             QuickMenuAPI.PrepareIcon("HeadLightMod", "AngleMinus", Assembly.GetExecutingAssembly().GetManifestResourceStream("HeadLightMod.Icons.AngleMinus.png"));
@@ -40,8 +42,18 @@ namespace HeadLightMod
         public static void InitUi()
         {
             loadAssets();
-
-            var cat = QuickMenuAPI.MiscTabPage.AddCategory("Head Light", "HeadLightMod");
+            Category cat = null;
+            if (Main.useNirvMiscPage.Value)
+            {
+                var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                page.MenuTitle = "Nirv Misc Page";
+                page.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
+                cat = page.AddCategory("Head Light", "HeadLightMod");
+            }
+            else
+            {
+                cat = QuickMenuAPI.MiscTabPage.AddCategory("Head Light", "HeadLightMod");
+            }
             var toggle = cat.AddToggle("Toggle Light", "Enable/disables head mounted light", false);
             toggle.OnValueUpdated += action =>
             {
