@@ -11,7 +11,8 @@ This mod requires [UI Expansion Kit](https://api.cvrmg.com/v1/mods/download/90)
 
 You can manually change the near clipping plane using the buttons in the UIX Mod Settings panel
 ![image](https://user-images.githubusercontent.com/81605232/219507900-2d4dd6c1-f53c-46be-9704-807655c47e65.png)   
-Or you can use the BTKUI Misc page. 
+Or using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)     
+![image](https://user-images.githubusercontent.com/81605232/227616814-d0807e41-f3c0-4b23-990a-2c1315f40fe0.png)       
 *There is a MelonPref to disable the mod from putting buttons here, if you desire.* 
 ![image](https://user-images.githubusercontent.com/81605232/219508687-ae13dd0e-7dbc-49f9-a8ce-ed7cc120cf2c.png)
 
