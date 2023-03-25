@@ -87,7 +87,7 @@ namespace IKpresetsMod
         private static readonly Dictionary<string, string> AvatarsNamesCache = new Dictionary<string, string>();
         public static void OnAvatarDetailsReceived(string guid, string name)
         {
-            Logger.Msg($"{guid} - {name}");
+            //Logger.Msg($"{guid} - {name}");
             AvatarsNamesCache[guid] = name;
             avatarGUID = guid;
             avatarName = name;
@@ -104,7 +104,7 @@ namespace IKpresetsMod
 
         internal static async void OnAnimatorManagerUpdate(CVRAnimatorManager animatorManager)
         {
-            Logger.Msg($"OnAnimatorManagerUpdate");
+            //Logger.Msg($"OnAnimatorManagerUpdate");
             var avatarGuid = MetaPort.Instance.currentAvatarGuid;
             string avatarName = null;
             if (AvatarsNamesCache.ContainsKey(avatarGuid)) avatarName = AvatarsNamesCache[avatarGuid];
@@ -112,7 +112,7 @@ namespace IKpresetsMod
             {
                 avatarName = await ApiRequests.RequestAvatarDetailsPageTask(avatarGuid);
             }
-            Logger.Msg($"OnAnimatorManagerUpdate - {avatarName}");
+            //Logger.Msg($"OnAnimatorManagerUpdate - {avatarName}");
             Main.OnAvatarDetailsReceived(avatarGuid, avatarName);
         }
     }
@@ -131,7 +131,7 @@ namespace IKpresetsMod
             }
             catch (Exception ex)
             {
-                Main.Logger.Error($"[API] Fetching avatar {guid} name has Failed! Location: OSC.Utils.ApiRequests.cs");
+                Main.Logger.Error($"[API] Fetching avatar {guid} name has Failed!");
                 Main.Logger.Error(ex);
                 return null;
             }
@@ -142,29 +142,19 @@ namespace IKpresetsMod
             }
             Main.Logger.Msg($"[API] Fetched avatar {guid} name successfully! Name: {response.Data.Name}");
             return response.Data.Name;
-        }
-        //https://github.com/kafeijao/Kafe_CVR_Mods/blob/6e2b44b2ed3db22d21096ca53177be3a298a4f46/OSC/HarmonyPatches.cs#L24
-        [HarmonyPatch]
-        internal class HarmonyPatches
+        } 
+    }
+    //https://github.com/kafeijao/Kafe_CVR_Mods/blob/6e2b44b2ed3db22d21096ca53177be3a298a4f46/OSC/HarmonyPatches.cs#L24
+    [HarmonyPatch]
+    internal class HarmonyPatches
+    {
+        // Avatar
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(MovementSystem), nameof(MovementSystem.UpdateAnimatorManager))]
+        internal static void AfterUpdateAnimatorManager(CVRAnimatorManager manager)
         {
-            // Avatar
-            [HarmonyPrefix]
-            [HarmonyPatch(typeof(AvatarDetails_t), "Recycle")]
-            internal static void BeforeAvatarDetailsRecycle(AvatarDetails_t __instance)
-            {
-                Main.Logger.Msg($"9-0");
-
-                Main.OnAvatarDetailsReceived(__instance.AvatarId, __instance.AvatarName);
-            }
-
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(MovementSystem), nameof(MovementSystem.UpdateAnimatorManager))]
-            internal static void AfterUpdateAnimatorManager(CVRAnimatorManager manager)
-            {
-                Main.Logger.Msg($"9-1");
-
-                Main.OnAnimatorManagerUpdate(manager);
-            }
+            //Main.Logger.Msg($"9-1");
+            Main.OnAnimatorManagerUpdate(manager);
         }
     }
 }
