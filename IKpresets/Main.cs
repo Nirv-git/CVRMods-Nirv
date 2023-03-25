@@ -43,7 +43,6 @@ namespace IKpresetsMod
 
         public static string avatarGUID, avatarName;
 
-
         public static class Config
         {   //Default settings
             static public int IKCalibrationMode = 0; //0 InPlace, 1 FollowHead, 2FullyFollowHead
@@ -71,11 +70,11 @@ namespace IKpresetsMod
 
             cat = MelonPreferences.CreateCategory(catagory, "IKpresets");
             //saveWithEveryChange = MelonPreferences.CreateEntry(catagory, nameof(saveWithEveryChange), true, "MelonPreferences.Save with every edit in EditMenu");
-            useNirvMiscPage = MelonPreferences.CreateEntry("IKTpresets", nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
-            savedPrefs = MelonPreferences.CreateEntry("IKTpresets", nameof(savedPrefs), "1,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;2,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;3,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;4,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;5,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;6,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;7,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;8,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;9,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;10,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;11,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;12,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;13,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;14,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;15,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;16,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false", "savedPrefs", "", true);
-            savedPrefNames = MelonPreferences.CreateEntry("IKTpresetsNames", nameof(savedPrefNames), "1,N/A;2,N/A;3,N/A;4,N/A;5,N/A;6,N/A;7,N/A;8,N/A;9,N/A;10,N/A;11,N/A;12,N/A;13,N/A;14,N/A;15,N/A;16,N/A", "savedSlotNames", "", true);
-            autoLoadAvatarPresets = MelonPreferences.CreateEntry("IKTpresets", nameof(autoLoadAvatarPresets), true, "Auto load specific avatar presets");
-            savedAvatarPrefs = MelonPreferences.CreateEntry("IKTpresets", nameof(savedAvatarPrefs), "", "savedPrefs", "", true);
+            useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
+            savedPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedPrefs), "1,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;2,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;3,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;4,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;5,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;6,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;7,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;8,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;9,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;10,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;11,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;12,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;13,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;14,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;15,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false;16,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false", "savedPrefs", "", true);
+            savedPrefNames = MelonPreferences.CreateEntry(catagory, nameof(savedPrefNames), "1,N/A;2,N/A;3,N/A;4,N/A;5,N/A;6,N/A;7,N/A;8,N/A;9,N/A;10,N/A;11,N/A;12,N/A;13,N/A;14,N/A;15,N/A;16,N/A", "savedSlotNames", "", true);
+            autoLoadAvatarPresets = MelonPreferences.CreateEntry(catagory, nameof(autoLoadAvatarPresets), true, "Auto load specific avatar presets");
+            savedAvatarPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedAvatarPrefs), "", "savedPrefs", "", true);
 
             BTKUI_Cust.SetupUI();
 
