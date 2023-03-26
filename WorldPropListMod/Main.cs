@@ -30,9 +30,11 @@ namespace WorldPropListMod
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
-        public static MelonPreferences_Entry<bool> useNirvMiscPage;
+        //public static MelonPreferences_Entry<bool> useNirvMiscPage;
         public static MelonPreferences_Entry<int> lineLifespan;
         public static MelonPreferences_Entry<int> onPropDetailSelect;
+        public static MelonPreferences_Entry<bool> usePropBlockList;
+
 
 
         public static GameObject lastHighlight, LineRen;
@@ -42,19 +44,23 @@ namespace WorldPropListMod
         public static bool LineWaitKill = false;
         public static bool LineKillNow = false;
 
-        public static readonly Dictionary<string, string> PropNamesCache = new Dictionary<string, string>();
-        public static readonly Dictionary<string, string> PropImageCache = new Dictionary<string, string>();
-        public static readonly Dictionary<string, string> PlayerNamesCache = new Dictionary<string, string>();
+        public static readonly Dictionary<string, string> PropNamesCache = new Dictionary<string, string>(); //GUID,Name
+        public static readonly Dictionary<string, string> PropImageCache = new Dictionary<string, string>(); //GUID,URL
+        public static readonly Dictionary<string, string> PlayerNamesCache = new Dictionary<string, string>(); //GUID,Name
+        public static readonly List<(string, string, string)> BlockedThisSession = new List<(string, string, string)>(); //Name,PlayerGUID,Time
+
 
         public override void OnApplicationStart()
         {
             Logger = new MelonLogger.Instance("WorldPropListMod", ConsoleColor.Blue);
 
             cat = MelonPreferences.CreateCategory(catagory, "WorldPropListMod");
-            useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
+            //useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
             lineLifespan = MelonPreferences.CreateEntry(catagory, nameof(lineLifespan), 7, "How long the line render should last (max 30)");
             onPropDetailSelect = MelonPreferences.CreateEntry(catagory, nameof(onPropDetailSelect), 3, "0-None, 1-Highlight, 2-Line, 3-Both");
-            BTKUI_Cust.SetupUI();        
+            usePropBlockList = MelonPreferences.CreateEntry(catagory, nameof(usePropBlockList), true, "Use prop block list to prevent prop loading");
+            SaveLoad.InitFileListOrLoad();
+            BTKUI_Cust.SetupUI();      
         }
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -68,7 +74,7 @@ namespace WorldPropListMod
                     if(RunOnce)
                     {
                         RunOnce = false;
-                        Logger.Msg($"MetaPort.Instance.ownerId {MetaPort.Instance.ownerId} - MetaPort.Instance.username {MetaPort.Instance.username}");
+                        //Logger.Msg($"MetaPort.Instance.ownerId {MetaPort.Instance.ownerId} - MetaPort.Instance.username {MetaPort.Instance.username}");
                         PlayerNamesCache[MetaPort.Instance.ownerId] = MetaPort.Instance.username;
                     }
                     break;
@@ -159,7 +165,7 @@ namespace WorldPropListMod
 
         internal static async void FindPropAPIname(string guid)
         {
-            Logger.Msg(ConsoleColor.DarkGray, $"FindPropAPIname");
+            //Logger.Msg(ConsoleColor.DarkGray, $"FindPropAPIname");
             if (PropNamesCache.ContainsKey(guid)) return;
             PropNamesCache[guid] = "PendingAPI";
             (string, string) propName = (null, null);
@@ -167,26 +173,25 @@ namespace WorldPropListMod
             if (propName.Item1 == null) { PropNamesCache.Remove(guid);  return; }
             PropNamesCache[guid] = propName.Item1;
             PropImageCache[guid] = propName.Item2;
-            Logger.Msg(ConsoleColor.DarkGray, $"propName - {propName}");
+            //Logger.Msg(ConsoleColor.DarkGray, $"propName - {propName}");
             MelonCoroutines.Start(GetPropImage(guid, propName.Item2));
         }
 
         internal static async void FindPlayerAPIname(string guid)
         {
-            Logger.Msg(ConsoleColor.Gray, $"FindPlayerAPIname");
+            //Logger.Msg(ConsoleColor.DarkGray, $"FindPlayerAPIname");
             if (PlayerNamesCache.ContainsKey(guid)) return;
             PlayerNamesCache[guid] = "PendingAPI";
             string playerName = null;
             playerName = await ApiRequests.RequestPlayerDetailsPageTask(guid);
             if (playerName == null) { PlayerNamesCache.Remove(guid); return; }
             PlayerNamesCache[guid] = playerName;
-            Logger.Msg(ConsoleColor.DarkGray, $"playerName - {playerName}");
+            //Logger.Msg(ConsoleColor.DarkGray, $"playerName - {playerName}");
         }
 
         private static IEnumerator GetPropImage(string guid, string url)
         {
-            Logger.Msg(ConsoleColor.DarkYellow, $"Getting prop image {guid} - {url}");
-
+            //Logger.Msg(ConsoleColor.DarkYellow, $"Getting prop image {guid} - {url}");
             var www = UnityWebRequestTexture.GetTexture(url);
             yield return www.SendWebRequest();
             if (www.isNetworkError || www.isHttpError)

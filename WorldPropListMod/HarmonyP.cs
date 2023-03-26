@@ -12,50 +12,60 @@ using ABI_RC.Core.Util;
 using ABI.CCK.Components;
 using HarmonyLib;
 using DarkRift;
+using BTKUILib;
 
 namespace WorldPropListMod
 {
     [HarmonyPatch]
     internal class HarmonyPatches
     {
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(CVRBuilderSpawnable), nameof(CVRBuilderSpawnable.Create))]
-        internal static void OnCVRBuilderSpawnableCreate(string guid, string bundleId)
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnPropFromNetwork))]
+        internal static bool OnSpawnPropFromNetwork(Message message)
         {
-            Main.Logger.Msg(ConsoleColor.Yellow, $"9-0");
-            Main.Logger.Msg($"guid {guid}");
-            //Main.FindPropAPIname(guid);
+            try { 
+                Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 SpawnPropFromNetwork");
+                using (DarkRiftReader reader = message.GetReader())
+                {
+                    float[] CustomFloats = new float[40];
+                    var ObjectId = reader.ReadString();
+                    var InstanceId = reader.ReadString();
+                    var FileKey = reader.ReadString();
+                    var PositionX = reader.ReadSingle();
+                    var PositionY = reader.ReadSingle();
+                    var PositionZ = reader.ReadSingle();
+                    var RotationX = reader.ReadSingle();
+                    var RotationY = reader.ReadSingle();
+                    var RotationZ = reader.ReadSingle();
+                    var ScaleX = reader.ReadSingle();
+                    var ScaleY = reader.ReadSingle();
+                    var ScaleZ = reader.ReadSingle();
+                    var CustomFloatsAmount = reader.ReadInt32();
+                    for (int index = 0; index < CustomFloatsAmount; ++index)
+                        CustomFloats[index] = reader.ReadSingle();
+                    var SpawnedBy = reader.ReadString();
+                    if (Main.usePropBlockList.Value && SaveLoad.blockedProps.ContainsKey(ObjectId))
+                    {
+                        var msg = $"Mod Blocking Prop: {SaveLoad.blockedProps[ObjectId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(SpawnedBy, out string name) ? name : SpawnedBy)}";
+                        Main.Logger.Msg(ConsoleColor.Magenta, "--- PROP BLOCKED ---");
+                        Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {SpawnedBy}, ID:{ObjectId}");
+                        QuickMenuAPI.ShowAlertToast(msg, 3);
+                        Main.BlockedThisSession.Add((SaveLoad.blockedProps[ObjectId], SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH'-'mm'-'ss")));
+                        return false;
+                    }
+                    else
+                    {
+                        Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
+                        Main.FindPropAPIname(ObjectId);
+                        Main.FindPlayerAPIname(SpawnedBy); 
+                    }
+                }
+            }
+            catch (Exception ex) { Main.Logger.Error("Error writing prop blocklist \n" + ex.ToString()); }
+            Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 50");
+            return true;
         }
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnPropFromNetwork))]
-        internal static void OnSpawnPropFromNetwork(Message message)
-        {
-            Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 SpawnPropFromNetwork");
-            using (DarkRiftReader reader = message.GetReader())
-            {
-                float[] CustomFloats = new float[40];
-                var ObjectId = reader.ReadString();
-                var InstanceId = reader.ReadString();
-                var FileKey = reader.ReadString();
-                var PositionX = reader.ReadSingle();
-                var PositionY = reader.ReadSingle();
-                var PositionZ = reader.ReadSingle();
-                var RotationX = reader.ReadSingle();
-                var RotationY = reader.ReadSingle();
-                var RotationZ = reader.ReadSingle();
-                var ScaleX = reader.ReadSingle();
-                var ScaleY = reader.ReadSingle();
-                var ScaleZ = reader.ReadSingle();
-                var CustomFloatsAmount = reader.ReadInt32();
-                for (int index = 0; index < CustomFloatsAmount; ++index)
-                    CustomFloats[index] = reader.ReadSingle();
-                var SpawnedBy = reader.ReadString();
-                Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
-                Main.FindPropAPIname(ObjectId);
-                Main.FindPlayerAPIname(SpawnedBy);
-            }
-        }
         [HarmonyPostfix]
         [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnProp))]
         internal static void OnSpawnProp(string propGuid, float PosX, float PosY, float PosZ)
@@ -71,7 +81,5 @@ namespace WorldPropListMod
         {
             Main.Logger.Msg(ConsoleColor.Yellow, $"9-5 DeleteAllProps");
         }
-
-
     }
 }
