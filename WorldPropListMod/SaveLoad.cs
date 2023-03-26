@@ -19,6 +19,7 @@ namespace WorldPropListMod
                 try
                 {
                     File.WriteAllText(blockedPropsPath, "", Encoding.UTF8);
+                    blockedProps = new Dictionary<string, string>();
                 } catch (Exception ex) { Main.Logger.Error("Error creating initial blocked props file \n" + ex.ToString()); }
             }
             else
