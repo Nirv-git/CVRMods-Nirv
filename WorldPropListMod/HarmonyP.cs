@@ -24,7 +24,7 @@ namespace WorldPropListMod
         internal static bool OnSpawnPropFromNetwork(Message message)
         {
             try { 
-                Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 SpawnPropFromNetwork");
+                //Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 SpawnPropFromNetwork");
                 using (DarkRiftReader reader = message.GetReader())
                 {
                     float[] CustomFloats = new float[40];
@@ -47,7 +47,7 @@ namespace WorldPropListMod
                     if (Main.usePropBlockList.Value && SaveLoad.blockedProps.ContainsKey(ObjectId))
                     {
                         var msg = $"Mod Blocking Prop: {SaveLoad.blockedProps[ObjectId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(SpawnedBy, out string name) ? name : SpawnedBy)}";
-                        Main.Logger.Msg(ConsoleColor.Magenta, "--- PROP BLOCKED ---");
+                        Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                         Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {SpawnedBy}, ID:{ObjectId}");
                         QuickMenuAPI.ShowAlertToast(msg, 3);
                         Main.BlockedThisSession.Add((SaveLoad.blockedProps[ObjectId], SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH'-'mm'-'ss")));
@@ -55,14 +55,14 @@ namespace WorldPropListMod
                     }
                     else
                     {
-                        Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
+                        //Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
                         Main.FindPropAPIname(ObjectId);
                         Main.FindPlayerAPIname(SpawnedBy); 
                     }
                 }
             }
             catch (Exception ex) { Main.Logger.Error("Error writing prop blocklist \n" + ex.ToString()); }
-            Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 50");
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 50");
             return true;
         }
 
@@ -70,16 +70,16 @@ namespace WorldPropListMod
         [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnProp))]
         internal static void OnSpawnProp(string propGuid, float PosX, float PosY, float PosZ)
         {
-            Main.Logger.Msg(ConsoleColor.Yellow, $"9-2 SpawnProp");
-            Main.Logger.Msg($"propGuid {propGuid}");
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"9-2 SpawnProp");
+            //Main.Logger.Msg($"propGuid {propGuid}");
             Main.FindPropAPIname(propGuid);
         }
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.DeleteAllProps))]
-        internal static void AfterDeleteAllProps()
-        {
-            Main.Logger.Msg(ConsoleColor.Yellow, $"9-5 DeleteAllProps");
-        }
+        //[HarmonyPostfix]
+        //[HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.DeleteAllProps))]
+        //internal static void AfterDeleteAllProps()
+        //{
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"9-5 DeleteAllProps");
+        //}
     }
 }

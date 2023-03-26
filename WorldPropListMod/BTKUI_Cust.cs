@@ -299,7 +299,7 @@ namespace WorldPropListMod
                 page.ClearChildren();
 
                 page.MenuTitle = "Blocked Prop List";
-                page.MenuSubtitle = $"List of all blocked props";
+                page.MenuSubtitle = $"List of all blocked props. Clicking each entry will unblock";
 
                 var cat1 = page.AddCategory("");
                 var cat2 = page.AddCategory("Props");
@@ -352,6 +352,10 @@ namespace WorldPropListMod
                 cat1.AddButton("Clear History", "ResetList", "Clear the history").OnPress += () =>
                 {
                     Main.BlockedThisSession.Clear();
+                    PropBlockHistoryMenu();
+                };
+                cat1.AddButton("Refresh", "Reset", "Refresh this page").OnPress += () =>
+                {
                     PropBlockHistoryMenu();
                 };
 
