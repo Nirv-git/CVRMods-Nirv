@@ -157,8 +157,7 @@ You can access the settings using BTKUI with the NirvMisc or default Misc page. 
 ![image](https://user-images.githubusercontent.com/81605232/226432554-af50ec94-3e17-4f32-97ec-a52052a81828.png)  
 
 # WorldPropListMod
-Provides a list of all the props in a world and includes details such as the player that spawned it, distance and location. You can delete individual props and highlight or create a line towards it.     
+Provides a list of all the props in a world with details such as the player that spawned it, distance and location. You can delete + block individual props and highlight or create a line towards their location.     
      
-You can access the settings using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)                  
-![image](https://user-images.githubusercontent.com/81605232/227806160-a15ace26-536b-41da-b386-313482ac18dd.png)      
-  
+You can access the settings using BTKUI with the 'Props' page.    
+![image](https://user-images.githubusercontent.com/81605232/227806160-a15ace26-536b-41da-b386-313482ac18dd.png)       
