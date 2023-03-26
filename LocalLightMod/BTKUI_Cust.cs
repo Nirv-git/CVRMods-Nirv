@@ -118,20 +118,12 @@ namespace LocalLightMod
             {
                 SelectSpecific();
             };
-            var delConfirm = cat.AddPage("Delete All Lights", "Delete", "Delete All Lights", "LocalLightMod");
-            delConfirm.AddCategory("");
-            delConfirm.AddCategory("");
-            delConfirm.AddCategory("");
-            delConfirm.AddCategory("");
-            delConfirm.AddCategory("");
-            delConfirm.AddCategory("");
-            delConfirm.AddCategory("");
-            delConfirm.AddCategory("");
-            var delcat = delConfirm.AddCategory("");
-            delcat.AddButton("Delete All Lights", "Delete", "Delete All Lights").OnPress += () =>
+
+            cat.AddButton("Delete All Lights", "Delete", "Delete All Lights").OnPress += () =>
             {
-                Main.CleanupVisObjects();
+                QuickMenuAPI.ShowConfirm("Delete All Lights?", "This will delete all lights in the world", () => { Main.CleanupVisObjects(); }, () => { }, "Yes", "No");
             };
+            
         }
 
         public static void LightConfig()
@@ -160,20 +152,22 @@ namespace LocalLightMod
             };
             catSettings1.AddButton("Reset to Defaults", "Reset", "Reset to Defaults").OnPress += () =>
             {
-                Main.Config.name = "DefaultName";
-                Main.Config.pickupOrient = false;
-                Main.Config.pickupable = true;
-                Main.Config.lightType = LightType.Point;
-                Main.Config.lightRange = 10;
-                Main.Config.lightSpotAngle = 30;
-                Main.Config.lightColor = Color.white;
-                Main.Config.lightIntensity = 1;
-                Main.Config.lightBounceIntensity = 1;
-                Main.Config.lightShadows = LightShadows.None;
-                Main.Config.lightShadowStr = 1;
-                Main.Config.lightShadowCustRes = 2048;
-                Main.Config.cullingMask = -1;
-                LightConfig();
+                QuickMenuAPI.ShowConfirm("Reset to Defaults", "Reset to Defaults?", () => {
+                    Main.Config.name = "DefaultName";
+                    Main.Config.pickupOrient = false;
+                    Main.Config.pickupable = true;
+                    Main.Config.lightType = LightType.Point;
+                    Main.Config.lightRange = 10;
+                    Main.Config.lightSpotAngle = 30;
+                    Main.Config.lightColor = Color.white;
+                    Main.Config.lightIntensity = 1;
+                    Main.Config.lightBounceIntensity = 1;
+                    Main.Config.lightShadows = LightShadows.None;
+                    Main.Config.lightShadowStr = 1;
+                    Main.Config.lightShadowCustRes = 2048;
+                    Main.Config.cullingMask = -1;
+                    LightConfig();
+                }, () => { }, "Yes", "No");
             };
             catSettings1.AddButton("Saved Presets", "LightSave", "Open a menu for saving and loading presets").OnPress += () =>
             {

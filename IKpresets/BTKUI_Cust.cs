@@ -34,7 +34,7 @@ namespace IKpresetsMod
             //QuickMenuAPI.PrepareIcon("IKpresets", "", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons..png"));
         }
 
-        public static Page pageEditSettings, pageSaveLoad, pageSlotLoadConfirm, pageSetName, pageEditSlotName, pageAvatarSaveLoad;
+        public static Page pageEditSettings, pageSaveLoad, pageSetName, pageEditSlotName, pageAvatarSaveLoad;
         public static BTKUILib.UIObjects.Category pageEditSlotName_Text;
         
         private static FieldInfo _uiInstance = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetField("Instance", BindingFlags.NonPublic | BindingFlags.Static);
@@ -60,8 +60,6 @@ namespace IKpresetsMod
             HackRegisterRoot(pageSaveLoad);
             pageSetName = new Page("IKpresets", "IK Presets - Set Name", false);
             HackRegisterRoot(pageSetName);
-            pageSlotLoadConfirm = new Page("IKpresets", "IK Presets - Slot load confirm", false);
-            HackRegisterRoot(pageSlotLoadConfirm);
             pageEditSlotName = new Page("IKpresets", "IK Presets - Edit slot names", false);
             HackRegisterRoot(pageEditSlotName);
             pageAvatarSaveLoad = new Page("IKpresets", "IK Presets - Avatar Slots", false);
@@ -508,15 +506,11 @@ namespace IKpresetsMod
                 {
                     if (slotNames[slot.Key] == "N/A")
                     {
-                        pageSlotLoadConfirm.ClearChildren();
-                        var slotcat = pageSlotLoadConfirm.AddCategory("This slot has no name set, are you sure you want to load from it?");
-                        slotcat.AddButton("Load", "Select", "Load unnamed slot").OnPress += () =>
-                        {
+                        QuickMenuAPI.ShowConfirm("Loading from default slot name.", "This slot has no name set, are you sure you want to load from it?", () => {
                             SaveSlots.LoadSlot(slot.Key);
                             UpdateText();
                             SaveChanges();
-                        };
-                        pageSlotLoadConfirm.OpenPage();
+                        }, () => { }, "Yes", "No");
                     }
                     else
                     {
