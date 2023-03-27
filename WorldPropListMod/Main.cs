@@ -26,7 +26,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5";
+        public const string versionStr = "0.5.1";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
@@ -118,7 +118,8 @@ namespace WorldPropListMod
             var time = Time.time + lineLifespan.Value;
             while (Time.time <= time && (!obj?.Equals(null) ?? false) && !LineKillNow)
             {
-                LineRen.GetComponent<LineRenderer>().SetPosition(1, LineRen.transform.InverseTransformPoint(obj.transform.position));
+                LineRen.GetComponent<LineRenderer>().SetPosition(0, LineRen.transform.position);
+                LineRen.GetComponent<LineRenderer>().SetPosition(1, obj.transform.position);
                 yield return null;
             }
             LineRen.SetActive(false);
@@ -139,14 +140,14 @@ namespace WorldPropListMod
                 myLine.AddComponent<LineRenderer>();
                 LineRenderer lr = myLine.GetComponent<LineRenderer>();
                 lr.material = new Material(Shader.Find("Particles/Standard Unlit"));
-                lr.useWorldSpace = false;
+                lr.useWorldSpace = true;
                 lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 lr.receiveShadows = false;
                 lr.startColor = new Color(0f, 1f, 1f);
                 lr.endColor = new Color(0f, .219f, 1f);
                 lr.startWidth = .005f;
                 lr.endWidth = 0.001f;
-                lr.SetPosition(0, Vector3.zero);
+                lr.SetPosition(0, myLine.transform.position);
                 lr.SetPosition(1, new Vector3(0f, 1f, 0f));
                 LineRen = myLine;
             }

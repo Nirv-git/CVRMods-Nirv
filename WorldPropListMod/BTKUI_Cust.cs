@@ -172,7 +172,8 @@ namespace WorldPropListMod
                     string label = $"{propItem.Value.Item1}, by: {propItem.Value.Item2}<p>Distance: {Utils.NumFormat(propItem.Value.Item3)}";
                     cat2.AddButton(propItem.Value.Item1, propItem.Key.Spawnable.guid, label).OnPress += () =>
                     {
-                        PropDetailMenu(propItem.Key);
+                        if (!propItem.Key?.Spawnable?.gameObject.Equals(null) ?? false) PropDetailMenu(propItem.Key);
+                        else PropMenu(true); //Reload PropMenu page, likely trying to open stuff for a deleted prop
                     };
                 }
 
@@ -232,11 +233,13 @@ namespace WorldPropListMod
                 cat1.AddButton("", guid, $"Just an icon, pressing this does nothing");
                 cat1.AddToggle("Highlight", "Highlight Prop", (Main.onPropDetailSelect.Value == 1 || Main.onPropDetailSelect.Value == 3)).OnValueUpdated += action =>
                 {
-                    Main.HighlightObj(propData.Spawnable.gameObject, action);
+                    if (!propData?.Spawnable?.gameObject.Equals(null) ?? false) Main.HighlightObj(propData.Spawnable.gameObject, action);
+                    else { PropMenu(false);  page.ClearChildren(); page.AddCategory("Prop was deleted"); }
                 };
                 cat1.AddButton("Show Line to Prop", "LineProp", $"Line from your right hand to the prop, stays active for {Main.lineLifespan.Value}s").OnPress += () =>
                 {
-                    Main.LineObj(propData.Spawnable.gameObject);
+                    if(!propData?.Spawnable?.gameObject.Equals(null) ?? false) Main.LineObj(propData.Spawnable.gameObject);
+                    else { PropMenu(false); page.ClearChildren(); page.AddCategory("Prop was deleted"); }
                 };
 
                 cat2.AddButton("Delete Prop", "Delete", "Delete this prop").OnPress += () =>
@@ -250,6 +253,7 @@ namespace WorldPropListMod
                     }
                     PropMenu(false);
                     page.ClearChildren();
+                    page.AddCategory("Prop was deleted");
                 };
 
                 cat2.AddButton("Block Prop and Delete", "BlockTrash", "Add this prop to the block list and Delete it").OnPress += () =>
@@ -266,8 +270,10 @@ namespace WorldPropListMod
                                 propData.Recycle();
                             else
                                 propData.Spawnable.Delete();
+
                             PropMenu(false);
                             page.ClearChildren();
+                            page.AddCategory("Prop was deleted");
                         }
                     }, () => { }, "Yes", "No");
                 };            
