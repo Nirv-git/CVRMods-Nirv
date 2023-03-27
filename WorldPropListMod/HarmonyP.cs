@@ -44,13 +44,13 @@ namespace WorldPropListMod
                     for (int index = 0; index < CustomFloatsAmount; ++index)
                         CustomFloats[index] = reader.ReadSingle();
                     var SpawnedBy = reader.ReadString();
-                    if (Main.usePropBlockList.Value && SaveLoad.blockedProps.ContainsKey(ObjectId))
+                    if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(ObjectId))
                     {
-                        var msg = $"Mod Blocking Prop: {SaveLoad.blockedProps[ObjectId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(SpawnedBy, out string name) ? name : SpawnedBy)}";
+                        var msg = $"Mod Blocking Prop: {Main.blockedProps[ObjectId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(SpawnedBy, out var obj) ? obj.Item1 : SpawnedBy)}";
                         Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                         Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {SpawnedBy}, ID:{ObjectId}");
                         QuickMenuAPI.ShowAlertToast(msg, 3);
-                        Main.BlockedThisSession.Add((SaveLoad.blockedProps[ObjectId], SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH'-'mm'-'ss")));
+                        Main.BlockedThisSession.Add((Main.blockedProps[ObjectId], SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH'-'mm'-'ss")));
                         return false;
                     }
                     else

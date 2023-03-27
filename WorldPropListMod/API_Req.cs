@@ -14,8 +14,8 @@ namespace WorldPropListMod
     internal static class ApiRequests
     {
         //Much of the credit goes to https://github.com/kafeijao/Kafe_CVR_Mods/blob/6e2b44b2ed3db22d21096ca53177be3a298a4f46/OSC/Utils/ApiRequests.cs#L7
-        internal static async System.Threading.Tasks.Task<(string, string)> RequestPropDetailsPageTask(string guid)
-        {
+        internal static async System.Threading.Tasks.Task<(string, string, string)> RequestPropDetailsPageTask(string guid)
+        {//Name, URL, Author
             Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching prop {guid} name...");
             BaseResponse<SpawnableDetailsResponse> response;
             try
@@ -27,15 +27,15 @@ namespace WorldPropListMod
             {
                 Main.Logger.Error($"[API] Fetching prop {guid} name has Failed!");
                 Main.Logger.Error(ex);
-                return (null,null);
+                return (null,null, null);
             }
             if (response == null)
             {
                 Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching prop {guid} name has Failed! Response came back empty.");
-                return (null, null);
+                return (null, null, null);
             }
             Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetched prop {guid} name successfully! Name: {response.Data.Name}");
-            return (response.Data.Name, response.Data.ImageUrl);
+            return (response.Data.Name, response.Data.ImageUrl, response.Data.Author.Name);
         }
 
         internal static async System.Threading.Tasks.Task<string> RequestPlayerDetailsPageTask(string guid)

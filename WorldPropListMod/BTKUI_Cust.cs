@@ -160,8 +160,8 @@ namespace WorldPropListMod
 
                     var location = new Vector3(propData.PositionX, propData.PositionY, propData.PositionZ);
                     var dist = Math.Abs(Vector3.Distance(location, Camera.main.transform.position));
-                    string name = Main.PropNamesCache.TryGetValue(propData.Spawnable.guid, out var propName) ? propName : "Error: PropNameNotFound";
-                    string player = Main.PlayerNamesCache.TryGetValue(propData.SpawnedBy, out var playerName) ? playerName : "Error: PlayerNameNotFound";
+                    string name = Main.PropNamesCache.TryGetValue(propData.Spawnable.guid, out var propNameObj) ? propNameObj.Item1 : "Error: PropNameNotFound";
+                    string player = Main.PlayerNamesCache.TryGetValue(propData.SpawnedBy, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
 
                     var data = (name, player, dist);
                     propList[propData] = data;
@@ -225,8 +225,8 @@ namespace WorldPropListMod
                 var cat2 = page.AddCategory("");
 
                 var guid = propData.Spawnable.guid;
-                string name = Main.PropNamesCache.TryGetValue(guid, out var propName) ? propName : "Error: PropNameNotFound";
-                string player = Main.PlayerNamesCache.TryGetValue(propData.SpawnedBy, out var playerName) ? playerName : "Error: PlayerNameNotFound";
+                string name = Main.PropNamesCache.TryGetValue(guid, out var propNameObj) ? propNameObj.Item1 : "Error: PropNameNotFound";
+                string player = Main.PlayerNamesCache.TryGetValue(propData.SpawnedBy, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
                 var location = new Vector3(propData.PositionX, propData.PositionY, propData.PositionZ);
                 var dist = Utils.NumFormat(Math.Abs(Vector3.Distance(location, Camera.main.transform.position)));
 
@@ -261,9 +261,9 @@ namespace WorldPropListMod
                     QuickMenuAPI.ShowConfirm("Confirm Block", "Are you sure you want to block and delete this prop?", () => {
                         if (propData.SpawnedBy != "SYSTEM" && propData.SpawnedBy != "LocalServer")
                         {
-                            if (!SaveLoad.blockedProps.ContainsKey(guid))
+                            if (!Main.blockedProps.ContainsKey(guid))
                             {
-                                SaveLoad.blockedProps.Add(guid, name);
+                                Main.blockedProps.Add(guid, name);
                                 SaveLoad.SaveListFiles();
                             }
                             if (propData.Spawnable == null)
@@ -282,7 +282,7 @@ namespace WorldPropListMod
                 var catSpawnBy = page.AddCategory($"Spawned by: {player}");
                 var catDist = page.AddCategory($"Prop is {dist} meters away");
                 var catPos = page.AddCategory($"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}");
-                if (SaveLoad.blockedProps.ContainsKey(guid))
+                if (Main.blockedProps.ContainsKey(guid))
                 {
                     page.AddCategory("");
                     page.AddCategory("");
@@ -314,19 +314,19 @@ namespace WorldPropListMod
                 {
                     QuickMenuAPI.ShowConfirm("Unblock all Props", "Are you sure you want to remove all props from the block list?", () => 
                     {
-                        SaveLoad.blockedProps = new Dictionary<string, string>();
+                        Main.blockedProps = new Dictionary<string, string>();
                         SaveLoad.SaveListFiles();
                         PropBlockMenu(); 
                     }, () => { }, "Yes", "No");
                 };
 
-                if (SaveLoad.blockedProps.Count > 0)
+                if (Main.blockedProps.Count > 0)
                 {
-                    foreach (var blockedProp in SaveLoad.blockedProps.Reverse())
+                    foreach (var blockedProp in Main.blockedProps.Reverse())
                     {
                         cat2.AddButton(blockedProp.Value, "Unblock", $"Unblock prop: {blockedProp.Value}<p>GUID:{blockedProp.Key}").OnPress += () =>
                         {
-                            SaveLoad.blockedProps.Remove(blockedProp.Key);
+                            Main.blockedProps.Remove(blockedProp.Key);
                             SaveLoad.SaveListFiles();
                             PropBlockMenu();
                         };
@@ -369,7 +369,7 @@ namespace WorldPropListMod
                 {
                     foreach (var blockedProp in Main.BlockedThisSession.Reverse<(string, string, string)>())
                     {
-                        var playerName = Main.PlayerNamesCache.TryGetValue(blockedProp.Item2, out string name) ? name : blockedProp.Item2;
+                        var playerName = Main.PlayerNamesCache.TryGetValue(blockedProp.Item2, out var obj) ? obj.Item1 : blockedProp.Item2;
                         page.AddCategory($"{blockedProp.Item1}");
                         page.AddCategory($"Spawned by:{playerName}, At:{blockedProp.Item3}");
                         page.AddCategory("");

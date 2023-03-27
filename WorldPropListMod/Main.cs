@@ -44,10 +44,13 @@ namespace WorldPropListMod
         public static bool LineWaitKill = false;
         public static bool LineKillNow = false;
 
-        public static readonly Dictionary<string, string> PropNamesCache = new Dictionary<string, string>(); //GUID,Name
-        public static readonly Dictionary<string, string> PropImageCache = new Dictionary<string, string>(); //GUID,URL
-        public static readonly Dictionary<string, string> PlayerNamesCache = new Dictionary<string, string>(); //GUID,Name
+        public static Dictionary<string, string> blockedProps = new Dictionary<string, string>(); //GUID, Name
+        public static Dictionary<string, (string, string, DateTime)> PropNamesCache = new Dictionary<string, (string, string, DateTime)>(); //GUID,(Name,Author,CacheDate)
+        //public static readonly Dictionary<string, (string, DateTime)> PropImageCache = new Dictionary<string, string>(); //GUID,URL
+        public static Dictionary<string, (string, DateTime)> PlayerNamesCache = new Dictionary<string, (string, DateTime)>(); //GUID,(Name,CacheDate)
         public static readonly List<(string, string, string)> BlockedThisSession = new List<(string, string, string)>(); //Name,PlayerGUID,Time
+        public static readonly List<(string, string, string, string)> PropsThisSession = new List<(string, string, string, string)>(); //GUID,Name,PlayerGUID,Time
+
 
 
         public override void OnApplicationStart()
@@ -62,6 +65,16 @@ namespace WorldPropListMod
             SaveLoad.InitFileListOrLoad();
             BTKUI_Cust.SetupUI();      
         }
+        public override void OnPreferencesSaved()
+        {
+            SaveLoad.SaveListFiles();
+        }
+
+        public override void OnApplicationQuit()
+        {
+            Main.Logger.Msg("Saving files");
+            SaveLoad.SaveListFiles();
+        }
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
@@ -75,7 +88,7 @@ namespace WorldPropListMod
                     {
                         RunOnce = false;
                         //Logger.Msg($"MetaPort.Instance.ownerId {MetaPort.Instance.ownerId} - MetaPort.Instance.username {MetaPort.Instance.username}");
-                        PlayerNamesCache[MetaPort.Instance.ownerId] = MetaPort.Instance.username;
+                        PlayerNamesCache[MetaPort.Instance.ownerId] = (MetaPort.Instance.username, DateTime.Now);
                     }
                     break;
             }
@@ -165,15 +178,15 @@ namespace WorldPropListMod
         }
 
         internal static async void FindPropAPIname(string guid)
-        {
+        {//Name, URL, Author
             //Logger.Msg(ConsoleColor.DarkGray, $"FindPropAPIname");
             if (PropNamesCache.ContainsKey(guid)) return;
-            PropNamesCache[guid] = "PendingAPI";
-            (string, string) propName = (null, null);
+            PropNamesCache[guid] = ("PendingAPI", "", DateTime.MinValue);
+            (string, string, string) propName = (null, null, null);
             propName = await ApiRequests.RequestPropDetailsPageTask(guid);
             if (propName.Item1 == null) { PropNamesCache.Remove(guid);  return; }
-            PropNamesCache[guid] = propName.Item1;
-            PropImageCache[guid] = propName.Item2;
+            PropNamesCache[guid] = (propName.Item1, propName.Item3, DateTime.Now);
+            //PropImageCache[guid] = propName.Item2;
             //Logger.Msg(ConsoleColor.DarkGray, $"propName - {propName}");
             MelonCoroutines.Start(GetPropImage(guid, propName.Item2));
         }
@@ -182,11 +195,11 @@ namespace WorldPropListMod
         {
             //Logger.Msg(ConsoleColor.DarkGray, $"FindPlayerAPIname");
             if (PlayerNamesCache.ContainsKey(guid)) return;
-            PlayerNamesCache[guid] = "PendingAPI";
+            PlayerNamesCache[guid] = ("PendingAPI", DateTime.MinValue);
             string playerName = null;
             playerName = await ApiRequests.RequestPlayerDetailsPageTask(guid);
             if (playerName == null) { PlayerNamesCache.Remove(guid); return; }
-            PlayerNamesCache[guid] = playerName;
+            PlayerNamesCache[guid] = (playerName, DateTime.Now);
             //Logger.Msg(ConsoleColor.DarkGray, $"playerName - {playerName}");
         }
 
