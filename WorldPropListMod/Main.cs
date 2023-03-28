@@ -35,8 +35,6 @@ namespace WorldPropListMod
         public static MelonPreferences_Entry<int> onPropDetailSelect;
         public static MelonPreferences_Entry<bool> usePropBlockList;
 
-
-
         public static GameObject lastHighlight, LineRen;
         public static bool RunOnce = true;
 
@@ -45,11 +43,11 @@ namespace WorldPropListMod
         public static bool LineKillNow = false;
 
         public static Dictionary<string, string> blockedProps = new Dictionary<string, string>(); //GUID, Name
-        public static Dictionary<string, (string, string, DateTime)> PropNamesCache = new Dictionary<string, (string, string, DateTime)>(); //GUID,(Name,Author,CacheDate)
-        //public static readonly Dictionary<string, (string, DateTime)> PropImageCache = new Dictionary<string, string>(); //GUID,URL
-        public static Dictionary<string, (string, DateTime)> PlayerNamesCache = new Dictionary<string, (string, DateTime)>(); //GUID,(Name,CacheDate)
-        public static readonly List<(string, string, string)> BlockedThisSession = new List<(string, string, string)>(); //Name,PlayerGUID,Time
-        public static readonly List<(string, string, string, string)> PropsThisSession = new List<(string, string, string, string)>(); //GUID,Name,PlayerGUID,Time
+        public static Dictionary<string, (string, string, DateTime)> PropNamesCache = new Dictionary<string, (string, string, DateTime)>(); //propGUID,(Name,AuthorName,CacheDate)
+        public static Dictionary<string, (string, DateTime)> PlayerNamesCache = new Dictionary<string, (string, DateTime)>(); //playerGUID,(Name,CacheDate)
+
+        public static readonly List<(string, string, string)> BlockedThisSession = new List<(string, string, string)>(); //propGUID,PlayerGUID,Time
+        public static readonly List<(string, string, string)> PropsThisSession = new List<(string, string, string)>(); //propGUID,PlayerGUID,Time
 
 
 

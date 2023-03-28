@@ -35,10 +35,12 @@ namespace WorldPropListMod
             QuickMenuAPI.PrepareIcon("WorldPropList", "Props", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Props.png"));
             QuickMenuAPI.PrepareIcon("WorldPropList", "BlockList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.BlockList.png"));
             QuickMenuAPI.PrepareIcon("WorldPropList", "ResetList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.ResetList.png"));
+            QuickMenuAPI.PrepareIcon("WorldPropList", "PropList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.PropList.png"));
+            QuickMenuAPI.PrepareIcon("WorldPropList", "DeleteLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.DeleteLess.png"));
             //QuickMenuAPI.PrepareIcon("WorldPropList", "", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons..png"));
         }
 
-        public static Page pagePropList, pagePropSingle, pagePropBlocks, pagePropBlockHistory;
+        public static Page pagePropList, pagePropSingle, pagePropBlocks, pagePropBlockHistory, pagePropHistory;
 
         private static FieldInfo _uiInstance = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetField("Instance", BindingFlags.NonPublic | BindingFlags.Static);
         private static MethodInfo _registerRootPage = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetMethod("RegisterRootPage", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -60,24 +62,15 @@ namespace WorldPropListMod
             HackRegisterRoot(pagePropBlocks);
             pagePropBlockHistory = new Page("WorldPropList", "World Prop List - Blocked Props History", false);
             HackRegisterRoot(pagePropBlockHistory);
-
-            //Category cat = null;
-            //if (Main.useNirvMiscPage.Value)
-            //{
-            //    var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
-            //    page.MenuTitle = "Nirv Misc Page";
-            //    page.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
-            //    cat = page.AddCategory("World Prop List", "WorldPropList");
-            //}
-            //else
-            //{
-            //    cat = QuickMenuAPI.MiscTabPage.AddCategory("World Prop List", "WorldPropList");
-            //}
+            pagePropHistory = new Page("WorldPropList", "World Prop List - Props History", false);
+            HackRegisterRoot(pagePropHistory);
 
             var page = new Page("WorldPropList", "World Prop List", true, "Props");
             page.MenuTitle = "World Prop List";
             page.MenuSubtitle = "Lists all props in the world with options to locate and delete";
             var cat = page.AddCategory("");
+            var cat2 = page.AddCategory("History");
+            var cat3 = page.AddCategory("Delete Props");
 
             cat.AddButton("Props in World", "WorldProps", "Lists all props in the world with options to locate and delete").OnPress += () =>
             {
@@ -87,13 +80,23 @@ namespace WorldPropListMod
             {
                 PropBlockMenu();
             };
-            cat.AddButton("Blocked Props this Session", "BlockList", "Lists all props that have been blocked from spawning this session").OnPress += () =>
+            //
+            cat2.AddButton("Spawned this Session", "PropList", "Lists all props that have spawned this session").OnPress += () =>
+            {
+                PropHistoryMenu();
+            };
+            cat2.AddButton("Blocked this Session", "BlockList", "Lists all props that have been blocked from spawning this session").OnPress += () =>
             {
                 PropBlockHistoryMenu();
             };
-            cat.AddButton("Delete All Props", "Delete", "Delete all props in the world").OnPress += () =>
+            //
+            cat3.AddButton("Delete Your Props", "DeleteLess", "Delete your props from the world").OnPress += () =>
             {
-                QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete all props in the world", () => { CVRSyncHelper.DeleteAllProps(); }, () => { }, "Yes", "No");
+                QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete all of YOUR props in the world", () => { CVRSyncHelper.DeleteMyProps(); }, () => { }, "Yes", "No");
+            };
+            cat3.AddButton("Delete All Props", "Delete", "Delete all props in the world").OnPress += () =>
+            {
+                QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete ALL props in the world", () => { CVRSyncHelper.DeleteAllProps(); }, () => { }, "Yes", "No");
             };
         }
 
@@ -227,6 +230,7 @@ namespace WorldPropListMod
                 var guid = propData.Spawnable.guid;
                 string name = Main.PropNamesCache.TryGetValue(guid, out var propNameObj) ? propNameObj.Item1 : "Error: PropNameNotFound";
                 string player = Main.PlayerNamesCache.TryGetValue(propData.SpawnedBy, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
+                string propAuthor = Main.PropNamesCache.TryGetValue(guid, out var propAuthObj) ? propAuthObj.Item2 : "Error: PropAuthorNotFound";
                 var location = new Vector3(propData.PositionX, propData.PositionY, propData.PositionZ);
                 var dist = Utils.NumFormat(Math.Abs(Vector3.Distance(location, Camera.main.transform.position)));
 
@@ -279,12 +283,13 @@ namespace WorldPropListMod
                 };            
 
                 var catName = page.AddCategory($"Name: {name}");
+                var catAuthor = page.AddCategory($"Prop author: {propAuthor}");
                 var catSpawnBy = page.AddCategory($"Spawned by: {player}");
                 var catDist = page.AddCategory($"Prop is {dist} meters away");
                 var catPos = page.AddCategory($"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}");
+
                 if (Main.blockedProps.ContainsKey(guid))
                 {
-                    page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("PROP IS IN BLOCK LIST");
@@ -308,7 +313,7 @@ namespace WorldPropListMod
                 page.MenuSubtitle = $"List of all blocked props. Clicking each entry will unblock";
 
                 var cat1 = page.AddCategory("");
-                var cat2 = page.AddCategory("Props");
+                var cat2 = page.AddCategory("Blocked Props List");
 
                 cat1.AddButton("Unblock all Props", "UnblockAll", "Clear the block list").OnPress += () =>
                 {
@@ -355,6 +360,8 @@ namespace WorldPropListMod
                 page.MenuSubtitle = $"List of props that have been blocked from spawning this session";
 
                 var cat1 = page.AddCategory("");
+                var cat2 = page.AddCategory("Blocked Props History");
+
                 cat1.AddButton("Clear History", "ResetList", "Clear the history").OnPress += () =>
                 {
                     Main.BlockedThisSession.Clear();
@@ -366,13 +373,21 @@ namespace WorldPropListMod
                 };
 
                 if (Main.BlockedThisSession.Count > 0)
-                {
-                    foreach (var blockedProp in Main.BlockedThisSession.Reverse<(string, string, string)>())
+                {//propGUID,PlayerGUID,Time
+                    foreach (var prop in Main.BlockedThisSession.Reverse<(string, string, string)>())
                     {
-                        var playerName = Main.PlayerNamesCache.TryGetValue(blockedProp.Item2, out var obj) ? obj.Item1 : blockedProp.Item2;
-                        page.AddCategory($"{blockedProp.Item1}");
-                        page.AddCategory($"Spawned by:{playerName}, At:{blockedProp.Item3}");
-                        page.AddCategory("");
+                        string name = Main.PropNamesCache.TryGetValue(prop.Item1, out var propNameObj) ? propNameObj.Item1 : "Error: PropNameNotFound";
+                        string player = Main.PlayerNamesCache.TryGetValue(prop.Item2, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
+
+                        string label = $"{name}, by: {player}<p>At: {prop.Item3}";
+
+                        cat2.AddButton(name, prop.Item1, label).OnPress += () =>
+                        {
+                            QuickMenuAPI.ShowConfirm("Confirm Unblock", "Are you sure you want to unblock this prop?", () => {
+                                Main.blockedProps.Remove(prop.Item1);
+                                SaveLoad.SaveListFiles();
+                            }, () => { }, "Yes", "No");
+                        };
                     }
                 }
                 else
@@ -385,6 +400,58 @@ namespace WorldPropListMod
                 page.OpenPage();
             }
             catch (System.Exception ex) { Main.Logger.Error($"Error when creating prop block history menu\n" + ex.ToString()); }
+        }
+
+        public static void PropHistoryMenu()
+        {
+            try
+            {
+                var page = pagePropHistory;
+                page.ClearChildren();
+
+                page.MenuTitle = "Prop History";
+                page.MenuSubtitle = $"List of props that have been spawned this session. Click to block props.";
+
+                var cat1 = page.AddCategory("");
+                var cat2 = page.AddCategory("Props History");
+                cat1.AddButton("Clear History", "ResetList", "Clear the history").OnPress += () =>
+                {
+                    Main.PropsThisSession.Clear();
+                    PropHistoryMenu();
+                };
+                cat1.AddButton("Refresh", "Reset", "Refresh this page").OnPress += () =>
+                {
+                    PropHistoryMenu();
+                };
+
+                if (Main.PropsThisSession.Count > 0)
+                {//propGUID,PlayerGUID,Time
+                    foreach (var prop in Main.PropsThisSession.Reverse<(string, string, string)>())
+                    {
+                        string name = Main.PropNamesCache.TryGetValue(prop.Item1, out var propNameObj) ? propNameObj.Item1 : "Error: PropNameNotFound";
+                        string player = Main.PlayerNamesCache.TryGetValue(prop.Item2, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
+
+                        string label = $"{name}, by: {player}<p>At: {prop.Item3}{(Main.blockedProps.ContainsKey(prop.Item1)?"<p>PROP IS BLOCKED":"")}";
+
+                        cat2.AddButton(name, prop.Item1, label).OnPress += () =>
+                        {
+                            QuickMenuAPI.ShowConfirm("Confirm Block", "Are you sure you want to block this prop?", () => { 
+                                Main.blockedProps.Add(prop.Item1, name);
+                                SaveLoad.SaveListFiles();
+                            }, () => { }, "Yes", "No");
+                        };
+                    }       
+                }
+                else
+                {
+                    page.AddCategory("");
+                    page.AddCategory("");
+                    page.AddCategory("");
+                    page.AddCategory("List is empty");
+                }  
+                page.OpenPage();
+            }
+            catch (System.Exception ex) { Main.Logger.Error($"Error when creating prop history menu\n" + ex.ToString()); }
         }
 
     }

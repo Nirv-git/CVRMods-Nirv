@@ -46,15 +46,18 @@ namespace WorldPropListMod
                     var SpawnedBy = reader.ReadString();
                     if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(ObjectId))
                     {
+                        Main.FindPropAPIname(ObjectId);
+                        Main.FindPlayerAPIname(SpawnedBy);
                         var msg = $"Mod Blocking Prop: {Main.blockedProps[ObjectId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(SpawnedBy, out var obj) ? obj.Item1 : SpawnedBy)}";
                         Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                         Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {SpawnedBy}, ID:{ObjectId}");
                         QuickMenuAPI.ShowAlertToast(msg, 3);
-                        Main.BlockedThisSession.Add((Main.blockedProps[ObjectId], SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH'-'mm'-'ss")));
+                        Main.BlockedThisSession.Add((ObjectId, SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                         return false;
                     }
                     else
-                    {
+                    {   //GUID,PlayerGUID,Time
+                        Main.PropsThisSession.Add((ObjectId, SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                         //Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
                         Main.FindPropAPIname(ObjectId);
                         Main.FindPlayerAPIname(SpawnedBy); 
