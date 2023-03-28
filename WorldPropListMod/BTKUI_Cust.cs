@@ -331,9 +331,12 @@ namespace WorldPropListMod
                     {
                         cat2.AddButton(blockedProp.Value, "Unblock", $"Unblock prop: {blockedProp.Value}<p>GUID:{blockedProp.Key}").OnPress += () =>
                         {
-                            Main.blockedProps.Remove(blockedProp.Key);
-                            SaveLoad.SaveListFiles();
-                            PropBlockMenu();
+                            QuickMenuAPI.ShowConfirm("Unblock Prop", "Are you sure you want to unblock this prop?", () =>
+                            {
+                                Main.blockedProps.Remove(blockedProp.Key);
+                                SaveLoad.SaveListFiles();
+                                PropBlockMenu();
+                            }, () => { }, "Yes", "No");
                         };
                     }
                 }

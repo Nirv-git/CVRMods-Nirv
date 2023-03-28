@@ -26,7 +26,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.1";
+        public const string versionStr = "0.5.2";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
@@ -65,7 +65,7 @@ namespace WorldPropListMod
         }
         public override void OnPreferencesSaved()
         {
-            SaveLoad.SaveListFiles();
+            if(!RunOnce) SaveLoad.SaveListFiles();
         }
 
         public override void OnApplicationQuit()
