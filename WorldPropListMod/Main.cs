@@ -42,8 +42,10 @@ namespace WorldPropListMod
         public static bool LineWaitKill = false;
         public static bool LineKillNow = false;
 
+        public static int APIwaitingCount = 0;
+
         public static Dictionary<string, string> blockedProps = new Dictionary<string, string>(); //GUID, Name
-        public static Dictionary<string, (string, string, DateTime)> PropNamesCache = new Dictionary<string, (string, string, DateTime)>(); //propGUID,(Name,AuthorName,CacheDate)
+        public static Dictionary<string, (string, string, string, bool, string, string, string, DateTime)> PropNamesCache = new Dictionary<string, (string, string, string, bool, string, string, string, DateTime)>(); //propGUID,(Name,AuthorName,tags, isPub, FileSize, UpdatedAt, DescriptionCacheDate)
         public static Dictionary<string, (string, DateTime)> PlayerNamesCache = new Dictionary<string, (string, DateTime)>(); //playerGUID,(Name,CacheDate)
 
         public static readonly List<(string, string, string)> BlockedThisSession = new List<(string, string, string)>(); //propGUID,PlayerGUID,Time
@@ -156,8 +158,8 @@ namespace WorldPropListMod
                 lr.receiveShadows = false;
                 lr.startColor = new Color(0f, 1f, 1f);
                 lr.endColor = new Color(0f, .219f, 1f);
-                lr.startWidth = .005f;
-                lr.endWidth = 0.001f;
+                lr.startWidth = .0099f;
+                lr.endWidth = 0.005f;
                 lr.SetPosition(0, myLine.transform.position);
                 lr.SetPosition(1, new Vector3(0f, 1f, 0f));
                 LineRen = myLine;
@@ -179,11 +181,15 @@ namespace WorldPropListMod
         {//Name, URL, Author
             //Logger.Msg(ConsoleColor.DarkGray, $"FindPropAPIname");
             if (PropNamesCache.ContainsKey(guid)) return;
-            PropNamesCache[guid] = ("PendingAPI", "", DateTime.MinValue);
-            (string, string, string) propName = (null, null, null);
+            PropNamesCache[guid] = ("PendingAPI", "", "", false, "", "", "", DateTime.MinValue);
+            (string, string, string, string, bool, string, string, string) propName = (null, null, null, null, false, null, null, null);
+            while (APIwaitingCount > 3) { await System.Threading.Tasks.Task.Delay(2000); }
+            APIwaitingCount++;
             propName = await ApiRequests.RequestPropDetailsPageTask(guid);
+            APIwaitingCount--;
+            //Logger.Msg(APIwaitingCount);
             if (propName.Item1 == null) { PropNamesCache.Remove(guid);  return; }
-            PropNamesCache[guid] = (propName.Item1, propName.Item3, DateTime.Now);
+            PropNamesCache[guid] = (propName.Item1, propName.Item3, propName.Item4, propName.Item5, propName.Item6, propName.Item7, propName.Item8, DateTime.Now);
             //PropImageCache[guid] = propName.Item2;
             //Logger.Msg(ConsoleColor.DarkGray, $"propName - {propName}");
             MelonCoroutines.Start(GetPropImage(guid, propName.Item2));
@@ -195,7 +201,11 @@ namespace WorldPropListMod
             if (PlayerNamesCache.ContainsKey(guid)) return;
             PlayerNamesCache[guid] = ("PendingAPI", DateTime.MinValue);
             string playerName = null;
+            while (APIwaitingCount > 3) { await System.Threading.Tasks.Task.Delay(1500); }
+            APIwaitingCount++;
             playerName = await ApiRequests.RequestPlayerDetailsPageTask(guid);
+            APIwaitingCount--;
+            //Logger.Msg(APIwaitingCount);
             if (playerName == null) { PlayerNamesCache.Remove(guid); return; }
             PlayerNamesCache[guid] = (playerName, DateTime.Now);
             //Logger.Msg(ConsoleColor.DarkGray, $"playerName - {playerName}");

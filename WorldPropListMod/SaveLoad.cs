@@ -43,9 +43,9 @@ namespace WorldPropListMod
                 }
                 else
                 {
-                    try { Main.PropNamesCache = new Dictionary<string, (string, string, DateTime)>(File.ReadAllLines(path).Select(s => s.Split(new char[] { '␟' }, StringSplitOptions.RemoveEmptyEntries))
-                        .Where(x => x.Length == 4).Where(x => ParseDate(x[3].Trim()) >= DateTime.Now.AddDays(-7))
-                        .ToDictionary(p => p[0].Trim(), p => (p[1].Trim(), p[2].Trim(), ParseDate(p[3].Trim()))));
+                    try { Main.PropNamesCache = new Dictionary<string, (string, string, string, bool, string, string, string, DateTime)>(File.ReadAllLines(path).Select(s => s.Split(new char[] { '␟' }, StringSplitOptions.RemoveEmptyEntries))
+                        .Where(x => x.Length == 9).Where(x => ParseDate(x[8].Trim()) >= DateTime.Now.AddDays(-7))
+                        .ToDictionary(p => p[0].Trim(), p => (p[1].Trim(), p[2].Trim(), p[3].Trim(), Boolean.Parse(p[4].Trim()), p[5].Trim(), p[6].Trim(), p[7].Trim(), ParseDate(p[8].Trim()) )));
                     } catch (Exception ex) { Main.Logger.Error("Error reading prop cache file \n" + ex.ToString()); }
                 }
             }
@@ -72,7 +72,8 @@ namespace WorldPropListMod
             try { File.WriteAllLines(blockedPropsPath, Main.blockedProps.Select(p => string.Format("{0}␟ {1}", p.Key, p.Value)), Encoding.UTF8); 
             } catch (Exception ex) { Main.Logger.Error("Error writing prop blocklist \n" + ex.ToString()); }
 
-            try { File.WriteAllLines(propNameCachePath, Main.PropNamesCache.Select(p => string.Format("{0}␟ {1}␟ {2}␟ {3}", p.Key, p.Value.Item1, p.Value.Item2, p.Value.Item3.ToString(dateFormatOut))), Encoding.UTF8); 
+            try { File.WriteAllLines(propNameCachePath, Main.PropNamesCache.Select(p => string.Format("{0}␟ {1}␟ {2}␟ {3}␟ {4}␟ {5}␟ {6}␟ {7}␟ {8}", p.Key, p.Value.Item1, p.Value.Item2, p.Value.Item3, p.Value.Item4,
+                p.Value.Item5, p.Value.Item6, p.Value.Item7, p.Value.Item8.ToString(dateFormatOut))), Encoding.UTF8); 
             } catch (Exception ex) { Main.Logger.Error("Error writing prop cache file \n" + ex.ToString()); }
 
             try { File.WriteAllLines(playerNamesCachePath, Main.PlayerNamesCache.Select(p => string.Format("{0}␟ {1}␟ {2}", p.Key, p.Value.Item1, p.Value.Item2.ToString(dateFormatOut))), Encoding.UTF8); 

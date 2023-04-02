@@ -228,9 +228,17 @@ namespace WorldPropListMod
                 var cat2 = page.AddCategory("");
 
                 var guid = propData.Spawnable.guid;
-                string name = Main.PropNamesCache.TryGetValue(guid, out var propNameObj) ? propNameObj.Item1 : "Error: PropNameNotFound";
+                bool foundPropCache = Main.PropNamesCache.TryGetValue(guid, out var propObj);
+                string name = foundPropCache ? propObj.Item1 : "Error: PropNameNotFound";
+                string propAuthor = foundPropCache ? propObj.Item2 : "Error: PropAuthorNotFound";
+                string propTags = foundPropCache ? propObj.Item3 : "Error: PropDataNotInCache";
+                bool propisPub = foundPropCache ? propObj.Item4 : false;
+                string propFileSize = foundPropCache ? propObj.Item5 : "Error: PropDataNotInCache";
+                string propUpdatedAt = foundPropCache ? propObj.Item6 : "Error: PropDataNotInCache";
+                string propDesc = foundPropCache ? propObj.Item7 : "Error: PropDataNotInCache";
+
+                //tags, isPub, FileSize, UpdatedAt, Description
                 string player = Main.PlayerNamesCache.TryGetValue(propData.SpawnedBy, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
-                string propAuthor = Main.PropNamesCache.TryGetValue(guid, out var propAuthObj) ? propAuthObj.Item2 : "Error: PropAuthorNotFound";
                 var location = new Vector3(propData.PositionX, propData.PositionY, propData.PositionZ);
                 var dist = Utils.NumFormat(Math.Abs(Vector3.Distance(location, Camera.main.transform.position)));
 
@@ -280,20 +288,19 @@ namespace WorldPropListMod
                             page.AddCategory("Prop was deleted");
                         }
                     }, () => { }, "Yes", "No");
-                };            
+                };
 
+                if (Main.blockedProps.ContainsKey(guid)) page.AddCategory("PROP IS IN BLOCK LIST");
                 var catName = page.AddCategory($"Name: {name}");
                 var catAuthor = page.AddCategory($"Prop author: {propAuthor}");
                 var catSpawnBy = page.AddCategory($"Spawned by: {player}");
-                var catDist = page.AddCategory($"Prop is {dist} meters away");
-                var catPos = page.AddCategory($"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}");
+                var catDist = page.AddCategory($"Distance: {dist}m, " +
+                    $"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}");
+                //var catPos = page.AddCategory($"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}");
+                var catDetails = page.AddCategory($"{propFileSize}MB, {propUpdatedAt}, {(propisPub ? "Published Publicly" : "Not Published")}");
+                var catTags = page.AddCategory($"Tags: {propTags}");
+                var catDesc = page.AddCategory($"Desc: {propDesc}");
 
-                if (Main.blockedProps.ContainsKey(guid))
-                {
-                    page.AddCategory("");
-                    page.AddCategory("");
-                    page.AddCategory("PROP IS IN BLOCK LIST");
-                }
                 page.OpenPage();
             }
             catch (System.Exception ex) { 
