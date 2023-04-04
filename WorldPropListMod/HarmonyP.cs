@@ -44,10 +44,10 @@ namespace WorldPropListMod
                     for (int index = 0; index < CustomFloatsAmount; ++index)
                         CustomFloats[index] = reader.ReadSingle();
                     var SpawnedBy = reader.ReadString();
+                    Main.FindPropAPIname(ObjectId);
+                    Main.FindPlayerAPIname(SpawnedBy);
                     if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(ObjectId))
                     {
-                        Main.FindPropAPIname(ObjectId);
-                        Main.FindPlayerAPIname(SpawnedBy);
                         var msg = $"Mod Blocking Prop: {Main.blockedProps[ObjectId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(SpawnedBy, out var obj) ? obj.Item1 : SpawnedBy)}";
                         Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                         Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {SpawnedBy}, ID:{ObjectId}");
@@ -59,8 +59,7 @@ namespace WorldPropListMod
                     {   //GUID,PlayerGUID,Time
                         Main.PropsThisSession.Add((ObjectId, SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                         //Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
-                        Main.FindPropAPIname(ObjectId);
-                        Main.FindPlayerAPIname(SpawnedBy); 
+                         
                     }
                 }
             }
@@ -69,13 +68,23 @@ namespace WorldPropListMod
             return true;
         }
 
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnProp))]
-        internal static void OnSpawnProp(string propGuid, float PosX, float PosY, float PosZ)
+        internal static bool OnSpawnProp(string propGuid, float PosX, float PosY, float PosZ)
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"9-2 SpawnProp");
             //Main.Logger.Msg($"propGuid {propGuid}");
             Main.FindPropAPIname(propGuid);
+            if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(propGuid))
+            {
+                var msg = $"Mod Blocking Prop: {Main.blockedProps[propGuid]}, SpawnedBy: Self";
+                Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
+                Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - ID:{propGuid}");
+                QuickMenuAPI.ShowAlertToast(msg, 3);
+                Main.BlockedThisSession.Add((propGuid, MetaPort.Instance.ownerId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                return false;
+            }
+            return true;
         }
 
         //[HarmonyPostfix]
