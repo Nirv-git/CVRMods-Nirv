@@ -21,7 +21,7 @@ namespace WorldPropListMod
     {
         public static void loadAssets()
         {
-            //QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.NirvMisc.png"));
+            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.NirvMisc.png"));
             QuickMenuAPI.PrepareIcon("WorldPropList", "Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Delete.png"));
             QuickMenuAPI.PrepareIcon("WorldPropList", "Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Reset.png")); 
             QuickMenuAPI.PrepareIcon("WorldPropList", "Select", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Select.png"));
@@ -40,7 +40,7 @@ namespace WorldPropListMod
             //QuickMenuAPI.PrepareIcon("WorldPropList", "", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons..png"));
         }
 
-        public static Page pagePropList, pagePropSingle, pagePropBlocks, pagePropBlockHistory, pagePropHistory;
+        public static Page pagePropRoot, pagePropList, pagePropSingle, pagePropBlocks, pagePropBlockHistory, pagePropHistory;
 
         private static FieldInfo _uiInstance = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetField("Instance", BindingFlags.NonPublic | BindingFlags.Static);
         private static MethodInfo _registerRootPage = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetMethod("RegisterRootPage", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -65,7 +65,26 @@ namespace WorldPropListMod
             pagePropHistory = new Page("WorldPropList", "World Prop List - Props History", false);
             HackRegisterRoot(pagePropHistory);
 
-            var page = new Page("WorldPropList", "World Prop List", true, "Props");
+            var page = pagePropRoot;
+            if (Main.useNirvMiscPage.Value)
+            {
+                var pageNirv = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                pageNirv.MenuTitle = "Nirv Misc Page";
+                pageNirv.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
+
+                var catNirv = pageNirv.AddCategory("World Prop List", "WorldPropList");
+                page = new Page("WorldPropList", "World Prop List", false);
+                HackRegisterRoot(page);
+                catNirv.AddButton("Open Props Menu", "Props", "Lists all props in the world with options to locate, delete and block").OnPress += () =>
+                {
+                    page.OpenPage();
+                };
+            }
+            else
+            {
+                page = new Page("WorldPropList", "World Prop List", true, "Props");
+            }
+
             page.MenuTitle = "World Prop List";
             page.MenuSubtitle = "Lists all props in the world with options to locate and delete";
             var cat = page.AddCategory("");
