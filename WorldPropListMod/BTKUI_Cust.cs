@@ -350,6 +350,10 @@ namespace WorldPropListMod
                         PropBlockMenu(); 
                     }, () => { }, "Yes", "No");
                 };
+                cat1.AddToggle("Show HUD Notification", "Show a Notification on the HUD when a prop is blocked", Main.showHUDNotification.Value).OnValueUpdated += action =>
+                {
+                    Main.showHUDNotification.Value = action;
+                };
 
                 if (Main.blockedProps.Count > 0)
                 {

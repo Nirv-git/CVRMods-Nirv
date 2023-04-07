@@ -13,6 +13,8 @@ using ABI.CCK.Components;
 using HarmonyLib;
 using DarkRift;
 using BTKUILib;
+using ABI_RC.Core.UI;
+
 
 namespace WorldPropListMod
 {
@@ -48,10 +50,17 @@ namespace WorldPropListMod
                     Main.FindPlayerAPIname(SpawnedBy);
                     if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(ObjectId))
                     {
+                        if (SpawnedBy == "SYSTEM" || SpawnedBy == "LocalServer")
+                        {
+                            Main.Logger.Msg(ConsoleColor.Yellow, $"Can not block prop: {Main.blockedProps[ObjectId]} - Spawned by: {SpawnedBy}, ID:{ObjectId}");
+                            Main.PropsThisSession.Add((ObjectId, SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                            return true;
+                        }
                         var msg = $"Mod Blocking Prop: {Main.blockedProps[ObjectId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(SpawnedBy, out var obj) ? obj.Item1 : SpawnedBy)}";
                         Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                         Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {SpawnedBy}, ID:{ObjectId}");
                         QuickMenuAPI.ShowAlertToast(msg, 3);
+                        if(Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
                         Main.BlockedThisSession.Add((ObjectId, SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                         return false;
                     }
@@ -59,7 +68,6 @@ namespace WorldPropListMod
                     {   //GUID,PlayerGUID,Time
                         Main.PropsThisSession.Add((ObjectId, SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                         //Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
-                         
                     }
                 }
             }
@@ -81,6 +89,7 @@ namespace WorldPropListMod
                 Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                 Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - ID:{propGuid}");
                 QuickMenuAPI.ShowAlertToast(msg, 3);
+                if (Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
                 Main.BlockedThisSession.Add((propGuid, MetaPort.Instance.ownerId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                 return false;
             }

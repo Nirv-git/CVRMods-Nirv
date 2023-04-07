@@ -26,7 +26,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.5";
+        public const string versionStr = "0.5.6";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
@@ -35,6 +35,7 @@ namespace WorldPropListMod
         public static MelonPreferences_Entry<int> lineLifespan;
         public static MelonPreferences_Entry<int> onPropDetailSelect;
         public static MelonPreferences_Entry<bool> usePropBlockList;
+        public static MelonPreferences_Entry<bool> showHUDNotification;
 
         public static GameObject lastHighlight, LineRen;
         public static bool RunOnce = true;
@@ -59,11 +60,11 @@ namespace WorldPropListMod
             Logger = new MelonLogger.Instance("WorldPropListMod", ConsoleColor.Blue);
 
             cat = MelonPreferences.CreateCategory(catagory, "WorldPropListMod");
-            //useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
             useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), false, "BTKUI - Use 'NirvMisc' page instead of custom page. (Restart req)");
             lineLifespan = MelonPreferences.CreateEntry(catagory, nameof(lineLifespan), 7, "How long the line render should last (max 30)");
             onPropDetailSelect = MelonPreferences.CreateEntry(catagory, nameof(onPropDetailSelect), 3, "0-None, 1-Highlight, 2-Line, 3-Both");
             usePropBlockList = MelonPreferences.CreateEntry(catagory, nameof(usePropBlockList), true, "Use prop block list to prevent prop loading");
+            showHUDNotification = MelonPreferences.CreateEntry(catagory, nameof(showHUDNotification), true, "Show notification on HUD when a prop is blocked");
             SaveLoad.InitFileListOrLoad();
             BTKUI_Cust.SetupUI();      
         }
@@ -91,6 +92,7 @@ namespace WorldPropListMod
                         RunOnce = false;
                         //Logger.Msg($"MetaPort.Instance.ownerId {MetaPort.Instance.ownerId} - MetaPort.Instance.username {MetaPort.Instance.username}");
                         PlayerNamesCache[MetaPort.Instance.ownerId] = (MetaPort.Instance.username, DateTime.Now);
+                        PlayerNamesCache["SYSTEM"] = ("SYSTEM", DateTime.Now); PlayerNamesCache["LocalServer"] = ("LocalServer", DateTime.Now);
                     }
                     break;
             }
