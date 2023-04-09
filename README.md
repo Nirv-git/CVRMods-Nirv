@@ -162,6 +162,14 @@ Provides a list of all the props in a world with details such as the player that
 You can access the settings using BTKUI with the 'Props' page. (Toggle in MelonPrefs to switch to NirvMisc Page)      
 ![image](https://user-images.githubusercontent.com/81605232/229889735-8e482ca6-1c86-464f-aa65-1eafcd53f332.png)   
 
+# QMShutdownOptionsMod
+Adds options to Shutdown/Sleep/Hibernate your computer from your QuickMenu
+     
+You can access the settings using BTKUI with the 'Props' page. (Toggle in MelonPrefs to switch to NirvMisc Page)      
+![image](https://user-images.githubusercontent.com/81605232/230750400-2688c9d0-547e-43c6-800d-257adcdf3e16.png)
+
+      
+ 
 
      
       
