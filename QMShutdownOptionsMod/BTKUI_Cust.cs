@@ -39,7 +39,7 @@ namespace QMShutdownOptionsMod
                 cat = QuickMenuAPI.MiscTabPage.AddCategory("Shutdown Options", "QMShutdownOptionsMod");
             }
 
-            cat.AddButton("Shutdown in 1 min", "Shutdown", "This will shutdown your computer in 1 minute").OnPress += () =>
+            cat.AddButton("Shutdown in 1 minute", "Shutdown", "This will shutdown your computer in 1 minute").OnPress += () =>
             {
                 QuickMenuAPI.ShowConfirm("Shutdown your computer?", "This will shutdown your computer in 1 minute", () => {
                     Main.Logger.Msg(ConsoleColor.Yellow, "Shutting down computer");
@@ -55,12 +55,13 @@ namespace QMShutdownOptionsMod
             };
             cat.AddButton("Sleep", "Sleep", "This will sleep your computer").OnPress += () =>
             { //https://superuser.com/a/1310274
+              //This is a cursed solution 
                 QuickMenuAPI.ShowConfirm("Sleep your computer?", "This will sleep your computer (If enabled)<p><p>This can not be aborted.", () => {
                     Main.Logger.Msg(ConsoleColor.Yellow, "Sleep computer");
                     Main.runProgram("CMD.exe", "/C powershell.exe -C \"$m='[DllImport(\\\"Powrprof.dll\\\",SetLastError=true)]static extern bool SetSuspendState(bool hibernate,bool forceCritical,bool disableWakeEvent);public static void PowerSleep(){SetSuspendState(false,false,false); }';add-type -name Import -member $m -namespace Dll; [Dll.Import]::PowerSleep();\"");
                 }, () => { }, "Yes", "No");
             };
-            cat.AddButton("Abort Shutdown", "Block", "Aborts any current shutdown commends").OnPress += () =>
+            cat.AddButton("Abort Shutdown", "Block", "Aborts any current shutdown commands").OnPress += () =>
             {
                 Main.Logger.Msg(ConsoleColor.Yellow, "Attempting to abort shutdown");
                 Main.runProgram("CMD.exe", "/C shutdown /a");
