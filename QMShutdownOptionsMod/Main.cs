@@ -5,6 +5,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using System.Reflection;
+using System.Runtime.InteropServices;
+
 
 
 [assembly: MelonGame(null, "ChilloutVR")]
@@ -18,7 +20,7 @@ namespace QMShutdownOptionsMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.0.5";
+        public const string versionStr = "0.0.6";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "QMShutdownOptions";
@@ -27,6 +29,12 @@ namespace QMShutdownOptionsMod
         public override void OnApplicationStart()
         {
             Logger = new MelonLogger.Instance("QMShutdownOptionsMod", ConsoleColor.Cyan);
+
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                MelonLogger.Msg(ConsoleColor.Red, "QMShutdownOptions is only available for Windows");
+                return;
+            }
             cat = MelonPreferences.CreateCategory(catagory, "QMShutdownOptionsMod");
             useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
             
