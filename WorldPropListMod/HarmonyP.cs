@@ -18,6 +18,10 @@ using ABI_RC.Core.UI;
 
 namespace WorldPropListMod
 {
+    //Change patches to use CVRSelfModerationManager.GetPropVisibility
+
+
+
     [HarmonyPatch]
     internal class HarmonyPatches
     {

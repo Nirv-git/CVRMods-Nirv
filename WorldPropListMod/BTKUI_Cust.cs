@@ -202,6 +202,9 @@ namespace WorldPropListMod
                 if(!MetaPort.Instance.worldAllowProps)
                 {
                     page.AddCategory("");
+                    page.AddCategory("");
+                    page.AddCategory("");
+                    page.AddCategory("");
                     page.AddCategory("Props are not allowed in this world");
                 }
 
@@ -282,6 +285,8 @@ namespace WorldPropListMod
                         else
                             propData.Spawnable.Delete();
                     }
+                    else
+                        QuickMenuAPI.ShowAlertToast($"Can not delete, prop spawned by server: {name}", 3);
                     PropMenu(false);
                     page.ClearChildren();
                     page.AddCategory("Prop was deleted");
@@ -296,7 +301,10 @@ namespace WorldPropListMod
                             {
                                 Main.blockedProps.Add(guid, name);
                                 SaveLoad.SaveListFiles();
+                                QuickMenuAPI.ShowAlertToast($"Blocking prop: {name}", 3);
                             }
+                            else
+                                QuickMenuAPI.ShowAlertToast($"Prop is already in blocklist: {name}", 3);
                             if (propData.Spawnable == null)
                                 propData.Recycle();
                             else
@@ -306,6 +314,8 @@ namespace WorldPropListMod
                             page.ClearChildren();
                             page.AddCategory("Prop was deleted");
                         }
+                        else
+                            QuickMenuAPI.ShowAlertToast($"Can not block and delete, prop spawned by server: {name}", 3);
                     }, () => { }, "Yes", "No");
                 };
 
@@ -375,6 +385,7 @@ namespace WorldPropListMod
                     page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
+                    page.AddCategory("");
                     page.AddCategory("Prop blocklist is empty");
                 }
                 page.OpenPage();
@@ -416,15 +427,22 @@ namespace WorldPropListMod
 
                         cat2.AddButton(name, prop.Item1, label).OnPress += () =>
                         {
-                            QuickMenuAPI.ShowConfirm("Confirm Unblock", "Are you sure you want to unblock this prop?", () => {
-                                Main.blockedProps.Remove(prop.Item1);
-                                SaveLoad.SaveListFiles();
+                            QuickMenuAPI.ShowConfirm("Confirm Unblock", "Are you sure you want to unblock this prop?", () => {     
+                                if (Main.blockedProps.ContainsKey(prop.Item1))
+                                {
+                                    Main.blockedProps.Remove(prop.Item1);
+                                    SaveLoad.SaveListFiles();
+                                    QuickMenuAPI.ShowAlertToast($"Unblocked prop: {name}", 3);
+                                }
+                                else
+                                    QuickMenuAPI.ShowAlertToast($"Prop was not in blocklist: {name}", 3);
                             }, () => { }, "Yes", "No");
                         };
                     }
                 }
                 else
                 {
+                    page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
@@ -468,15 +486,22 @@ namespace WorldPropListMod
 
                         cat2.AddButton(name, prop.Item1, label).OnPress += () =>
                         {
-                            QuickMenuAPI.ShowConfirm("Confirm Block", "Are you sure you want to block this prop?", () => { 
-                                Main.blockedProps.Add(prop.Item1, name);
-                                SaveLoad.SaveListFiles();
+                            QuickMenuAPI.ShowConfirm("Confirm Block", "Are you sure you want to block this prop?", () => {
+                                if (!Main.blockedProps.ContainsKey(prop.Item1))
+                                {
+                                    Main.blockedProps.Add(prop.Item1, name);
+                                    SaveLoad.SaveListFiles();
+                                    QuickMenuAPI.ShowAlertToast($"Blocking prop: {name}", 3);
+                                }
+                                else
+                                    QuickMenuAPI.ShowAlertToast($"Prop is already in blocklist: {name}", 3);
                             }, () => { }, "Yes", "No");
                         };
                     }       
                 }
                 else
                 {
+                    page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
