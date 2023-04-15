@@ -292,7 +292,7 @@ namespace WorldPropListMod
                     page.AddCategory("Prop was deleted");
                 };
 
-                cat2.AddButton("Block Prop and Delete", "BlockTrash", "Add this prop to the block list and Delete it").OnPress += () =>
+                cat2.AddButton("Block Prop and Delete", "BlockTrash", "Add this prop to the block list and Delete all instances of it in the world").OnPress += () =>
                 {
                     QuickMenuAPI.ShowConfirm("Confirm Block", "Are you sure you want to block and delete this prop?", () => {
                         if (propData.SpawnedBy != "SYSTEM" && propData.SpawnedBy != "LocalServer")
@@ -305,11 +305,17 @@ namespace WorldPropListMod
                             }
                             else
                                 QuickMenuAPI.ShowAlertToast($"Prop is already in blocklist: {name}", 3);
-                            if (propData.Spawnable == null)
-                                propData.Recycle();
-                            else
-                                propData.Spawnable.Delete();
-
+                            //Delete all matching GUID's if blocking prop
+                            foreach (var propDataDel in CVRSyncHelper.Props.ToArray())
+                            {
+                                if (propDataDel.Spawnable.guid == guid && propDataDel.SpawnedBy != "SYSTEM" && propDataDel.SpawnedBy != "LocalServer")
+                                {
+                                    if (propDataDel.Spawnable == null)
+                                        propDataDel.Recycle();
+                                    else
+                                        propDataDel.Spawnable.Delete();
+                                }
+                            }
                             PropMenu(false);
                             page.ClearChildren();
                             page.AddCategory("Prop was deleted");

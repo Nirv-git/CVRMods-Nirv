@@ -18,61 +18,42 @@ using ABI_RC.Core.UI;
 
 namespace WorldPropListMod
 {
-    //Change patches to use CVRSelfModerationManager.GetPropVisibility
-
-
-
     [HarmonyPatch]
     internal class HarmonyPatches
     {
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnPropFromNetwork))]
-        internal static bool OnSpawnPropFromNetwork(Message message)
+        [HarmonyPatch(typeof(CVRSelfModerationManager), nameof(CVRSelfModerationManager.GetPropVisibility))]
+        internal static bool OnGetPropVisibility(string userId, string propId, out bool wasForceHidden, out bool wasForceShown)
         {
-            try { 
-                //Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 SpawnPropFromNetwork");
-                using (DarkRiftReader reader = message.GetReader())
+            wasForceHidden = false;
+            wasForceShown = false;
+
+            try
+            {
+                //Main.Logger.Msg(ConsoleColor.Yellow, $"9-15 OnGetPropVisibility");
+                Main.FindPropAPIname(propId);
+                Main.FindPlayerAPIname(userId);
+                if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(propId))
                 {
-                    float[] CustomFloats = new float[40];
-                    var ObjectId = reader.ReadString();
-                    var InstanceId = reader.ReadString();
-                    var FileKey = reader.ReadString();
-                    var PositionX = reader.ReadSingle();
-                    var PositionY = reader.ReadSingle();
-                    var PositionZ = reader.ReadSingle();
-                    var RotationX = reader.ReadSingle();
-                    var RotationY = reader.ReadSingle();
-                    var RotationZ = reader.ReadSingle();
-                    var ScaleX = reader.ReadSingle();
-                    var ScaleY = reader.ReadSingle();
-                    var ScaleZ = reader.ReadSingle();
-                    var CustomFloatsAmount = reader.ReadInt32();
-                    for (int index = 0; index < CustomFloatsAmount; ++index)
-                        CustomFloats[index] = reader.ReadSingle();
-                    var SpawnedBy = reader.ReadString();
-                    Main.FindPropAPIname(ObjectId);
-                    Main.FindPlayerAPIname(SpawnedBy);
-                    if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(ObjectId))
+                    if (userId == "SYSTEM" || userId == "LocalServer")
                     {
-                        if (SpawnedBy == "SYSTEM" || SpawnedBy == "LocalServer")
-                        {
-                            Main.Logger.Msg(ConsoleColor.Yellow, $"Can not block prop: {Main.blockedProps[ObjectId]} - Spawned by: {SpawnedBy}, ID:{ObjectId}");
-                            Main.PropsThisSession.Add((ObjectId, SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
-                            return true;
-                        }
-                        var msg = $"Mod Blocking Prop: {Main.blockedProps[ObjectId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(SpawnedBy, out var obj) ? obj.Item1 : SpawnedBy)}";
-                        Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
-                        Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {SpawnedBy}, ID:{ObjectId}");
-                        QuickMenuAPI.ShowAlertToast(msg, 3);
-                        if(Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
-                        Main.BlockedThisSession.Add((ObjectId, SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
-                        return false;
+                        Main.Logger.Msg(ConsoleColor.Yellow, $"Can not block prop: {Main.blockedProps[propId]} - Spawned by: {userId}, ID:{propId}");
+                        Main.PropsThisSession.Add((propId, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                        return true;
                     }
-                    else
-                    {   //GUID,PlayerGUID,Time
-                        Main.PropsThisSession.Add((ObjectId, SpawnedBy, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
-                        //Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
-                    }
+                    var msg = $"Mod Blocking Prop: {Main.blockedProps[propId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(userId, out var obj) ? obj.Item1 : userId)}";
+                    Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
+                    Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {userId}, ID:{propId}");
+                    QuickMenuAPI.ShowAlertToast(msg, 3);
+                    if (Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
+                    Main.BlockedThisSession.Add((propId, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                    wasForceHidden = true;
+                    return false;
+                }
+                else
+                {   //GUID,PlayerGUID,Time
+                    Main.PropsThisSession.Add((propId, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                    //Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
                 }
             }
             catch (Exception ex) { Main.Logger.Error("Error writing prop blocklist \n" + ex.ToString()); }
