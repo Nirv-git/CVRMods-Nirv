@@ -14,6 +14,8 @@ using HarmonyLib;
 using DarkRift;
 using BTKUILib;
 using ABI_RC.Core.UI;
+using System.Threading;
+
 
 
 namespace WorldPropListMod
@@ -25,12 +27,11 @@ namespace WorldPropListMod
         [HarmonyPatch(typeof(CVRSelfModerationManager), nameof(CVRSelfModerationManager.GetPropVisibility))]
         internal static bool OnGetPropVisibility(string userId, string propId, out bool wasForceHidden, out bool wasForceShown)
         {
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"9-15 OnGetPropVisibility");
             wasForceHidden = false;
             wasForceShown = false;
-
             try
             {
-                //Main.Logger.Msg(ConsoleColor.Yellow, $"9-15 OnGetPropVisibility");
                 Main.FindPropAPIname(propId);
                 Main.FindPlayerAPIname(userId);
                 if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(propId))
@@ -44,7 +45,19 @@ namespace WorldPropListMod
                     var msg = $"Mod Blocking Prop: {Main.blockedProps[propId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(userId, out var obj) ? obj.Item1 : userId)}";
                     Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                     Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {userId}, ID:{propId}");
-                    if (Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
+                    if (Main.showHUDNotification.Value)
+                    {
+                        if (!Main.Instance.IsOnMainThread(Thread.CurrentThread))
+                        {
+                            //Main.Logger.Msg(ConsoleColor.Yellow, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"); //me_irl
+                            Main.Instance.MainThreadQueue.Enqueue(() =>
+                            {
+                                CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
+                            });
+                        }
+                        else
+                            CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
+                    }
                     Main.BlockedThisSession.Add((propId, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                     wasForceHidden = true;
                     return false;

@@ -13,6 +13,8 @@ using HighlightPlus;
 using UnityEngine.Networking;
 using BTKUILib;
 using System.IO;
+using System.Threading;
+
 
 
 [assembly: MelonGame(null, "ChilloutVR")]
@@ -37,8 +39,12 @@ namespace WorldPropListMod
         public static MelonPreferences_Entry<bool> usePropBlockList;
         public static MelonPreferences_Entry<bool> showHUDNotification;
 
+        public static Main Instance;
+        private Thread _mainThread;
+        public Queue<Action> MainThreadQueue = new Queue<Action>();
+
         public static GameObject lastHighlight, LineRen;
-        public static bool RunOnce = true;
+        public static bool init = false;
 
         public static System.Object lineRenRoutine = null;
         public static bool LineWaitKill = false;
@@ -58,6 +64,8 @@ namespace WorldPropListMod
         public override void OnApplicationStart()
         {
             Logger = new MelonLogger.Instance("WorldPropListMod", ConsoleColor.Blue);
+            Instance = this;
+            _mainThread = Thread.CurrentThread;
 
             cat = MelonPreferences.CreateCategory(catagory, "WorldPropListMod");
             useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), false, "BTKUI - Use 'NirvMisc' page instead of custom page. (Restart req)");
@@ -70,7 +78,7 @@ namespace WorldPropListMod
         }
         public override void OnPreferencesSaved()
         {
-            if(!RunOnce) SaveLoad.SaveListFiles();
+            if(init) SaveLoad.SaveListFiles();
         }
 
         public override void OnApplicationQuit()
@@ -87,15 +95,25 @@ namespace WorldPropListMod
                 case 1: break;
                 case 2: break;
                 default:
-                    if(RunOnce)
+                    if(!init)
                     {
-                        RunOnce = false;
+                        init = true;
                         //Logger.Msg($"MetaPort.Instance.ownerId {MetaPort.Instance.ownerId} - MetaPort.Instance.username {MetaPort.Instance.username}");
                         PlayerNamesCache[MetaPort.Instance.ownerId] = (MetaPort.Instance.username, DateTime.Now);
                         PlayerNamesCache["SYSTEM"] = ("SYSTEM", DateTime.Now); PlayerNamesCache["LocalServer"] = ("LocalServer", DateTime.Now);
                     }
                     break;
             }
+        }
+        public override void OnUpdate()
+        {
+            //Fire any queued actions on main thread
+            if (MainThreadQueue.Count > 0)
+                MainThreadQueue.Dequeue().Invoke();
+        }
+        public bool IsOnMainThread(Thread thread)
+        {
+            return thread.Equals(_mainThread);
         }
 
         public static void HighlightObj(GameObject obj, bool state)
