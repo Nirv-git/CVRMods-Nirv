@@ -44,7 +44,6 @@ namespace WorldPropListMod
                     var msg = $"Mod Blocking Prop: {Main.blockedProps[propId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(userId, out var obj) ? obj.Item1 : userId)}";
                     Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                     Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {userId}, ID:{propId}");
-                    QuickMenuAPI.ShowAlertToast(msg, 3);
                     if (Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
                     Main.BlockedThisSession.Add((propId, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                     wasForceHidden = true;
@@ -73,7 +72,6 @@ namespace WorldPropListMod
                 var msg = $"Mod Blocking Prop: {Main.blockedProps[propGuid]}, SpawnedBy: Self";
                 Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                 Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - ID:{propGuid}");
-                QuickMenuAPI.ShowAlertToast(msg, 3);
                 if (Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
                 Main.BlockedThisSession.Add((propGuid, MetaPort.Instance.ownerId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                 return false;
