@@ -32,19 +32,26 @@ namespace WorldPropListMod
             wasForceShown = false;
             try
             {
-                Main.FindPropAPIname(propId);
+                //Main.Logger.Msg(ConsoleColor.Cyan, $"propId: {propId}");
+                string propGUID = propId.StartsWith("p+") ? propId.Substring(2) : propId;
+                if (propGUID.IndexOf('~') != -1)
+                    propGUID = propGUID.Substring(0, propGUID.IndexOf('~'));
+
+                //Main.Logger.Msg(ConsoleColor.Cyan, $"propGUID: {propGUID}");
+
+                Main.FindPropAPIname(propGUID);
                 Main.FindPlayerAPIname(userId);
-                if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(propId))
+                if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(propGUID))
                 {
                     if (userId == "SYSTEM" || userId == "LocalServer")
                     {
-                        Main.Logger.Msg(ConsoleColor.Yellow, $"Can not block prop: {Main.blockedProps[propId]} - Spawned by: {userId}, ID:{propId}");
-                        Main.PropsThisSession.Add((propId, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                        Main.Logger.Msg(ConsoleColor.Yellow, $"Can not block prop: {Main.blockedProps[propGUID]} - Spawned by: {userId}, ID:{propGUID}");
+                        Main.PropsThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                         return true;
                     }
-                    var msg = $"Mod Blocking Prop: {Main.blockedProps[propId]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(userId, out var obj) ? obj.Item1 : userId)}";
+                    var msg = $"Mod Blocking Prop: {Main.blockedProps[propGUID]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(userId, out var obj) ? obj.Item1 : userId)}";
                     Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
-                    Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {userId}, ID:{propId}");
+                    Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - {userId}, ID:{propGUID}");
                     if (Main.showHUDNotification.Value)
                     {
                         if (!Main.Instance.IsOnMainThread(Thread.CurrentThread))
@@ -58,13 +65,13 @@ namespace WorldPropListMod
                         else
                             CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
                     }
-                    Main.BlockedThisSession.Add((propId, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                    Main.BlockedThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                     wasForceHidden = true;
                     return false;
                 }
                 else
                 {   //GUID,PlayerGUID,Time
-                    Main.PropsThisSession.Add((propId, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                    Main.PropsThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                     //Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
                 }
             }
