@@ -45,7 +45,6 @@ namespace NearClipPlaneAdj
             smallerDefault = MelonPreferences.CreateEntry<bool>("NearClipAdj", "SmallerDefault", false, "Smaller Default Nearclip on World Change - 0.001 vs 0.01");
             BTKUILib_en = MelonPreferences.CreateEntry<bool>("NearClipAdj", "BTKUILib_en", true, "BTKUILib Support (Requires Restart)");
             replace05withNumpad = MelonPreferences.CreateEntry<bool>("NearClipAdj", "replace05withNumpad", false, "BTKUI Replace .05 button with numberpad");
-            replace05withNumpad.OnValueChanged += CustomBTKUI.ChangeButtons;
             defaultChangeBlackList = MelonPreferences.CreateEntry("NearClipAdj", "defaultChangeBlackList", true, "Check a blacklist for worlds to not auto change the NearClip on (Restart Required to Enable)");
 
             //debug = MelonPreferences.CreateEntry<bool>("NearClipAdj", "debug", false, "debug");
@@ -60,6 +59,7 @@ namespace NearClipPlaneAdj
             if (MelonHandler.Mods.Any(m => m.Info.Name == "BTKUILib") && BTKUILib_en.Value)
             {
                 CustomBTKUI.InitUi();
+                replace05withNumpad.OnValueChanged += CustomBTKUI.ChangeButtons;
             }
             else Logger.Msg("BTKUILib is missing, or setting is toggled off in Mod Settings - Not adding controls to BTKUILib");
 
