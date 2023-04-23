@@ -17,7 +17,7 @@ namespace NearClipPlaneAdj
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.6.1";
+        public const string versionStr = "0.6.3";
         public static MelonLogger.Instance Logger;
 
         public static MelonPreferences_Entry<bool> useNirvMiscPage;
@@ -25,6 +25,7 @@ namespace NearClipPlaneAdj
         public static MelonPreferences_Entry<bool> keybindsEnabled;
         public static MelonPreferences_Entry<bool> smallerDefault;
         public static MelonPreferences_Entry<bool> BTKUILib_en;
+        public static MelonPreferences_Entry<bool> replace05withNumpad;
         public static MelonPreferences_Entry<bool> defaultChangeBlackList;
 
         public static Dictionary<string, System.Tuple<bool, string>> blackList; 
@@ -43,6 +44,8 @@ namespace NearClipPlaneAdj
             keybindsEnabled = MelonPreferences.CreateEntry<bool>("NearClipAdj", "Keyboard", true, "Keyboard Shortcuts: '[' - 0.0001, ']' - 0.05");
             smallerDefault = MelonPreferences.CreateEntry<bool>("NearClipAdj", "SmallerDefault", false, "Smaller Default Nearclip on World Change - 0.001 vs 0.01");
             BTKUILib_en = MelonPreferences.CreateEntry<bool>("NearClipAdj", "BTKUILib_en", true, "BTKUILib Support (Requires Restart)");
+            replace05withNumpad = MelonPreferences.CreateEntry<bool>("NearClipAdj", "replace05withNumpad", false, "BTKUI Replace .05 button with numberpad");
+            replace05withNumpad.OnValueChanged += CustomBTKUI.ChangeButtons;
             defaultChangeBlackList = MelonPreferences.CreateEntry("NearClipAdj", "defaultChangeBlackList", true, "Check a blacklist for worlds to not auto change the NearClip on (Restart Required to Enable)");
 
             //debug = MelonPreferences.CreateEntry<bool>("NearClipAdj", "debug", false, "debug");
