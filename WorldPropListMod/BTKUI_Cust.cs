@@ -306,15 +306,18 @@ namespace WorldPropListMod
                             else
                                 QuickMenuAPI.ShowAlertToast($"Prop is already in blocklist: {name}", 3);
                             //Delete all matching GUID's if blocking prop
+                            var toRemove = new List<CVRSyncHelper.PropData>();
                             foreach (var propDataDel in CVRSyncHelper.Props.ToArray())
                             {
-                                if (propDataDel.Spawnable.guid == guid && propDataDel.SpawnedBy != "SYSTEM" && propDataDel.SpawnedBy != "LocalServer")
-                                {
-                                    if (propDataDel.Spawnable == null)
-                                        propDataDel.Recycle();
-                                    else
-                                        propDataDel.Spawnable.Delete();
-                                }
+                                if (propDataDel?.Spawnable?.guid == guid && propDataDel.SpawnedBy != "SYSTEM" && propDataDel.SpawnedBy != "LocalServer")
+                                    toRemove.Add(propDataDel);
+                            }
+                            foreach (var item in toRemove)
+                            {
+                                if (item?.Spawnable == null)
+                                    item.Recycle();
+                                else
+                                    item.Spawnable.Delete();
                             }
                             PropMenu(false);
                             page.ClearChildren();
