@@ -19,7 +19,8 @@ namespace NearClipPlaneAdj
             QuickMenuAPI.PrepareIcon("NearClipPlaneAdj", "nearclip-Keypad", Assembly.GetExecutingAssembly().GetManifestResourceStream("NearClipPlaneAdj.Icons.btk.Keypad.png"));
         }
 
-        public static Category mainCat;
+        //This is done to keep BTKUI an optional dependancy 
+        public static System.Object mainCat;
         public static void InitUi()
         {
             loadAssets();
@@ -46,8 +47,8 @@ namespace NearClipPlaneAdj
 
         public static void PopulateButtons()
         {
-            if (mainCat.IsGenerated)
-                mainCat.ClearChildren();
+            if (((Category)mainCat).IsGenerated)
+                ((Category)mainCat).ClearChildren();
 
             var clipList = new float[] {
                 .05f,
@@ -60,7 +61,7 @@ namespace NearClipPlaneAdj
             {
                 if (clip == .05f && Main.replace05withNumpad.Value)
                 {
-                    mainCat.AddButton($"Custom Nearclip", "nearclip-Keypad", "Set a custom Nearclip. Be cafeful when setting to values > 0.05<p>Range 0.0001 - .5 meters").OnPress += () =>
+                    ((Category)mainCat).AddButton($"Custom Nearclip", "nearclip-Keypad", "Set a custom Nearclip. Be cafeful when setting to values > 0.05<p>Range 0.0001 - .5 meters").OnPress += () =>
                     {
                         QuickMenuAPI.OpenNumberInput("Custom Nearclip", 0f, (action) =>
                         { //Make this default to .05 in the future, after bug with BTKUI is resolved~ https://github.com/BTK-Development/BTKUILib/issues/11
@@ -71,7 +72,7 @@ namespace NearClipPlaneAdj
                     continue;
                 }
 
-                var butt = mainCat.AddButton($"{clip}", clip.ToString().Replace("0.", ""), $"Sets Nearclipping plane to {clip}");
+                var butt = ((Category)mainCat).AddButton($"{clip}", clip.ToString().Replace("0.", ""), $"Sets Nearclipping plane to {clip}");
                 butt.OnPress += () =>
                 {
                     Main.ChangeNearClipPlane(clip, true);

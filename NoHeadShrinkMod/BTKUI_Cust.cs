@@ -16,8 +16,9 @@ namespace NoHeadShrinkMod
             QuickMenuAPI.PrepareIcon("NoHeadShrinkMod", "Noshrink-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("NoHeadShrinkMod.Icons.Reset.png"));
         }
 
-        public static Category mainCat;
-        public static Page pageSub;
+        //This is done to keep BTKUI an optional dependancy 
+        public static System.Object mainCat;
+        public static System.Object pageSub;
 
         public static bool dontUpdate = false; //This is hacky
 
@@ -51,24 +52,24 @@ namespace NoHeadShrinkMod
 
         public static void PopulateButtons()
         {
-            if (mainCat.IsGenerated)
-                mainCat.ClearChildren();
+            if (((Category)mainCat).IsGenerated)
+                ((Category)mainCat).ClearChildren();
 
-            mainCat.AddToggle("Always Disable Head Shrink", "Model's head will never be shrunk", Main.disableHeadShrink.Value).OnValueUpdated += action =>
+            ((Category)mainCat).AddToggle("Always Disable Head Shrink", "Model's head will never be shrunk", Main.disableHeadShrink.Value).OnValueUpdated += action =>
             {
                 dontUpdate = true;
                 Main.disableHeadShrink.Value = action;
                 dontUpdate = false;
             };
 
-            mainCat.AddToggle("Unshrink at distance", "Unshrink when your camera is x distance from head", Main.unshrinkAtDistance.Value).OnValueUpdated += action =>
+            ((Category)mainCat).AddToggle("Unshrink at distance", "Unshrink when your camera is x distance from head", Main.unshrinkAtDistance.Value).OnValueUpdated += action =>
             {
                 dontUpdate = true;
                 Main.unshrinkAtDistance.Value = action;
                 dontUpdate = false;
             };
 
-            mainCat.AddToggle("Scale distance with height", "Scale distance based on avatar height (Height*Distance)", Main.scaleDistance.Value).OnValueUpdated += action =>
+            ((Category)mainCat).AddToggle("Scale distance with height", "Scale distance based on avatar height (Height*Distance)", Main.scaleDistance.Value).OnValueUpdated += action =>
             {
                 dontUpdate = true;
                 Main.scaleDistance.Value = action;
@@ -76,14 +77,14 @@ namespace NoHeadShrinkMod
             };
 
             if (pageSub != null)
-                pageSub.Delete();
-            pageSub = mainCat.AddPage("Distance & Remeasure", "Noshrink-Head", "Change unshrink distance and Remeasure Avatar Height", "NoHeadShrinkMod");
-            var subCat = pageSub.AddCategory("");
+                ((Page)pageSub).Delete();
+            pageSub = ((Category)mainCat).AddPage("Distance & Remeasure", "Noshrink-Head", "Change unshrink distance and Remeasure Avatar Height", "NoHeadShrinkMod");
+            var subCat = ((Page)pageSub).AddCategory("");
             subCat.AddButton($"Remeasure Avatar Height", "Noshrink-Reset", "Remeasures current avatar height").OnPress += () =>
             {
                 Main.FindScale();
             };
-            pageSub.AddSlider("Unshink distance", "Unshink distance value", Main.unshrinkDistance.Value, 0f, 2f).OnValueUpdated += action =>
+            ((Page)pageSub).AddSlider("Unshink distance", "Unshink distance value", Main.unshrinkDistance.Value, 0f, 2f).OnValueUpdated += action =>
             {
                 dontUpdate = true;
                 Main.unshrinkDistance.Value = action;
