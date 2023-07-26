@@ -28,7 +28,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.10";
+        public const string versionStr = "0.5.11";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
@@ -99,7 +99,7 @@ namespace WorldPropListMod
                     {
                         init = true;
                         //Logger.Msg($"MetaPort.Instance.ownerId {MetaPort.Instance.ownerId} - MetaPort.Instance.username {MetaPort.Instance.username}");
-                        PlayerNamesCache[MetaPort.Instance.ownerId] = (MetaPort.Instance.username, DateTime.Now);
+                        //PlayerNamesCache[MetaPort.Instance.ownerId] = (MetaPort.Instance.username, DateTime.Now);
                         PlayerNamesCache["SYSTEM"] = ("SYSTEM", DateTime.Now); PlayerNamesCache["LocalServer"] = ("LocalServer", DateTime.Now);
                     }
                     break;
