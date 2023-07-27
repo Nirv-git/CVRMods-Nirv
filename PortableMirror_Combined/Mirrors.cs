@@ -10,6 +10,7 @@ using ABI.CCK.Components;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.InteractionSystem;
 using ABI_RC.Core.Savior;
+using ABI_RC.Systems.InputManagement;
 
 
 namespace PortableMirror
@@ -37,7 +38,7 @@ namespace PortableMirror
         public static Dictionary<GameObject, int> calObjects = new Dictionary<GameObject, int>();
 
         public static bool _baseFollowGazeActive, _45FollowGazeActive, _transFollowGazeActive, _microFollowGazeActive;
-        public static bool _baseGrabActive, _microGrabActive, _transGrabActive;
+        public static bool _GrabActive, _baseGrabActive, _microGrabActive, _transGrabActive;
         public static bool _globalHeld = false;
 
 
@@ -500,7 +501,7 @@ namespace PortableMirror
                 pickupLine = myLine;
             }
         }
-        
+
         //Could I have made this all just one Coroutine that handled all pickups, yes! But that is later me's issue
         //Later me, is going to fix that, I swear
         public static IEnumerator pickupBase()

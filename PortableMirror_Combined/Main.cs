@@ -13,6 +13,7 @@ using ABI_RC.Core.InteractionSystem;
 using HarmonyLib;
 using ABI_RC.Core.Savior;
 
+
 [assembly: MelonInfo(typeof(PortableMirror.Main), "PortableMirrorMod", PortableMirror.Main.versionStr, "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
 
@@ -21,7 +22,7 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.1.9";
+        public const string versionStr = "2.1.10";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -227,8 +228,6 @@ namespace PortableMirror
             _oldMirrorDistanceMicro = Main._micro_MirrorDistance.Value;
             _oldMirrorScaleYTrans = Main._trans_MirrorScaleY.Value;
             _oldMirrorDistanceTrans = Main._trans_MirrorDistance.Value;
-
-            MelonCoroutines.Start(WaitForLocalPlayer());
         }
         public override void OnPreferencesSaved()
         {
@@ -521,25 +520,18 @@ namespace PortableMirror
                         QM.ParseSettings();
                     }
                     if (_mirrorBase != null)
-                    { try { UnityEngine.Object.Destroy(_mirrorBase); } catch (System.Exception ex) { Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); } _mirrorBase = null; }
+                    { try { UnityEngine.Object.Destroy(_mirrorBase); } catch (System.Exception ex) { Logger.Msg(System.ConsoleColor.DarkRed, ex.ToString()); } _mirrorBase = null; }
                     if (_mirror45 != null)
-                    { try { UnityEngine.Object.Destroy(_mirror45); } catch (System.Exception ex) { Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); } _mirror45 = null; }
+                    { try { UnityEngine.Object.Destroy(_mirror45); } catch (System.Exception ex) { Logger.Msg(System.ConsoleColor.DarkRed, ex.ToString()); } _mirror45 = null; }
                     if (_mirrorCeiling != null)
-                    { try { UnityEngine.Object.Destroy(_mirrorCeiling); } catch (System.Exception ex) { Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); } _mirrorCeiling = null; }
+                    { try { UnityEngine.Object.Destroy(_mirrorCeiling); } catch (System.Exception ex) { Logger.Msg(System.ConsoleColor.DarkRed, ex.ToString()); } _mirrorCeiling = null; }
                     if (_mirrorMicro != null)
-                    { try { UnityEngine.Object.Destroy(_mirrorMicro); } catch (System.Exception ex) { Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); } _mirrorMicro = null; }
+                    { try { UnityEngine.Object.Destroy(_mirrorMicro); } catch (System.Exception ex) { Logger.Msg(System.ConsoleColor.DarkRed, ex.ToString()); } _mirrorMicro = null; }
                     if (_mirrorTrans != null)
-                    { try { UnityEngine.Object.Destroy(_mirrorTrans); } catch (System.Exception ex) { Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); } _mirrorTrans = null; }
+                    { try { UnityEngine.Object.Destroy(_mirrorTrans); } catch (System.Exception ex) { Logger.Msg(System.ConsoleColor.DarkRed, ex.ToString()); } _mirrorTrans = null; }
                     QM.ParseSettings();
                     break;
             }
-        }
-
-        IEnumerator WaitForLocalPlayer()
-        {
-            while (PlayerSetup.Instance == null)
-                yield return null;
-            CVRInputManager.Instance.gameObject.AddComponent<InputSVR>();
         }
 
 
