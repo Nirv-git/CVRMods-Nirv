@@ -17,16 +17,17 @@ namespace NearClipPlaneAdj
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.6.4";
+        public const string versionStr = "0.6.6";
         public static MelonLogger.Instance Logger;
 
         public static MelonPreferences_Entry<bool> useNirvMiscPage;
         public static MelonPreferences_Entry<bool> changeClipOnLoad;
         public static MelonPreferences_Entry<bool> keybindsEnabled;
         public static MelonPreferences_Entry<bool> smallerDefault;
+        public static MelonPreferences_Entry<bool> defaultChangeBlackList;
         public static MelonPreferences_Entry<bool> BTKUILib_en;
         public static MelonPreferences_Entry<bool> replace05withNumpad;
-        public static MelonPreferences_Entry<bool> defaultChangeBlackList;
+        public static MelonPreferences_Entry<bool> farClipControl;
 
         public static Dictionary<string, System.Tuple<bool, string>> blackList; 
         public static float oldNearClip;
@@ -43,10 +44,10 @@ namespace NearClipPlaneAdj
             changeClipOnLoad = MelonPreferences.CreateEntry<bool>("NearClipAdj", "changeClipOnLoad", true, "Change NearClip on world load");
             keybindsEnabled = MelonPreferences.CreateEntry<bool>("NearClipAdj", "Keyboard", true, "Keyboard Shortcuts: '[' - 0.0001, ']' - 0.05");
             smallerDefault = MelonPreferences.CreateEntry<bool>("NearClipAdj", "SmallerDefault", false, "Smaller Default Nearclip on World Change - 0.001 vs 0.01");
+            defaultChangeBlackList = MelonPreferences.CreateEntry("NearClipAdj", "defaultChangeBlackList", true, "Check a blacklist for worlds to not auto change the NearClip on (Restart Required to Enable)");
             BTKUILib_en = MelonPreferences.CreateEntry<bool>("NearClipAdj", "BTKUILib_en", true, "BTKUILib Support (Requires Restart)");
             replace05withNumpad = MelonPreferences.CreateEntry<bool>("NearClipAdj", "replace05withNumpad", false, "BTKUI Replace .05 button with numberpad");
-            defaultChangeBlackList = MelonPreferences.CreateEntry("NearClipAdj", "defaultChangeBlackList", true, "Check a blacklist for worlds to not auto change the NearClip on (Restart Required to Enable)");
-
+            farClipControl = MelonPreferences.CreateEntry<bool>("NearClipAdj", "farClipControl", false, "Add controls for Far Clipping Plane");
             //debug = MelonPreferences.CreateEntry<bool>("NearClipAdj", "debug", false, "debug");
 
             var settings = ExpansionKitApi.GetSettingsCategory("NearClipAdj");
@@ -60,6 +61,7 @@ namespace NearClipPlaneAdj
             {
                 CustomBTKUI.InitUi();
                 replace05withNumpad.OnValueChanged += CustomBTKUI.ChangeButtons;
+                farClipControl.OnValueChanged += CustomBTKUI.ChangeButtons;
             }
             else Logger.Msg("BTKUILib is missing, or setting is toggled off in Mod Settings - Not adding controls to BTKUILib");
 
@@ -121,7 +123,16 @@ namespace NearClipPlaneAdj
             if (printMsg) Logger.Msg($"New: {value}, Old: {oldvalue} {(keybindsEnabled.Value ? "- Keyboard Hotkeys: '[' - 0.0001, ']' - 0.05" : "")}");
             oldNearClip = screenCamera.nearClipPlane;
         }
-        
+
+        public static void ChangeFarClipPlane(float value, bool printMsg)
+        {
+            var screenCamera = GetScreenCam();
+            if (screenCamera is null) return;
+            float oldvalue = screenCamera.farClipPlane;
+            screenCamera.farClipPlane = value;
+            if (printMsg) Logger.Msg($"FARCLIP CHANGED - New: {value}, Old: {oldvalue}");
+        }
+
         System.Collections.IEnumerator SetNearClipPlane(float znear)
         {
             //printPlane(); //debug

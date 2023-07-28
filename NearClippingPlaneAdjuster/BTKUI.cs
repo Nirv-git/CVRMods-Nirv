@@ -17,6 +17,9 @@ namespace NearClipPlaneAdj
             QuickMenuAPI.PrepareIcon("NearClipPlaneAdj", "01", Assembly.GetExecutingAssembly().GetManifestResourceStream("NearClipPlaneAdj.Icons.btk.n01.png"));
             QuickMenuAPI.PrepareIcon("NearClipPlaneAdj", "05", Assembly.GetExecutingAssembly().GetManifestResourceStream("NearClipPlaneAdj.Icons.btk.n05.png"));
             QuickMenuAPI.PrepareIcon("NearClipPlaneAdj", "nearclip-Keypad", Assembly.GetExecutingAssembly().GetManifestResourceStream("NearClipPlaneAdj.Icons.btk.Keypad.png"));
+            QuickMenuAPI.PrepareIcon("NearClipPlaneAdj", "f500", Assembly.GetExecutingAssembly().GetManifestResourceStream("NearClipPlaneAdj.Icons.btk.f500.png"));
+            QuickMenuAPI.PrepareIcon("NearClipPlaneAdj", "f1000", Assembly.GetExecutingAssembly().GetManifestResourceStream("NearClipPlaneAdj.Icons.btk.f1000.png"));
+            QuickMenuAPI.PrepareIcon("NearClipPlaneAdj", "f20000", Assembly.GetExecutingAssembly().GetManifestResourceStream("NearClipPlaneAdj.Icons.btk.f20000.png"));
         }
 
         //This is done to keep BTKUI an optional dependancy 
@@ -63,8 +66,9 @@ namespace NearClipPlaneAdj
                 {
                     ((Category)mainCat).AddButton($"Custom Nearclip", "nearclip-Keypad", "Set a custom Nearclip. Be cafeful when setting to values > 0.05<p>Range 0.0001 - .5 meters").OnPress += () =>
                     {
-                        QuickMenuAPI.OpenNumberInput("Custom Nearclip", 0f, (action) =>
+                        QuickMenuAPI.OpenNumberInput("Custom Nearclip", .05f, (action) =>
                         { //Make this default to .05 in the future, after bug with BTKUI is resolved~ https://github.com/BTK-Development/BTKUILib/issues/11
+                            //Done, 2023-07-25
                             var value = (action < .0001f) ? .0001f : (action > .5f) ? .5f : action;
                             Main.ChangeNearClipPlane(value, true);
                         });
@@ -78,6 +82,38 @@ namespace NearClipPlaneAdj
                     Main.ChangeNearClipPlane(clip, true);
                 };
             }
+
+            if (Main.farClipControl.Value)
+            {
+                var farclipList = new float[] {
+                100f,
+                500f,
+                1000f,
+                20000f
+                };
+
+                foreach (var clip in farclipList)
+                {
+                    if (clip == 100)
+                    {
+                        ((Category)mainCat).AddButton($"Custom Farclip", "nearclip-Keypad", "Set a custom Farclip").OnPress += () =>
+                        {
+                            QuickMenuAPI.OpenNumberInput("Custom Farclip", 100f, (action) =>
+                            {
+                            var value = (action < 1f) ? 1f : (action > 500000f) ? 500000f : action;
+                                Main.ChangeFarClipPlane(value, true);
+                            });
+                        };
+                        continue;
+                    }
+                    var butt = ((Category)mainCat).AddButton($"Farclip: {clip}", $"f{clip}" , $"Sets Farclipping plane to {clip}");
+                    butt.OnPress += () =>
+                    {
+                        Main.ChangeFarClipPlane(clip, true);
+                    };
+                }
+            }
+
         }
     }
 }
