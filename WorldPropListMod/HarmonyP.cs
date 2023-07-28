@@ -75,7 +75,12 @@ namespace WorldPropListMod
                     //Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
                 }
             }
-            catch (Exception ex) { Main.Logger.Error("Error writing prop blocklist \n" + ex.ToString()); }
+            catch (Exception ex)
+            {
+                Main.Logger.Error("Error in OnGetPropVisibility patch. Possible corruption in lists, clearing. \n" + ex.ToString());
+                Main.BlockedThisSession.Clear();
+                Main.PropsThisSession.Clear();
+            }
             //Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 50");
             return true;
         }
@@ -86,15 +91,24 @@ namespace WorldPropListMod
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"9-2 SpawnProp");
             //Main.Logger.Msg($"propGuid {propGuid}");
-            Main.FindPropAPIname(propGuid);
-            if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(propGuid))
+            try
             {
-                var msg = $"Mod Blocking Prop: {Main.blockedProps[propGuid]}, SpawnedBy: Self";
-                Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
-                Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - ID:{propGuid}");
-                if (Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
-                Main.BlockedThisSession.Add((propGuid, MetaPort.Instance.ownerId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
-                return false;
+                Main.FindPropAPIname(propGuid);
+                if (Main.usePropBlockList.Value && Main.blockedProps.ContainsKey(propGuid))
+                {
+                    var msg = $"Mod Blocking Prop: {Main.blockedProps[propGuid]}, SpawnedBy: Self";
+                    Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
+                    Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - ID:{propGuid}");
+                    if (Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
+                    Main.BlockedThisSession.Add((propGuid, MetaPort.Instance.ownerId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Main.Logger.Error("Error in OnSpawnProp patch. Possible corruption in lists, clearing. \n" + ex.ToString());
+                Main.BlockedThisSession.Clear();
+                Main.PropsThisSession.Clear();
             }
             return true;
         }

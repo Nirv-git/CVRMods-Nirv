@@ -37,6 +37,7 @@ namespace WorldPropListMod
             QuickMenuAPI.PrepareIcon("WorldPropList", "ResetList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.ResetList.png"));
             QuickMenuAPI.PrepareIcon("WorldPropList", "PropList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.PropList.png"));
             QuickMenuAPI.PrepareIcon("WorldPropList", "DeleteLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.DeleteLess.png"));
+            QuickMenuAPI.PrepareIcon("WorldPropList", "Cube", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Cube.png"));
             //QuickMenuAPI.PrepareIcon("WorldPropList", "", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons..png"));
         }
 
@@ -274,6 +275,17 @@ namespace WorldPropListMod
                 {
                     if(!propData?.Spawnable?.gameObject.Equals(null) ?? false) Main.LineObj(propData.Spawnable.gameObject);
                     else { PropMenu(false); page.ClearChildren(); page.AddCategory("Prop was deleted"); }
+                };
+
+                cat1.AddButton("Prop Details Page", "Cube", $"Opens the CVR Prop Details Page for this Prop").OnPress += () =>
+                {
+                    if (propisPub)
+                    {
+                        ViewManager.Instance.GetPropDetails(guid);
+                        ViewManager.Instance.UiStateToggle(true);
+                    }
+                    else
+                        QuickMenuAPI.ShowAlertToast($"Prop is private", 3);
                 };
 
                 cat2.AddButton("Delete Prop", "Delete", "Delete this prop").OnPress += () =>

@@ -28,7 +28,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.11";
+        public const string versionStr = "0.5.12";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
@@ -58,8 +58,6 @@ namespace WorldPropListMod
 
         public static readonly List<(string, string, string)> BlockedThisSession = new List<(string, string, string)>(); //propGUID,PlayerGUID,Time
         public static readonly List<(string, string, string)> PropsThisSession = new List<(string, string, string)>(); //propGUID,PlayerGUID,Time
-
-
 
         public override void OnApplicationStart()
         {
