@@ -28,7 +28,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.12";
+        public const string versionStr = "0.5.13";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
@@ -38,6 +38,7 @@ namespace WorldPropListMod
         public static MelonPreferences_Entry<int> onPropDetailSelect;
         public static MelonPreferences_Entry<bool> usePropBlockList;
         public static MelonPreferences_Entry<bool> showHUDNotification;
+        public static MelonPreferences_Entry<bool> printAPIrequestsToConsole;
 
         public static Main Instance;
         private Thread _mainThread;
@@ -71,6 +72,7 @@ namespace WorldPropListMod
             onPropDetailSelect = MelonPreferences.CreateEntry(catagory, nameof(onPropDetailSelect), 3, "0-None, 1-Highlight, 2-Line, 3-Both");
             usePropBlockList = MelonPreferences.CreateEntry(catagory, nameof(usePropBlockList), true, "Use prop block list to prevent prop loading");
             showHUDNotification = MelonPreferences.CreateEntry(catagory, nameof(showHUDNotification), true, "Show notification on HUD when a prop is blocked");
+            printAPIrequestsToConsole = MelonPreferences.CreateEntry(catagory, nameof(printAPIrequestsToConsole), false, "Prints logging of API requests to console");
             SaveLoad.InitFileListOrLoad();
             BTKUI_Cust.SetupUI();      
         }

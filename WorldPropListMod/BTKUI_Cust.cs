@@ -285,7 +285,7 @@ namespace WorldPropListMod
                         ViewManager.Instance.UiStateToggle(true);
                     }
                     else
-                        QuickMenuAPI.ShowAlertToast($"Prop is private", 3);
+                        QuickMenuAPI.ShowAlertToast($"Prop is private, can not open details page.", 3);
                 };
 
                 cat2.AddButton("Delete Prop", "Delete", "Delete this prop").OnPress += () =>

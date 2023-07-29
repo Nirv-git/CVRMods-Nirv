@@ -16,7 +16,7 @@ namespace WorldPropListMod
         //Much of the credit goes to https://github.com/kafeijao/Kafe_CVR_Mods/blob/6e2b44b2ed3db22d21096ca53177be3a298a4f46/OSC/Utils/ApiRequests.cs#L7
         internal static async System.Threading.Tasks.Task<(string, string, string, string, bool, string, string, string)> RequestPropDetailsPageTask(string guid)
         {//Name, URL, Author,tags, isPub, FileSize, UpdatedAt, Description
-            Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching prop {guid} name...");
+            if (Main.printAPIrequestsToConsole.Value) Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching prop {guid} name...");
             BaseResponse<SpawnableDetailsResponse> response;
             try
             {
@@ -34,7 +34,7 @@ namespace WorldPropListMod
                 Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching prop {guid} name has Failed! Response came back empty.");
                 return (null, null, null, null, false, null, null, null);
             }
-            Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetched prop {guid} name successfully! Name: {response.Data.Name}");
+            if (Main.printAPIrequestsToConsole.Value) Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetched prop {guid} name successfully! Name: {response.Data.Name}");
             string tags = "";
             foreach(var tag in response.Data.Tags)
             {
@@ -47,7 +47,7 @@ namespace WorldPropListMod
 
         internal static async System.Threading.Tasks.Task<string> RequestPlayerDetailsPageTask(string guid)
         {
-            Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching player {guid} name...");
+            if (Main.printAPIrequestsToConsole.Value) Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching player {guid} name...");
             BaseResponse<UserDetailsResponse> response;
             try
             {
@@ -65,7 +65,7 @@ namespace WorldPropListMod
                 Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching player {guid} name has Failed! Response came back empty.");
                 return null;
             }
-            Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetched player {guid} name successfully! Name: {response.Data.Name}");
+            if (Main.printAPIrequestsToConsole.Value) Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetched player {guid} name successfully! Name: {response.Data.Name}");
             return response.Data.Name;
         }
     }
