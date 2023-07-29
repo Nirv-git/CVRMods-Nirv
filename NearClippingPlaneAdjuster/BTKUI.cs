@@ -70,7 +70,15 @@ namespace NearClipPlaneAdj
                         { //Make this default to .05 in the future, after bug with BTKUI is resolved~ https://github.com/BTK-Development/BTKUILib/issues/11
                             //Done, 2023-07-25
                             var value = (action < .0001f) ? .0001f : (action > .5f) ? .5f : action;
-                            Main.ChangeNearClipPlane(value, true);
+                            var valValue = Main.ValidateNewNearClipPlane(value);
+                            if (valValue == -1) return;
+                            if (valValue != value)
+                            {
+                                QuickMenuAPI.ShowAlertToast($"Far to Near clip ratio too high, limting Near to: {valValue}", 5);
+                                Main.ChangeNearClipPlane(valValue, true);
+                            }
+                            else
+                                Main.ChangeNearClipPlane(value, true);
                         });
                     };
                     continue;
@@ -79,14 +87,22 @@ namespace NearClipPlaneAdj
                 var butt = ((Category)mainCat).AddButton($"{clip}", clip.ToString().Replace("0.", ""), $"Sets Nearclipping plane to {clip}");
                 butt.OnPress += () =>
                 {
-                    Main.ChangeNearClipPlane(clip, true);
+                    var valValue = Main.ValidateNewNearClipPlane(clip);
+                    if (valValue == -1) return;
+                    if (valValue != clip)
+                    {
+                        QuickMenuAPI.ShowAlertToast($"Far to Near clip ratio too high, limting Near to: {valValue}", 5);
+                        Main.ChangeNearClipPlane(valValue, true);
+                    }
+                    else
+                        Main.ChangeNearClipPlane(clip, true);
                 };
             }
 
             if (Main.farClipControl.Value)
             {
                 var farclipList = new float[] {
-                100f,
+                1f,
                 500f,
                 1000f,
                 20000f
@@ -94,13 +110,21 @@ namespace NearClipPlaneAdj
 
                 foreach (var clip in farclipList)
                 {
-                    if (clip == 100)
+                    if (clip == 1)
                     {
-                        ((Category)mainCat).AddButton($"Custom Farclip", "nearclip-Keypad", "Set a custom Farclip").OnPress += () =>
+                        ((Category)mainCat).AddButton($"Custom Farclip", "nearclip-Keypad", "Set a custom Farclip (1-9999)").OnPress += () =>
                         {
-                            QuickMenuAPI.OpenNumberInput("Custom Farclip", 100f, (action) =>
+                            QuickMenuAPI.OpenNumberInput("Custom Farclip", 1f, (action) =>
                             {
-                            var value = (action < 1f) ? 1f : (action > 500000f) ? 500000f : action;
+                            var value = (action < 1f) ? 1f : action;
+                            var valValue = Main.ValidateNewFarClipPlane(value);
+                            if (valValue == -1) return;
+                            if (valValue != value)
+                            {
+                                QuickMenuAPI.ShowAlertToast($"Far to Near clip ratio too high, limting Far to: {valValue}", 5);
+                                Main.ChangeFarClipPlane(valValue, true);
+                            }
+                            else
                                 Main.ChangeFarClipPlane(value, true);
                             });
                         };
@@ -109,7 +133,15 @@ namespace NearClipPlaneAdj
                     var butt = ((Category)mainCat).AddButton($"Farclip: {clip}", $"f{clip}" , $"Sets Farclipping plane to {clip}");
                     butt.OnPress += () =>
                     {
-                        Main.ChangeFarClipPlane(clip, true);
+                        var valValue = Main.ValidateNewFarClipPlane(clip);
+                        if (valValue == -1) return;
+                        if (valValue != clip)
+                        {
+                            QuickMenuAPI.ShowAlertToast($"Far to Near clip ratio too high, limting Far to: {valValue}", 5);
+                            Main.ChangeFarClipPlane(valValue, true);
+                        }
+                        else
+                            Main.ChangeFarClipPlane(clip, true);
                     };
                 }
             }

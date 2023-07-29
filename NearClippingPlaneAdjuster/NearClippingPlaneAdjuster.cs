@@ -114,14 +114,31 @@ namespace NearClipPlaneAdj
             return screenCamera;
         }
 
+        public static float ValidateNewNearClipPlane(float value)
+        {
+            var screenCamera = GetScreenCam();
+            if (screenCamera is null) return -1;
+            return ((screenCamera.farClipPlane / value) > 10000000.0) ? screenCamera.farClipPlane / 10000000f : value;
+        }
+
         public static void ChangeNearClipPlane(float value, bool printMsg)
         {
             var screenCamera = GetScreenCam();
             if (screenCamera is null) return;
             float oldvalue = screenCamera.nearClipPlane;
-            screenCamera.nearClipPlane = value;
-            if (printMsg) Logger.Msg($"New: {value}, Old: {oldvalue} {(keybindsEnabled.Value ? "- Keyboard Hotkeys: '[' - 0.0001, ']' - 0.05" : "")}");
+            var valValue = ValidateNewNearClipPlane(value);
+            if (valValue == -1) return;
+            if (valValue != value) Main.Logger.Msg($"New value: {value} exceeds ratio between Far and Near clips, limiting Near to {valValue}");
+            screenCamera.nearClipPlane = valValue;
+            if (printMsg) Logger.Msg($"New: {valValue}, Old: {oldvalue} {(keybindsEnabled.Value ? "- Keyboard Hotkeys: '[' - 0.0001, ']' - 0.05" : "")}");
             oldNearClip = screenCamera.nearClipPlane;
+        }
+
+        public static float ValidateNewFarClipPlane(float value)
+        {
+            var screenCamera = GetScreenCam();
+            if (screenCamera is null) return -1;
+            return ((value / screenCamera.nearClipPlane) > 10000000.0) ? screenCamera.nearClipPlane * 10000000f : value;
         }
 
         public static void ChangeFarClipPlane(float value, bool printMsg)
@@ -129,8 +146,11 @@ namespace NearClipPlaneAdj
             var screenCamera = GetScreenCam();
             if (screenCamera is null) return;
             float oldvalue = screenCamera.farClipPlane;
-            screenCamera.farClipPlane = value;
-            if (printMsg) Logger.Msg($"FARCLIP CHANGED - New: {value}, Old: {oldvalue}");
+            var valValue = ValidateNewFarClipPlane(value);
+            if (valValue == -1) return;
+            if (valValue != value) Main.Logger.Msg($"New value: {value} exceeds ratio between Far and Near clips, limiting Far to {valValue}");
+            screenCamera.farClipPlane = valValue;
+            if (printMsg) Logger.Msg(ConsoleColor.DarkYellow, $"Farclip changed - New: {valValue}, Old: {oldvalue}");
         }
 
         System.Collections.IEnumerator SetNearClipPlane(float znear)
