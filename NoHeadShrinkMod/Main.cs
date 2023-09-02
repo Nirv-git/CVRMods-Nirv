@@ -22,7 +22,7 @@ namespace NoHeadShrinkMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.4";
+        public const string versionStr = "0.5.5";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "NoHeadShrinkMod";
@@ -40,6 +40,8 @@ namespace NoHeadShrinkMod
         public static float scaleAdj = 1f;
 
         public static bool alertFlag = false;
+
+        public static System.Object recheckRoutine = null;
 
         public override void OnApplicationStart()
         {
@@ -96,18 +98,38 @@ namespace NoHeadShrinkMod
                         Vector3.Distance(anim.GetBoneTransform(HumanBodyBones.Spine).position, anim.GetBoneTransform(HumanBodyBones.Chest).position) +
                         Vector3.Distance(anim.GetBoneTransform(HumanBodyBones.Chest).position, anim.GetBoneTransform(HumanBodyBones.Neck).position) +
                         Vector3.Distance(anim.GetBoneTransform(HumanBodyBones.Neck).position, anim.GetBoneTransform(HumanBodyBones.Head).position);
-
                     Logger.Msg($"Height:{height:F2}, Dist:{unshrinkDistance.Value}, Scaled distance will be {unshrinkDistance.Value * height:F2}");
                     scaleAdj = height;
                 }
-                catch (Exception ex) { scaleAdj = 1f; Logger.Error("Error Measuring Height defaulting to 1\n" + ex.ToString()); } 
+                catch (Exception ex) { scaleAdj = 1f; Logger.Error("Error Measuring Height defaulting to 1\n" + ex.ToString()); }
+
+                if (recheckRoutine != null) MelonCoroutines.Stop(recheckRoutine);
+                recheckRoutine = MelonCoroutines.Start(RecheckScale());
             }
             else
                 scaleAdj = 1f;
 
             Head = anim.GetBoneTransform(HumanBodyBones.Head);
         }
+
+        public static IEnumerator RecheckScale()
+        { //Check scale and remeasure avatar if needed
+            var lastScale = PlayerSetup.Instance._avatar.transform.localScale;
+            while (scaleDistance.Value)
+            {
+                var curScale = PlayerSetup.Instance._avatar.transform.localScale;
+                if (lastScale != curScale)
+                {
+                    var newAdj = (curScale.y / lastScale.y) * scaleAdj;
+                    Logger.Msg($"Remeasure due to scale changes | Old Height:{scaleAdj:F2}, New:{newAdj:F2} | Dist:{unshrinkDistance.Value}, Old Scaled distance: {unshrinkDistance.Value * scaleAdj:F2}, New: {unshrinkDistance.Value * newAdj:F2}");
+                    scaleAdj = newAdj;
+                    lastScale = curScale;
+                }
+                yield return new WaitForSeconds(1.25f);
+            }
+        }
     }
+   
 
     [HarmonyPatch]
     internal class HarmonyPatches
