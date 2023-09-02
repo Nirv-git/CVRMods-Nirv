@@ -192,7 +192,7 @@ namespace WorldPropListMod
 
                 foreach (var propItem in propList.OrderBy(pair => pair.Value.Item3))
                 {
-                    string label = $"{propItem.Value.Item1}, by: {propItem.Value.Item2}<p>Distance: {Utils.NumFormat(propItem.Value.Item3)}";
+                    string label = $"{propItem.Value.Item1}, Spawned by: {propItem.Value.Item2}<p>Distance: {Utils.NumFormat(propItem.Value.Item3)}";
                     cat2.AddButton(propItem.Value.Item1, propItem.Key.Spawnable.guid, label).OnPress += () =>
                     {
                         if (!propItem.Key?.Spawnable?.gameObject.Equals(null) ?? false) PropDetailMenu(propItem.Key);
@@ -444,7 +444,7 @@ namespace WorldPropListMod
                         string name = Main.PropNamesCache.TryGetValue(prop.Item1, out var propNameObj) ? propNameObj.Item1 : "Error: PropNameNotFound";
                         string player = Main.PlayerNamesCache.TryGetValue(prop.Item2, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
 
-                        string label = $"{name}, by: {player}<p>At: {prop.Item3}";
+                        string label = $"{name}, Spawned by: {player}<p>At: {prop.Item3}";
 
                         cat2.AddButton(name, prop.Item1, label).OnPress += () =>
                         {
@@ -503,7 +503,7 @@ namespace WorldPropListMod
                         string name = Main.PropNamesCache.TryGetValue(prop.Item1, out var propNameObj) ? propNameObj.Item1 : "Error: PropNameNotFound";
                         string player = Main.PlayerNamesCache.TryGetValue(prop.Item2, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
 
-                        string label = $"{name}, by: {player}<p>At: {prop.Item3}{(Main.blockedProps.ContainsKey(prop.Item1)?"<p>PROP IS BLOCKED":"")}";
+                        string label = $"{name}, Spawned by: {player}<p>At: {prop.Item3}{(Main.blockedProps.ContainsKey(prop.Item1)?"<p>PROP IS BLOCKED":"")}";
 
                         cat2.AddButton(name, prop.Item1, label).OnPress += () =>
                         {

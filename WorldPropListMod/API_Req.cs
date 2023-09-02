@@ -41,7 +41,7 @@ namespace WorldPropListMod
                 tags += tag + ", ";
             }
             //Main.Logger.Msg($"tags:{tags},\nisPub:{(response.Data.IsPublished ? "Published" : "Not Published")},\nFileSizeMB:{Utils.NumFormat(response.Data.FileSize/1048576f, 2)},\nUpdatedAt:{response.Data.UpdatedAt.ToString("yyyy'-'MM'-'dd")},\nDescription:{Utils.ReturnCleanASCII(response.Data.Description)},");
-            return (response.Data.Name, response.Data.ImageUrl, response.Data.Author.Name, tags, response.Data.IsPublished,
+            return (Utils.ReturnCleanASCII(response.Data.Name), response.Data.ImageUrl, response.Data.Author.Name, tags, response.Data.IsPublished,
                 Utils.NumFormat(response.Data.FileSize / 1048576f, 2), response.Data.UpdatedAt.ToString("yyyy'-'MM'-'dd"), Utils.ReturnCleanASCII(response.Data.Description));
         }
 

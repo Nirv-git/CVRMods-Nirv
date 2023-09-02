@@ -14,6 +14,7 @@ using UnityEngine.Networking;
 using BTKUILib;
 using System.IO;
 using System.Threading;
+using ABI_RC.Core.Networking;
 
 
 
@@ -28,11 +29,10 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.13";
+        public const string versionStr = "0.5.14";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
-        //public static MelonPreferences_Entry<bool> useNirvMiscPage;
         public static MelonPreferences_Entry<bool> useNirvMiscPage;
         public static MelonPreferences_Entry<int> lineLifespan;
         public static MelonPreferences_Entry<int> onPropDetailSelect;
@@ -99,8 +99,9 @@ namespace WorldPropListMod
                     {
                         init = true;
                         //Logger.Msg($"MetaPort.Instance.ownerId {MetaPort.Instance.ownerId} - MetaPort.Instance.username {MetaPort.Instance.username}");
-                        //PlayerNamesCache[MetaPort.Instance.ownerId] = (MetaPort.Instance.username, DateTime.Now);
+                        PlayerNamesCache[MetaPort.Instance.ownerId] = (AuthManager.username, DateTime.Now);
                         PlayerNamesCache["SYSTEM"] = ("SYSTEM", DateTime.Now); PlayerNamesCache["LocalServer"] = ("LocalServer", DateTime.Now);
+                        PropNamesCache["incompatible-content"] = ("Error prop", "CVR", "", false, "", "", "Internal Error Prop for CVR\nID:incompatible-content", DateTime.Now);
                     }
                     break;
             }
