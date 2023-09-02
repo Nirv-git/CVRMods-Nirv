@@ -642,10 +642,25 @@ namespace IKpresetsMod
             //    AvatarSaveLoad();
             //};
 
+
+            var currentID = MetaPort.Instance.currentAvatarGuid;
+            if (SaveSlots.AvatarGetSaved().ContainsKey(currentID))
+            {
+                SlotLine(true, new System.Collections.Generic.KeyValuePair<string, (bool, bool, bool, bool, bool, bool, int, int, int, int, int, int, int, int, float, bool, string)>(
+                    currentID, SaveSlots.AvatarGetSaved()[currentID]));
+            }
+
             foreach (System.Collections.Generic.KeyValuePair<string, (bool, bool, bool, bool, bool, bool, int, int, int, int, int, int, int, int, float, bool, string)>
                 slot in SaveSlots.AvatarGetSaved().Reverse())
             {
-                string label = $"{slot.Value.Item17} - {slot.Key}";
+                if (slot.Key == currentID)
+                    continue; //Don't repeat the current one if it matches
+                SlotLine(false, slot);
+            }
+            void SlotLine(bool current, System.Collections.Generic.KeyValuePair<string, (bool, bool, bool, bool, bool, bool, int, int, int, int, int, int, int, int, float, bool, string)>
+                slot)
+            {
+                string label = $"{(current ? "*Current avatar* " : "")}{slot.Value.Item17} - {slot.Key}";
                 var cat = page.AddCategory(label);
 
                 var desc = $"PitchYaw:{Utils.CompactTF(slot.Value.Item1)}_HipPin:{Utils.CompactTF(slot.Value.Item3)}_" +
