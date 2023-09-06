@@ -11,21 +11,12 @@ Current animations are, 'Lay down on back', 'Sit', 'Sit Crossed Legs', 'Sit Legs
 ![image](https://user-images.githubusercontent.com/81605232/187961673-05d763c9-0b06-4135-9e5b-aa374bd20d14.png)     
   
 ### Todo
+  * **This mod needs some serious love**
   * Tweak starting pose offset in VR. Some animations start in the floor and need to be moved up with movement controls.      
   
 Pressing the toggle chair button will place you into a chair at your current location with the selected sitting animation. The movement controls lets you adjust the location of the chair object. Rotation Lock stops your body from rotating in the chair when your head turns.      
 
 ![image](https://user-images.githubusercontent.com/81605232/187956905-3948aba9-3ff4-442b-8d85-e6cc08012fc9.png)  
-   
-**>>>>>>>>>> Use SeatExitController, seriously do it <<<<<<<<<<**  
-
-If you find it too easy to leave chairs you can use [SeatExitController](https://api.cvrmg.com/v1/mods/download/49)   
-
-**>>>>>>>>>> Use SeatExitController, seriously do it <<<<<<<<<<**  
-
-> Prevents you from falling out of seats accidentally. Press both triggers in VR, or q and e in desktop to leave seats.   
-
-**>>>>>>>>>> Use SeatExitController, seriously do it <<<<<<<<<<**  
 
 There are a few MelonPrefs that can be customized that aren't included on the menu. (I recommend using https://github.com/sinai-dev/MelonPreferencesManager | For CVR use the Mono version)    
   * QuickMenu Starts Maximized - Exactly as it says, default state of the mirror menu attached to your QuickMenu     

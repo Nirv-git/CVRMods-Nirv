@@ -22,6 +22,8 @@ This mod will set the near plane clipping distance to .01 15 seconds after you l
 
 Includes an option to adjust the Nearclipping Plane up to 0.05. This was suggested as a compatibility option for very large worlds where the Far Clipping Plane was getting pulled in too close by 0.01
 
+**Farclipping Plane** off by default, there is an option for adjusting the far clipping plane in the BTKUI menu. The mod will limit the ratio betwee Near and Far Planes to prevent Unity from exploding.
+
 * Keyboard Shortcuts - Enables keyboard shortcuts to set your clipping plane to the smallest or largest values.  **[** for 0.001 and  **]** for 0.05
 * Smaller Default - Sets a smaller value on World Change - 0.001 vs 0.01   
 

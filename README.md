@@ -2,6 +2,11 @@
 
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
 
+# Mods not published on CVRMG
+
+[HideDragonWingsMod](HideDragonWingsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/HideWings-0.0.1/HideDragonWings.dll)     
+[QMShutdownOptionsMod](QMShutdownOptionsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.7_QMShut0.0.6/QMShutdownOptionsMod.dll)    
+[WorldDetailsPage](WorldDetailsPage) [Download](xxxxxxxxxx)     
 
 # PortableMirror
 This mod allows the user to locally spawn mirrors for themselves in any world.   
@@ -93,6 +98,8 @@ This mod will set the near plane clipping distance to .01 15 seconds after you l
 
 Includes an option to adjust the Nearclipping Plane up to 0.05. This was suggested as a compatibility option for very large worlds where the Far Clipping Plane was getting pulled in too close by 0.01
 
+**Farclipping Plane** off by default, there is an option for adjusting the far clipping plane in the BTKUI menu. The mod will limit the ratio betwee Near and Far Planes to prevent Unity from exploding.
+
 * Keyboard Shortcuts - Enables keyboard shortcuts to set your clipping plane to the smallest or largest values.  **[** for 0.001 and  **]** for 0.05
 * Smaller Default - Sets a smaller value on World Change - 0.001 vs 0.01   
 
@@ -114,19 +121,13 @@ Current animations are, 'Lay down on back', 'Sit', 'Sit Crossed Legs', 'Sit Legs
 ![image](https://user-images.githubusercontent.com/81605232/187961673-05d763c9-0b06-4135-9e5b-aa374bd20d14.png)     
   
 ### Todo
+  * **This mod needs some serious love**
   * Tweak starting pose offset in VR. Some animations start in the floor and need to be moved up with movement controls.      
   
 Pressing the toggle chair button will place you into a chair at your current location with the selected sitting animation. The movement controls lets you adjust the location of the chair object. Rotation Lock stops your body from rotating in the chair when your head turns.      
 
 ![image](https://user-images.githubusercontent.com/81605232/187956905-3948aba9-3ff4-442b-8d85-e6cc08012fc9.png)     
-**>>>>>>>>>> Use SeatExitController, seriously do it <<<<<<<<<<**  
 
-If you find it too easy to leave chairs you can use [SeatExitController](https://api.cvrmg.com/v1/mods/download/49)   
-
-**>>>>>>>>>> Use SeatExitController, seriously do it <<<<<<<<<<**  
-> Prevents you from falling out of seats accidentally. Press both triggers in VR, or q and e in desktop to leave seats.   
-
-**>>>>>>>>>> Use SeatExitController, seriously do it <<<<<<<<<<**  
 
 There are a few MelonPrefs that can be customized that aren't included on the menu. (I recommend using https://github.com/sinai-dev/MelonPreferencesManager | For CVR use the Mono version)    
   * QuickMenu Starts Maximized - Exactly as it says, default state of the mirror menu attached to your QuickMenu     
