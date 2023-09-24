@@ -22,7 +22,7 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.1.10";
+        public const string versionStr = "2.1.11";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
