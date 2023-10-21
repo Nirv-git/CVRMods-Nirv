@@ -5,6 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.IO;
+using System.Collections.Generic;
+using System.Collections;
+using System.Reflection;
 
 
 
@@ -48,6 +51,24 @@ namespace WorldPropListMod
                 sb.Append(c);
             }
             return sb.ToString();
+        }
+
+        public static DateTime ParseDate(string value, string format)
+        {
+            if (DateTime.TryParseExact(value, format, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var dt))
+            {
+                return dt;
+            }
+            MelonLogger.Msg(ConsoleColor.Red, $"Date Error: {value}");
+            return DateTime.MinValue;
+        }
+
+        public static bool IsRepeat(string propGUID, List<(string, string, string)> list)
+        {
+            var last = list.LastOrDefault();
+            if (last.Item1 == propGUID && Utils.ParseDate(last.Item3, "yyyy-MM-dd HH:mm:ss") > DateTime.Now.AddSeconds(-5))
+                return true;
+            return false;
         }
     }
 }

@@ -46,7 +46,8 @@ namespace WorldPropListMod
                     if (userId == "SYSTEM" || userId == "LocalServer")
                     {
                         Main.Logger.Msg(ConsoleColor.Yellow, $"Can not block prop: {Main.blockedProps[propGUID]} - Spawned by: {userId}, ID:{propGUID}");
-                        Main.PropsThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                        if (!Utils.IsRepeat(propGUID, Main.PropsThisSession))
+                            Main.PropsThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                         return true;
                     }
                     var msg = $"Mod Blocking Prop: {Main.blockedProps[propGUID]}, SpawnedBy: {(Main.PlayerNamesCache.TryGetValue(userId, out var obj) ? obj.Item1 : userId)}";
@@ -65,13 +66,15 @@ namespace WorldPropListMod
                         else
                             CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
                     }
-                    Main.BlockedThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                    if (!Utils.IsRepeat(propGUID, Main.BlockedThisSession))
+                        Main.BlockedThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                     wasForceHidden = true;
                     return false;
                 }
                 else
                 {   //GUID,PlayerGUID,Time
-                    Main.PropsThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                    if (!Utils.IsRepeat(propGUID, Main.PropsThisSession))
+                        Main.PropsThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                     //Main.Logger.Msg($"ObjectId {ObjectId} InstanceId {InstanceId} SpawnedBy {SpawnedBy}");
                 }
             }
@@ -84,6 +87,8 @@ namespace WorldPropListMod
             //Main.Logger.Msg(ConsoleColor.Yellow, $"9-1 50");
             return true;
         }
+
+        
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnProp))]
@@ -100,7 +105,8 @@ namespace WorldPropListMod
                     Main.Logger.Msg(ConsoleColor.Magenta, ">>>> PROP BLOCKED <<<<");
                     Main.Logger.Msg(ConsoleColor.Magenta, msg + $" - ID:{propGuid}");
                     if (Main.showHUDNotification.Value) CohtmlHud.Instance.ViewDropText("Prop blocked", msg);
-                    Main.BlockedThisSession.Add((propGuid, MetaPort.Instance.ownerId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
+                    if (!Utils.IsRepeat(propGuid, Main.BlockedThisSession))
+                        Main.BlockedThisSession.Add((propGuid, MetaPort.Instance.ownerId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
                     return false;
                 }
             }
@@ -113,11 +119,15 @@ namespace WorldPropListMod
             return true;
         }
 
+
+        
+
+
         //[HarmonyPostfix]
         //[HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.DeleteAllProps))]
         //internal static void AfterDeleteAllProps()
         //{
-            //Main.Logger.Msg(ConsoleColor.Yellow, $"9-5 DeleteAllProps");
+        //Main.Logger.Msg(ConsoleColor.Yellow, $"9-5 DeleteAllProps");
         //}
     }
 }

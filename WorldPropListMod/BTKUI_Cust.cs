@@ -50,6 +50,11 @@ namespace WorldPropListMod
             _registerRootPage.Invoke(_uiInstance.GetValue(null), new object[] { element });
         }
 
+        //private static string GetPropImageUrl(string guid)
+        //{
+        //    return $"https://files.abidata.io/user_content/spawnables/{guid}/{guid}.png";
+        //}
+
         public static void SetupUI()
         {
             loadAssets();
@@ -139,7 +144,7 @@ namespace WorldPropListMod
                 SetCustomSub();
 
                 var cat1 = page.AddCategory("");
-                var cat2 = page.AddCategory("Props");
+                var cat2 = page.AddCategory($"Props - {CVRSyncHelper.Props.ToArray().Count()}");
 
                 cat1.AddButton("Delete All Props", "Delete", "Delete all props in the world").OnPress += () =>
                 {
@@ -193,6 +198,7 @@ namespace WorldPropListMod
                 foreach (var propItem in propList.OrderBy(pair => pair.Value.Item3))
                 {
                     string label = $"{propItem.Value.Item1}, Spawned by: {propItem.Value.Item2}<p>Distance: {Utils.NumFormat(propItem.Value.Item3)}";
+                    //GetPropImageUrl(
                     cat2.AddButton(propItem.Value.Item1, propItem.Key.Spawnable.guid, label).OnPress += () =>
                     {
                         if (!propItem.Key?.Spawnable?.gameObject.Equals(null) ?? false) PropDetailMenu(propItem.Key);
@@ -265,6 +271,7 @@ namespace WorldPropListMod
                 var location = new Vector3(propData.PositionX, propData.PositionY, propData.PositionZ);
                 var dist = Utils.NumFormat(Math.Abs(Vector3.Distance(location, Camera.main.transform.position)));
 
+                //GetPropImageUrl(
                 cat1.AddButton("", guid, $"Just an icon, pressing this does nothing");
                 cat1.AddToggle("Highlight", "Highlight Prop", (Main.onPropDetailSelect.Value == 1 || Main.onPropDetailSelect.Value == 3)).OnValueUpdated += action =>
                 {
@@ -445,7 +452,7 @@ namespace WorldPropListMod
                         string player = Main.PlayerNamesCache.TryGetValue(prop.Item2, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
 
                         string label = $"{name}, Spawned by: {player}<p>At: {prop.Item3}";
-
+                        //GetPropImageUrl(
                         cat2.AddButton(name, prop.Item1, label).OnPress += () =>
                         {
                             QuickMenuAPI.ShowConfirm("Confirm Unblock", "Are you sure you want to unblock this prop?", () => {     
@@ -504,7 +511,7 @@ namespace WorldPropListMod
                         string player = Main.PlayerNamesCache.TryGetValue(prop.Item2, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
 
                         string label = $"{name}, Spawned by: {player}<p>At: {prop.Item3}{(Main.blockedProps.ContainsKey(prop.Item1)?"<p>PROP IS BLOCKED":"")}";
-
+                        //GetPropImageUrl(
                         cat2.AddButton(name, prop.Item1, label).OnPress += () =>
                         {
                             QuickMenuAPI.ShowConfirm("Confirm Block", "Are you sure you want to block this prop?", () => {

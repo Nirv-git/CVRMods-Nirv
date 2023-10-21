@@ -29,7 +29,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.14";
+        public const string versionStr = "0.5.15";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";

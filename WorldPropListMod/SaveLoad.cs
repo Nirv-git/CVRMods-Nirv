@@ -44,8 +44,8 @@ namespace WorldPropListMod
                 else
                 {
                     try { Main.PropNamesCache = new Dictionary<string, (string, string, string, bool, string, string, string, DateTime)>(File.ReadAllLines(path).Select(s => s.Split(new char[] { '␟' }, StringSplitOptions.RemoveEmptyEntries))
-                        .Where(x => x.Length == 9).Where(x => ParseDate(x[8].Trim()) >= DateTime.Now.AddDays(-7))
-                        .ToDictionary(p => p[0].Trim(), p => (p[1].Trim(), p[2].Trim(), p[3].Trim(), Boolean.Parse(p[4].Trim()), p[5].Trim(), p[6].Trim(), p[7].Trim(), ParseDate(p[8].Trim()) )));
+                        .Where(x => x.Length == 9).Where(x => Utils.ParseDate(x[8].Trim(), dateFormatIn) >= DateTime.Now.AddDays(-7))
+                        .ToDictionary(p => p[0].Trim(), p => (p[1].Trim(), p[2].Trim(), p[3].Trim(), Boolean.Parse(p[4].Trim()), p[5].Trim(), p[6].Trim(), p[7].Trim(), Utils.ParseDate(p[8].Trim(), dateFormatIn) )));
                     } catch (Exception ex) { Main.Logger.Error("Error reading prop cache file \n" + ex.ToString()); }
                 }
             }
@@ -60,8 +60,8 @@ namespace WorldPropListMod
                 else
                 {
                     try { Main.PlayerNamesCache = new Dictionary<string, (string, DateTime)>(File.ReadAllLines(path).Select(s => s.Split(new char[] { '␟' }, StringSplitOptions.RemoveEmptyEntries))
-                        .Where(x => x.Length == 3).Where(x => ParseDate(x[2].Trim()) >= DateTime.Now.AddDays(-7))
-                        .ToDictionary(p => p[0].Trim(), p => (p[1].Trim(), ParseDate(p[2].Trim()))));
+                        .Where(x => x.Length == 3).Where(x => Utils.ParseDate(x[2].Trim(), dateFormatIn) >= DateTime.Now.AddDays(-7))
+                        .ToDictionary(p => p[0].Trim(), p => (p[1].Trim(), Utils.ParseDate(p[2].Trim(), dateFormatIn))));
                     } catch (Exception ex) { Main.Logger.Error("Error reading player cache file \n" + ex.ToString()); }
                 }
             }
@@ -81,14 +81,6 @@ namespace WorldPropListMod
         }
 
 
-        public static DateTime ParseDate(string value)
-        {
-            if(DateTime.TryParseExact(value, dateFormatIn, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var dt))
-            {
-                return dt;
-            }
-            Main.Logger.Msg(ConsoleColor.Red, $"Date Error: {value}");
-            return DateTime.MinValue;
-        }
+       
     }
 }
