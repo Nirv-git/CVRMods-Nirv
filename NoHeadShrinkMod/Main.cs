@@ -22,7 +22,7 @@ namespace NoHeadShrinkMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.5";
+        public const string versionStr = "0.5.6";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "NoHeadShrinkMod";
@@ -80,13 +80,15 @@ namespace NoHeadShrinkMod
             //Logger.Msg("OnAnimatorManagerUpdate");
             init = true;
             Head = null;
-            Animator anim = PlayerSetup.Instance._avatar.GetComponent<Animator>();
-            if((!anim?.avatar?.isHuman ?? true) || anim.GetBoneTransform(HumanBodyBones.Head) == null)
+
+            if ((!PlayerSetup.Instance._avatar.GetComponent<Animator>()?.avatar?.isHuman ?? true) || PlayerSetup.Instance._avatar.GetComponent<Animator>().GetBoneTransform(HumanBodyBones.Head) == null)
             {
                 Logger.Msg("Animator is null, or is not Humanoid, this avatar will not function with the mod");
                 return;
             }
 
+            Animator anim = PlayerSetup.Instance._avatar.GetComponent<Animator>();
+            
             if (scaleDistance.Value)
             {
                 try
@@ -117,6 +119,8 @@ namespace NoHeadShrinkMod
             var lastScale = PlayerSetup.Instance._avatar.transform.localScale;
             while (scaleDistance.Value)
             {
+                if (PlayerSetup.Instance?._avatar?.transform.Equals(null) ?? true)
+                    yield break;
                 var curScale = PlayerSetup.Instance._avatar.transform.localScale;
                 if (lastScale != curScale)
                 {
