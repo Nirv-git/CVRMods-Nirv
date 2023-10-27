@@ -7,6 +7,9 @@
 [HideDragonWingsMod](HideDragonWingsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/HideWings-0.0.1/HideDragonWings.dll)     
 [QMShutdownOptionsMod](QMShutdownOptionsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.7_QMShut0.0.6/QMShutdownOptionsMod.dll)    
 [WorldDetailsPage](WorldDetailsPage) [Download](xxxxxxxxxx)     
+[PlayerLocator](PlayerLocator) [Download](xxxxxxxxxx)        
+[RemoveChairs](RemoveChairs) [Download](xxxxxxxxxx)   
+
 
 # PortableMirror
 This mod allows the user to locally spawn mirrors for themselves in any world.   
@@ -179,9 +182,6 @@ This is a niche mod, but can be very useful in certain circumstances.
            
 Optional support for BTKUI with settings in the NirvMisc or default Misc page. (Toggle in MelonPrefs)                
 ![image](https://user-images.githubusercontent.com/81605232/233871748-ecc13889-4849-44fe-b284-2669e04be5f8.png)
-
-
- 
 
      
       
