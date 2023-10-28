@@ -34,7 +34,7 @@ namespace RemoveChairs
 
             cat = MelonPreferences.CreateCategory(catagory, "RemoveChairs");
             useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page.");
-            debug = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), false, "Log paths of chairs to console");
+            debug = MelonPreferences.CreateEntry(catagory, nameof(debug), false, "Log paths of chairs to console");
             CustomBTKUI.InitUi();
         }
 
