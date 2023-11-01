@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ABI_RC.Core.InteractionSystem;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
@@ -16,7 +17,7 @@ namespace PortableMirror
             settings = GameObject.Instantiate(Mirrors.mirrorSettingsPrefab);
             settings.SetActive(false);
 
-            settings.transform.SetParent(GameObject.Find("Cohtml/QuickMenu").transform, false);
+            settings.transform.SetParent(CVR_MenuManager.Instance.transform, false);
             settings.transform.localScale = new Vector3(0.01f, 0.01f, 0.05f);
             settings.transform.localPosition = new Vector3(0f, 0f, 0f);
 

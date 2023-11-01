@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections;
+using ABI_RC.Core.Player;
 using MelonLoader;
 using UnityEngine;
 using ABI.CCK.Components;
@@ -22,7 +23,7 @@ namespace PortableMirror
             //Main.Logger.Msg($"start dist rout");
             distActive = true;
             distWasActive = true;
-            var self = GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]");
+            var self = PlayerSetup.Instance.PlayerAvatarParent;
             //Main.Logger.Msg($"player {self.gameObject.name}");
             while (Main.distanceDisable.Value)
             {
@@ -73,7 +74,7 @@ namespace PortableMirror
                 MelonCoroutines.Stop(distDisableRoutine);
             distActive = false;
 
-            var self = GameObject.Find("_PLAYERLOCAL/[PlayerAvatar]");
+            var self = PlayerSetup.Instance.PlayerAvatarParent;
             var avatars = GameObject.FindObjectsOfType<CVRAvatar>();
             for (int i = 0; i < avatars.Length; i++)
             {
