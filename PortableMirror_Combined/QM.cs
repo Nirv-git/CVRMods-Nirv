@@ -266,6 +266,13 @@ namespace PortableMirror
                     ParseSettings();
                 }
                 ));
+                settingsCanvas.transform.Find("45-Grab-Cust").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main._45_CanPickupMirror.Value = !Main._45_CanPickupMirror.Value;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
+                }
+                ));
                 settingsCanvas.transform.Find("45-ToTracking").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     if (!Main._45_AnchorToTracking.Value)
@@ -363,6 +370,13 @@ namespace PortableMirror
                 }
                 ));
                 settingsCanvas.transform.Find("Ceil-Grab").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main._ceil_CanPickupMirror.Value = !Main._ceil_CanPickupMirror.Value;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
+                }
+                ));
+                settingsCanvas.transform.Find("Ceil-Grab-Cust").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     Main._ceil_CanPickupMirror.Value = !Main._ceil_CanPickupMirror.Value;
                     Main main = new Main(); main.OnPreferencesSaved();
@@ -637,13 +651,13 @@ namespace PortableMirror
                 }
                 ));
 
-                //settingsCanvas.transform.Find("Sett-MirrorsShowInCamera").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
-                //{
-                //    Main.MirrorsShowInCamera.Value = !Main.MirrorsShowInCamera.Value;
-                //    Main main = new Main(); main.OnPreferencesSaved();
-                //    ParseSettings();
-                //}
-                //));
+                settingsCanvas.transform.Find("Sett-MirrorsShowInCamera").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                {
+                    Main.MirrorsShowInCamera = !Main.MirrorsShowInCamera;
+                    Main main = new Main(); main.OnPreferencesSaved();
+                    ParseSettings();
+                }
+                ));
 
                 settingsCanvas.transform.Find("Sett-PositionOnView").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
@@ -664,11 +678,11 @@ namespace PortableMirror
                 //}
                 //));
 
-                settingsCanvas.transform.Find("Sett-forceMirrors").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
-                {
-                    Mirrors.ForceMirrorLayer();
-                }
-                ));
+                //settingsCanvas.transform.Find("Sett-forceMirrors").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                //{
+                //    Mirrors.ForceMirrorLayer();
+                //}
+                //));
                 settingsCanvas.transform.Find("Sett-HighPrecisionDistanceAdjustment").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
                 {
                     Main._mirrorDistHighPrec = !Main._mirrorDistHighPrec;
@@ -676,13 +690,13 @@ namespace PortableMirror
                     ParseSettings();
                 }
                 ));
-                settingsCanvas.transform.Find("Sett-DistDisable").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
-                {
-                    Main.distanceDisable.Value = !Main.distanceDisable.Value;
-                    Main main = new Main(); main.OnPreferencesSaved();
-                    ParseSettings();
-                }
-                ));
+                //settingsCanvas.transform.Find("Sett-DistDisable").GetComponent<Button>().onClick.AddListener(new UnityAction(() =>
+                //{
+                //    Main.distanceDisable.Value = !Main.distanceDisable.Value;
+                //    Main main = new Main(); main.OnPreferencesSaved();
+                //    ParseSettings();
+                //}
+                //));
 
 
             }
@@ -1101,6 +1115,14 @@ namespace PortableMirror
                 settingsCanvas.transform.Find("Base-Grab-Cust").GetComponent<Image>().color = custColor1;
             else
                 settingsCanvas.transform.Find("Base-Grab-Cust").GetComponent<Image>().color = custColor2;
+            if(Main._45_CanPickupMirror.Value)
+                settingsCanvas.transform.Find("45-Grab-Cust").GetComponent<Image>().color = custColor1;
+            else
+                settingsCanvas.transform.Find("45-Grab-Cust").GetComponent<Image>().color = custColor2;
+            if(Main._ceil_CanPickupMirror.Value)
+                settingsCanvas.transform.Find("Ceil-Grab-Cust").GetComponent<Image>().color = custColor1;
+            else
+                settingsCanvas.transform.Find("Ceil-Grab-Cust").GetComponent<Image>().color = custColor2;
             if (Main._micro_CanPickupMirror.Value)
                 settingsCanvas.transform.Find("Micro-Grab-Cust").GetComponent<Image>().color = custColor1;
             else
@@ -1113,6 +1135,10 @@ namespace PortableMirror
             bool custGrab = MetaPort.Instance.isUsingVr && Main.customGrab_en.Value;
             settingsCanvas.transform.Find("Base-Grab").gameObject.SetActive(!custGrab);
             settingsCanvas.transform.Find("Base-Grab-Cust").gameObject.SetActive(custGrab);
+            settingsCanvas.transform.Find("45-Grab").gameObject.SetActive(!custGrab);
+            settingsCanvas.transform.Find("45-Grab-Cust").gameObject.SetActive(custGrab);
+            settingsCanvas.transform.Find("Ceil-Grab").gameObject.SetActive(!custGrab);
+            settingsCanvas.transform.Find("Ceil-Grab-Cust").gameObject.SetActive(custGrab);
             settingsCanvas.transform.Find("Micro-Grab").gameObject.SetActive(!custGrab);
             settingsCanvas.transform.Find("Micro-Grab-Cust").gameObject.SetActive(custGrab);
             settingsCanvas.transform.Find("Trans-Grab").gameObject.SetActive(!custGrab);
@@ -1179,10 +1205,10 @@ namespace PortableMirror
             else
                 settingsCanvas.transform.Find("Sett-usePixelLights/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
 
-            //if (Main.MirrorsShowInCamera.Value)
-            //    settingsCanvas.transform.Find("Sett-MirrorsShowInCamera/Text").GetComponent<TextMeshProUGUI>().color = custColor1;
-            //else
-            //    settingsCanvas.transform.Find("Sett-MirrorsShowInCamera/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
+            if (Main.MirrorsShowInCamera)
+                settingsCanvas.transform.Find("Sett-MirrorsShowInCamera/Text").GetComponent<TextMeshProUGUI>().color = custColor1;
+            else
+                settingsCanvas.transform.Find("Sett-MirrorsShowInCamera/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
 ;
             if (Main._base_PositionOnView.Value)
                 settingsCanvas.transform.Find("Sett-PositionOnView/Text").GetComponent<TextMeshProUGUI>().color = custColor1;
@@ -1194,10 +1220,10 @@ namespace PortableMirror
             else
                 settingsCanvas.transform.Find("Sett-HighPrecisionDistanceAdjustment/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
 
-            if (Main.distanceDisable.Value)
-                settingsCanvas.transform.Find("Sett-DistDisable/Text").GetComponent<TextMeshProUGUI>().color = custColor1;
-            else
-                settingsCanvas.transform.Find("Sett-DistDisable/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
+            //if (Main.distanceDisable.Value)
+            //    settingsCanvas.transform.Find("Sett-DistDisable/Text").GetComponent<TextMeshProUGUI>().color = custColor1;
+            //else
+            //    settingsCanvas.transform.Find("Sett-DistDisable/Text").GetComponent<TextMeshProUGUI>().color = custColor2;
 
 
             //if (Main.fixRenderOrder.Value)

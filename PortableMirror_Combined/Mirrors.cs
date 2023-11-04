@@ -11,6 +11,7 @@ using ABI.CCK.Components;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
 using ABI_RC.Systems.InputManagement;
+using System.Diagnostics;
 
 
 namespace PortableMirror
@@ -23,23 +24,23 @@ namespace PortableMirror
         //PlayerNetwork  = 1 << 10; 
         //MirrorReflection  = 1 << 11; 
         //UiLayer = 1 << 5;
-        public static int water = 1 << 4; // Layer Mirror is on
-        public static int notwater = -1 & water;
-        public static int reserved3 = 1 << 14;
+        //public static int water = 1 << 4; // Layer Mirror is on
+        //public static int notwater = -1 & water;
+        //public static int reserved3 = 1 << 14;
         //int optMirrorMask = PlayerNetwork | MirrorReflectionLayer;   //Double check this
         //int fullMirrorMask = -1 & ~UiLayer & ~PlayerLocal & ~reserved3; //Double check this
 
         public static AssetBundle assetBundle;
         public static GameObject mirrorPrefab, mirrorSettingsPrefab, pickupLine;
 
-        public static object calDelayRoutine, waitForMeasureRoutine, calDelayRoutineOff;
-        public static bool _calInit = false;
-        public static float _calHeight;
-        public static Dictionary<GameObject, int> calObjects = new Dictionary<GameObject, int>();
+        //public static object calDelayRoutine, waitForMeasureRoutine, calDelayRoutineOff;
+        //public static bool _calInit = false;
+        //public static float _calHeight;
+        //public static Dictionary<GameObject, int> calObjects = new Dictionary<GameObject, int>();
 
         public static bool _baseFollowGazeActive, _45FollowGazeActive, _transFollowGazeActive, _microFollowGazeActive;
-        public static bool _GrabActive, _baseGrabActive, _microGrabActive, _transGrabActive;
-        public static bool _globalHeld = false;
+        //public static bool _GrabActive, _baseGrabActive, _microGrabActive, _transGrabActive;
+        //public static bool _globalHeld = false;
 
 
         public static void loadAssets()
@@ -63,18 +64,18 @@ namespace PortableMirror
             else Main.Logger.Error("Bundle was null");
         }
 
-        public static void ForceMirrorLayer()
-        {
-            foreach (var mirror in UnityEngine.Object.FindObjectsOfType<CVRMirror>())
-            {
-                try
-                {
-                    mirror.m_ReflectLayers = mirror.m_ReflectLayers.value & ~(1 << 4); //Force all mirrors to not reflect "Water" and set all mirrors to water                                                                                     
-                    mirror.gameObject.layer = 4;
-                }
-                catch (System.Exception ex) { Main.Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); }
-            }
-        }
+        //public static void ForceMirrorLayer()
+        //{
+        //    foreach (var mirror in UnityEngine.Object.FindObjectsOfType<CVRMirror>())
+        //    {
+        //        try
+        //        {
+        //            mirror.m_ReflectLayers = mirror.m_ReflectLayers.value & ~(1 << 4); //Force all mirrors to not reflect "Water" and set all mirrors to water                                                                                     
+        //            mirror.gameObject.layer = 4;
+        //        }
+        //        catch (System.Exception ex) { Main.Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); }
+        //    }
+        //}
         public static IEnumerator SetOrder(GameObject obj)
         {
             yield return new WaitForSeconds(1f);
@@ -86,35 +87,35 @@ namespace PortableMirror
 
         }
 
-        public static void SetAllMirrorsToIgnoreShader()
-        {
-            foreach (var mirror in UnityEngine.Object.FindObjectsOfType<CVRMirror>())
-            { // https://github.com/knah/VRCMods/blob/master/MirrorResolutionUnlimiter/UiExtensionsAddon.cs
-                try
-                {
-                    //Main.Logger.Msg($"-----");
-                    //Main.Logger.Msg($"{mirror.gameObject.name}");
-                    GameObject othermirror = mirror?.gameObject?.transform?.parent?.gameObject; // Question marks are always the answer
-                    //Main.Logger.Msg($"othermirror is null:{othermirror is null}, !=base:{othermirror != Main._mirrorBase}, !=45:{othermirror != Main._mirror45}," +
-                    //    $" !=Micro:{othermirror != Main._mirrorCeiling}, !=trans:{othermirror != Main._mirrorTrans}");
-                    //Main.Logger.Msg($"is child - base:{othermirror?.transform?.IsChildOf(Main._mirrorBase?.transform)}");
+        //public static void SetAllMirrorsToIgnoreShader()
+        //{
+        //    foreach (var mirror in UnityEngine.Object.FindObjectsOfType<CVRMirror>())
+        //    { // https://github.com/knah/VRCMods/blob/master/MirrorResolutionUnlimiter/UiExtensionsAddon.cs
+        //        try
+        //        {
+        //            //Main.Logger.Msg($"-----");
+        //            //Main.Logger.Msg($"{mirror.gameObject.name}");
+        //            GameObject othermirror = mirror?.gameObject?.transform?.parent?.gameObject; // Question marks are always the answer
+        //            //Main.Logger.Msg($"othermirror is null:{othermirror is null}, !=base:{othermirror != Main._mirrorBase}, !=45:{othermirror != Main._mirror45}," +
+        //            //    $" !=Micro:{othermirror != Main._mirrorCeiling}, !=trans:{othermirror != Main._mirrorTrans}");
+        //            //Main.Logger.Msg($"is child - base:{othermirror?.transform?.IsChildOf(Main._mirrorBase?.transform)}");
 
 
-                    if (othermirror is null || (othermirror != Main._mirrorBase && othermirror != Main._mirror45 && othermirror != Main._mirrorCeiling &&
-                        othermirror != Main._mirrorMicro && othermirror != Main._mirrorTrans &&  
-                        (Main._mirrorBase is null || !othermirror.transform.IsChildOf(Main._mirrorBase.transform)) &&
-                        (Main._mirror45 is null || !othermirror.transform.IsChildOf(Main._mirror45.transform)) &&
-                        (Main._mirrorCeiling is null || !othermirror.transform.IsChildOf(Main._mirrorCeiling.transform)) &&
-                        (Main._mirrorMicro is null || !othermirror.transform.IsChildOf(Main._mirrorMicro.transform)) &&
-                        (Main._mirrorTrans is null || !othermirror.transform.IsChildOf(Main._mirrorTrans.transform))  ))
-                    {
-                        //Main.Logger.Msg($"setting layers");
-                        mirror.m_ReflectLayers = mirror.m_ReflectLayers.value & ~reserved3; //Force all mirrors to not reflect "Mirror/TransparentBackground" - Set all mirrors to exclude reserved3                                                                                             
-                    }
-                }
-                catch (System.Exception ex) { Main.Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); }
-            }
-        }
+        //            if (othermirror is null || (othermirror != Main._mirrorBase && othermirror != Main._mirror45 && othermirror != Main._mirrorCeiling &&
+        //                othermirror != Main._mirrorMicro && othermirror != Main._mirrorTrans &&  
+        //                (Main._mirrorBase is null || !othermirror.transform.IsChildOf(Main._mirrorBase.transform)) &&
+        //                (Main._mirror45 is null || !othermirror.transform.IsChildOf(Main._mirror45.transform)) &&
+        //                (Main._mirrorCeiling is null || !othermirror.transform.IsChildOf(Main._mirrorCeiling.transform)) &&
+        //                (Main._mirrorMicro is null || !othermirror.transform.IsChildOf(Main._mirrorMicro.transform)) &&
+        //                (Main._mirrorTrans is null || !othermirror.transform.IsChildOf(Main._mirrorTrans.transform))  ))
+        //            {
+        //                //Main.Logger.Msg($"setting layers");
+        //                mirror.m_ReflectLayers = mirror.m_ReflectLayers.value & ~reserved3; //Force all mirrors to not reflect "Mirror/TransparentBackground" - Set all mirrors to exclude reserved3                                                                                             
+        //            }
+        //        }
+        //        catch (System.Exception ex) { Main.Logger.Msg(ConsoleColor.DarkRed, ex.ToString()); }
+        //    }
+        //}
 
         public static IEnumerator FixMirrorLayer(Transform mirrorBase, bool child)
         { //CVR appearently adds layers on init of the mirror, this should? fix that. 
@@ -122,11 +123,11 @@ namespace PortableMirror
             yield return new WaitForSeconds(.1f);
             if (child)
             {
-                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = 17408; //Layers 10 (PlayerNetwork) & 14 (layer for shader)  //{(1 << 10) | (1 << 14)}
-                mirrorBase.GetChild(0).GetComponent<CVRMirror>().m_ReflectLayers = 16640; //Layers 8 (Playerlocal) & 14 (layer for shader)  //{(1 << 8) | (1 << 14)}
+                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = (1 << CVRLayers.PlayerNetwork);
+                mirrorBase.GetChild(0).GetComponent<CVRMirror>().m_ReflectLayers = (1 << CVRLayers.PlayerLocal) | (1 << CVRLayers.PlayerClone); 
             }
             else
-                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = 16640; //Layers 8 (Playerlocal) & 14 (layer for shader)
+                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = (1 << CVRLayers.PlayerLocal) | (1 << CVRLayers.PlayerClone);
         }
 
 
@@ -156,9 +157,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._base_MirrorState.Value == "MirrorCutout" || Main._base_MirrorState.Value == "MirrorTransparent" ||
-                    Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._base_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
+                //if (Main._base_MirrorState.Value == "MirrorCutout" || Main._base_MirrorState.Value == "MirrorTransparent" ||
+                //    Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo" ||
+                //    Main._base_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 GameObject player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
                 Vector3 pos = player.transform.position;
@@ -210,7 +211,7 @@ namespace PortableMirror
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
 
-                    if (Main._base_CanPickupMirror.Value) MelonCoroutines.Start(pickupBase());
+                    if (Main._base_CanPickupMirror.Value) customPickupStart("Base", mirror);
                 }
                 else
                 {
@@ -230,9 +231,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._45_MirrorState.Value == "MirrorCutout" || Main._45_MirrorState.Value == "MirrorTransparent" ||
-                    Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._45_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
+                //if (Main._45_MirrorState.Value == "MirrorCutout" || Main._45_MirrorState.Value == "MirrorTransparent" ||
+                //    Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo" ||
+                //    Main._45_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
                 Vector3 pos = player.transform.position;
@@ -258,8 +259,8 @@ namespace PortableMirror
                     childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
                 }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3000f;
-                mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
-                mirror.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<CVRPickupObject>().enabled = false;// Main._45_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<BoxCollider>().enabled = false;// Main._45_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._45_CanPickupMirror.Value & Main.pickupFrame.Value);
                 FixFrame(mirror, Main._45_MirrorScaleX.Value, Main._45_MirrorScaleY.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
@@ -274,6 +275,18 @@ namespace PortableMirror
                 if (Main._45_followGaze.Value) MelonCoroutines.Start(followGaze45());
                 Main._mirror45 = mirror;
 
+                if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
+                {
+
+                    if (Main._45_CanPickupMirror.Value) customPickupStart("45", mirror);
+                }
+                else
+                {
+
+                    mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
+                    mirror.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
+                }
+
             }
         }
 
@@ -287,9 +300,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._ceil_MirrorState.Value == "MirrorCutout" || Main._ceil_MirrorState.Value == "MirrorTransparent" ||
-                    Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._ceil_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
+                //if (Main._ceil_MirrorState.Value == "MirrorCutout" || Main._ceil_MirrorState.Value == "MirrorTransparent" ||
+                //    Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo" ||
+                //    Main._ceil_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
 
@@ -313,8 +326,8 @@ namespace PortableMirror
                     childMirror.GetComponent<Renderer>().material.renderQueue = 3000;
                 }
                 mirror.GetOrAddComponent<CVRPickupObject>().maximumGrabDistance = 3000f;
-                mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
-                mirror.GetOrAddComponent<BoxCollider>().enabled = Main._ceil_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<CVRPickupObject>().enabled = false; //Main._ceil_CanPickupMirror.Value;
+                mirror.GetOrAddComponent<BoxCollider>().enabled = false; //Main._ceil_CanPickupMirror.Value;
                 mirror.transform.Find("Frame").gameObject.SetActive(Main._ceil_CanPickupMirror.Value & Main.pickupFrame.Value);
                 FixFrame(mirror, Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value);
                 //mirror.GetOrAddComponent<CVRPickupObject>().allowManipulationWhenEquipped = false;
@@ -326,6 +339,18 @@ namespace PortableMirror
                 if (Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(FixMirrorLayer(childMirror, false));
                 if (Main._ceil_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(FixMirrorLayer(childMirror, true));
                 Main._mirrorCeiling = mirror;
+
+                if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
+                {
+
+                    if (Main._ceil_CanPickupMirror.Value) customPickupStart("Ceiling", mirror);
+                }
+                else
+                {
+
+                    mirror.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
+                    mirror.GetOrAddComponent<BoxCollider>().enabled = Main._ceil_CanPickupMirror.Value;
+                }
             }
         }
 
@@ -338,9 +363,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._micro_MirrorState.Value == "MirrorCutout" || Main._micro_MirrorState.Value == "MirrorTransparent" ||
-                    Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._micro_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
+                //if (Main._micro_MirrorState.Value == "MirrorCutout" || Main._micro_MirrorState.Value == "MirrorTransparent" ||
+                //    Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo" ||
+                //    Main._micro_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
                 Vector3 pos = cam.transform.position;
@@ -389,7 +414,7 @@ namespace PortableMirror
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
 
-                    if (Main._micro_CanPickupMirror.Value) MelonCoroutines.Start(pickupMicro());
+                    if (Main._micro_CanPickupMirror.Value) customPickupStart("Micro", mirror);
                 }
                 else
                 {
@@ -409,9 +434,9 @@ namespace PortableMirror
             }
             else
             {
-                if (Main._trans_MirrorState.Value == "MirrorCutout" || Main._trans_MirrorState.Value == "MirrorTransparent" ||
-                    Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo" ||
-                    Main._trans_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
+                //if (Main._trans_MirrorState.Value == "MirrorCutout" || Main._trans_MirrorState.Value == "MirrorTransparent" ||
+                //    Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo" ||
+                //    Main._trans_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer();
                 var cam = Camera.main.gameObject;
                 Vector3 pos = player.transform.position;
@@ -463,7 +488,7 @@ namespace PortableMirror
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
 
-                    if (Main._trans_CanPickupMirror.Value) MelonCoroutines.Start(pickupTrans());
+                    if (Main._trans_CanPickupMirror.Value) customPickupStart("Trans", mirror);
                 }
                 else
                 {
@@ -485,13 +510,14 @@ namespace PortableMirror
                 myLine.transform.localPosition = Vector3.zero;
                 myLine.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
                 myLine.AddComponent<LineRenderer>();
+                myLine.layer = CVRLayers.UI;
                 LineRenderer lr = myLine.GetComponent<LineRenderer>();
                 lr.material = new Material(Shader.Find("Particles/Standard Unlit"));
                 lr.useWorldSpace = false;
                 lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 lr.receiveShadows = false;
-                lr.startColor = new Color(1f, 0f, 1f);
-                lr.endColor = new Color(.58f, .219f, 1f);
+                lr.startColor = new Color(1f, 0f, 1f, .75f);
+                lr.endColor = new Color(.58f, .219f, 1f, .5f);
                 lr.startWidth = .005f;
                 lr.endWidth = 0.001f;
                 lr.SetPosition(0, Vector3.zero);
@@ -501,111 +527,141 @@ namespace PortableMirror
             }
         }
 
-        //Could I have made this all just one Coroutine that handled all pickups, yes! But that is later me's issue
-        //Later me, is going to fix that, I swear
-        public static IEnumerator pickupBase()
+        //Could I have made this all just one Coroutine that handled all pickups, yes! But that is later me's issue -- 2023-02-24
+        //Later me, is going to fix that, I swear -- 2023-03-10
+        //I did it! -- 2023-11-02
+        public static Dictionary<string, GameObject> customGrabs = new Dictionary<string, GameObject>();
+        public static bool pickupObjsRunning = false;
+        public static System.Object pickupObjs_Rout = null;
+
+        public static void customPickupStart(string name, GameObject mirror)
         { 
-            _baseGrabActive = true;
-            var mirror = Main._mirrorBase;
-            var rightCon = PlayerSetup.Instance.vrRayRight.gameObject;
             SetupLineRender();
-            var held = false;
-            var setCol = false;
-            while (Main._base_CanPickupMirror.Value && (!mirror?.Equals(null) ?? false))
+            if (!customGrabs.ContainsKey(name)) 
+                customGrabs.Add(name, mirror);
+            else
+                customGrabs[name] = mirror;
+            if (!pickupObjsRunning)
             {
-                pickupObj(mirror, rightCon, ref Main._base_AnchorToTracking, ref setCol, ref held);
-                yield return null;
+                if (pickupObjs_Rout != null) MelonCoroutines.Stop(pickupObjs_Rout);
+                pickupObjs_Rout = MelonCoroutines.Start(pickupObjs());
             }
-            if (held) { _globalHeld = false; }
-            pickupLine.SetActive(false);
-            _baseGrabActive = false;
         }
 
-        public static IEnumerator pickupMicro()
-        { 
-            _microGrabActive = true;
-            var mirror = Main._mirrorMicro;
-            var rightCon = PlayerSetup.Instance.vrRayRight.gameObject;
-            SetupLineRender();
-            var held = false;
-            var setCol = false;
-            while (Main._micro_CanPickupMirror.Value && (!mirror?.Equals(null) ?? false))
-            {
-                pickupObj(mirror, rightCon, ref Main._micro_AnchorToTracking, ref setCol, ref held);
-                yield return null;
-            }
-            if (held) { _globalHeld = false; }
-            pickupLine.SetActive(false);
-            _microGrabActive = false;
-        }
-
-        public static IEnumerator pickupTrans()
+        public static IEnumerator pickupObjs()
         {
-            _transGrabActive = true;
-            var mirror = Main._mirrorTrans;
+            pickupObjsRunning = true;
             var rightCon = PlayerSetup.Instance.vrRayRight.gameObject;
-            SetupLineRender();
+
             var held = false;
-            var setCol = false;
-            while (Main._trans_CanPickupMirror.Value && (!mirror?.Equals(null) ?? false))
-            {
-                pickupObj(mirror, rightCon, ref Main._trans_AnchorToTracking, ref setCol, ref held);
-                yield return null;
-            }
-            if (held) { _globalHeld = false; }
-            pickupLine.SetActive(false);
-            _transGrabActive = false;
-        }
+            (string, GameObject) lastHeld = ("", null);
 
-
-        public static void pickupObj(GameObject mirror, GameObject rightCon, ref MelonPreferences_Entry<bool> anchorToTracking, ref bool setCol, ref bool held)
-        { 
-            if(_globalHeld && !held ) return;
-            if (!held ? CVRInputManager.Instance.interactRightValue > .5f : CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
+            while (customGrabs.Count > 0)
             {
-                setCol = true; var col = mirror.GetComponent<BoxCollider>(); col.enabled = true;
-                Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward); RaycastHit hit;
-                if (col.Raycast(ray, out hit, 1000f))
+                try
                 {
-                    pickupLine.SetActive(Main.customGrabLine.Value);
-                    pickupLine.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0f, hit.distance, 0f));
-                    if (held || CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
-                    {               
-                        if (!held)
+                    if (!held ? CVRInputManager.Instance.interactRightValue > .5f : CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
+                    {//Allow laser to object while holding trigger without grabbing it
+
+                        var hitFound = false;
+                        RaycastHit hit = new RaycastHit();
+                        Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward);
+                        (string, GameObject, float) nearest = ("", null, 1000f);
+
+                        foreach (var mirror in customGrabs)
+                        { //Find the nearest mirror to the raycast
+                            if (mirror.Value?.Equals(null) ?? true)
+                            {
+                                Main.Logger.Msg($"Removing mirror {mirror.Key}");
+                                customGrabs.Remove(mirror.Key);
+                                Main.Logger.Msg($"Removed");
+                                break;
+                            }
+
+                            var col = mirror.Value.GetComponent<BoxCollider>(); col.enabled = true;
+                            if (col.Raycast(ray, out hit, 1000f))
+                            {
+                                if (hit.distance < nearest.Item3)
+                                {
+                                    nearest.Item1 = mirror.Key; nearest.Item2 = mirror.Value; nearest.Item3 = hit.distance;
+                                }
+                                hitFound = true;
+                            }
+                            col.enabled = false;
+                        }
+
+                        if (hitFound || held)
                         {
-                            mirror.transform.SetParent(rightCon.transform, true);
-                            held = true; _globalHeld = true;
+                            var dist = nearest.Item3;
+
+                            if (held || (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f && !(nearest.Item2?.Equals(null) ?? true)))
+                            {//Grab or continue grabbing
+                                if (!held)
+                                {
+                                    dist = nearest.Item3;
+                                    nearest.Item2.transform.SetParent(rightCon.transform, true);
+                                    lastHeld.Item1 = nearest.Item1; lastHeld.Item2 = nearest.Item2;
+                                    held = true;
+                                }
+                                else
+                                {//Joystick Forward/Back
+
+                                    Vector3 direction = rightCon.transform.forward;
+                                    var tempPos = nearest.Item2.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
+                                    var moveDistance = Vector3.Distance(tempPos, nearest.Item2.transform.position);
+                                    var inputY = InputSVR.GetVRLookVector().y;
+
+                                    dist = Vector3.Distance(rightCon.transform.position, nearest.Item2.transform.position);
+                                    var col = nearest.Item2.GetComponent<BoxCollider>(); col.enabled = true;
+                                    if (col.Raycast(ray, out hit, 1000f))
+                                    {//Get the distance for ray, can't just use Gameobject distance as that will be short/long cause it is to the transform center
+                                        dist = hit.distance;
+                                    }
+                                    col.enabled = false;
+
+                                    //Make sure if never goes past the hand
+                                    if (!(dist - moveDistance <= 0f && inputY < 0F))
+                                        lastHeld.Item2.transform.position += direction * Mathf.Clamp(hit.distance / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
+                                }
+                            }
+
+                            pickupLine.SetActive(Main.customGrabLine.Value);
+                            pickupLine.GetComponent<LineRenderer>().SetPosition(1, new Vector3(0f, dist, 0f));
                         }
                         else
-                        {//Joystick Forward/Back
-                            Vector3 direction = rightCon.transform.forward;
-                            var tempPos = mirror.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
-                            var moveDistance = Vector3.Distance(tempPos, mirror.transform.position);
-                            var inputY = InputSVR.GetVRLookVector().y;
-                            //Main.Logger.Msg($"hit.distance {hit.distance}, moveDistance {moveDistance}, inputY {inputY}");
-                            if (!(hit.distance - moveDistance <= 0f && inputY < 0F))
-                                mirror.transform.position += direction * Mathf.Clamp(hit.distance / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
+                        {
+                            pickupLine.SetActive(false);
                         }
-                    
+                    }
+                    else
+                    {
+                        pickupLine.SetActive(false);
+                        if (held && !(lastHeld.Item2?.Equals(null) ?? true))
+                        {
+                            bool toTracking = false;
+                            switch (lastHeld.Item1)
+                            {
+                                case "Base": toTracking = Main._base_AnchorToTracking.Value; break;
+                                case "45": toTracking = Main._45_AnchorToTracking.Value; break;
+                                case "Ceiling": toTracking = Main._ceil_AnchorToTracking.Value; break;
+                                case "Micro": toTracking = Main._micro_AnchorToTracking.Value; break;
+                                case "Trans": toTracking = Main._trans_AnchorToTracking.Value; break;
+                                default: toTracking = false; break;
+                            }
+
+                            if (toTracking) lastHeld.Item2.transform.SetParent(null);
+                            else lastHeld.Item2.transform.SetParent(PlayerSetup.Instance.transform, true);
+                        }
+                        held = false;
                     }
                 }
-                else
-                {
-                    pickupLine.SetActive(false);
-                }
+                catch (System.Exception ex) { Main.Logger.Error("Error in pickupObjs - Aborting:\n" +  ex.ToString()); pickupObjsRunning = false; yield break; }
+                yield return null;        
             }
-            else
-            {
-                pickupLine.SetActive(false);
-                if (setCol) { setCol = false; mirror.GetComponent<BoxCollider>().enabled = false; }
-                if (held)
-                {
-                    if (!anchorToTracking.Value) mirror.transform.SetParent(null);
-                    else mirror.transform.SetParent(PlayerSetup.Instance.transform, true);
-                    held = false; _globalHeld = false;
-                }
-            }
+            pickupObjsRunning = false;
         }
+
+        
         public static IEnumerator followGazeBase()
         {
             bool waitToSettle = false;

@@ -11,7 +11,9 @@ using ABI_RC.Core.Player;
 using ABI_RC.Systems.IK.SubSystems;
 using ABI_RC.Core.InteractionSystem;
 using HarmonyLib;
+using ABI_RC.Core;
 using ABI_RC.Core.Savior;
+using ABI_RC.Systems.Camera;
 
 
 [assembly: MelonInfo(typeof(PortableMirror.Main), "PortableMirrorMod", PortableMirror.Main.versionStr, "Nirvash")] 
@@ -112,11 +114,11 @@ namespace PortableMirror
         public static MelonPreferences_Entry<bool> _trans_PositionOnView;
         public static MelonPreferences_Entry<bool> _trans_followGaze;
 
-        public static MelonPreferences_Entry<bool> distanceDisable;
-        public static MelonPreferences_Entry<float> distanceValue;
-        public static MelonPreferences_Entry<float> distanceUpdateInit;
+        //public static MelonPreferences_Entry<bool> distanceDisable;
+        //public static MelonPreferences_Entry<float> distanceValue;
+        //public static MelonPreferences_Entry<float> distanceUpdateInit;
 
-
+        public static bool MirrorsShowInCamera = true;
 
         public override void OnApplicationStart()
         {
@@ -155,9 +157,9 @@ namespace PortableMirror
             //MirrorsShowInCamera = MelonPreferences.CreateEntry<bool>("PortableMirror", "MirrorsShowInCamera", true, "Mirrors show in Cameras - Global for all mirrors --Don't use--");
             //Spacer3 = MelonPreferences.CreateEntry<bool>("PortableMirror", "Spacer3", false, "--PortableMirror Distance Disable--");///
             //MelonPreferences.CreateCategory("PortableMirrorDistDisable", "PortableMirror Distance Disable");
-            distanceDisable = MelonPreferences.CreateEntry<bool>("PortableMirror", "distanceDisable", false, "Disable avatars > than a distance from showing in Mirrors");
-            distanceValue = MelonPreferences.CreateEntry<float>("PortableMirror", "distanceValue", 3f, "Disable Distance in meters");
-            distanceUpdateInit = MelonPreferences.CreateEntry<float>("PortableMirror", "distanceUpdateInit", .5f, "Disable Update interval");
+            //distanceDisable = MelonPreferences.CreateEntry<bool>("PortableMirror", "distanceDisable", false, "Disable avatars > than a distance from showing in Mirrors");
+            //distanceValue = MelonPreferences.CreateEntry<float>("PortableMirror", "distanceValue", 3f, "Disable Distance in meters");
+            //distanceUpdateInit = MelonPreferences.CreateEntry<float>("PortableMirror", "distanceUpdateInit", .5f, "Disable Update interval");
 
             //MelonPreferences.CreateCategory("PortableMirrorMisc", "Base-PortableMirror Base");
             MelonPreferences.CreateCategory("PortableMirrorMisc", "PortableMirror Misc Settings");
@@ -264,16 +266,25 @@ namespace PortableMirror
             }
 
 
-            if (Main.distanceDisable.Value)
+            if(MirrorsShowInCamera)
             {
-                if (!DistanceDisable.distActive)
-                    DistanceDisable.distDisableRoutine = MelonCoroutines.Start(DistanceDisable.DistDisableUpdate());
+                PortableCamera.Instance.cameraComponent.cullingMask |= (1 << CVRLayers.CVRReserved3);
             }
-            else if (DistanceDisable.distWasActive)
+            else
             {
-                DistanceDisable.distWasActive = false;
-                DistanceDisable.ReturnAllPlayersToNormal();
+                PortableCamera.Instance.cameraComponent.cullingMask &= ~(1 << CVRLayers.CVRReserved3);
             }
+
+            //if (Main.distanceDisable.Value)
+            //{
+            //    if (!DistanceDisable.distActive)
+            //        DistanceDisable.distDisableRoutine = MelonCoroutines.Start(DistanceDisable.DistDisableUpdate());
+            //}
+            //else if (DistanceDisable.distWasActive)
+            //{
+            //    DistanceDisable.distWasActive = false;
+            //    DistanceDisable.ReturnAllPlayersToNormal();
+            //}
 
 
             _mirrorDistAdj = _mirrorDistHighPrec ? MirrorDistAdjAmmount.Value : .25f;
@@ -290,7 +301,7 @@ namespace PortableMirror
                 _mirrorBase.GetOrAddComponent<BoxCollider>().enabled = false;
                 _mirrorBase.GetOrAddComponent<CVRPickupObject>().enabled = false;
                 _mirrorBase.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
-                if (Main._base_MirrorState.Value == "MirrorCutout" || Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
+                //if (Main._base_MirrorState.Value == "MirrorCutout" || Main._base_MirrorState.Value == "MirrorTransparent" || Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
                 for (int i = 0; i < _mirrorBase.transform.childCount; i++)
                     _mirrorBase.transform.GetChild(i).gameObject.SetActive(false);
                 var childMirror = _mirrorBase.transform.Find(Main._base_MirrorState.Value);
@@ -312,7 +323,7 @@ namespace PortableMirror
 
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
-                    if (Main._base_CanPickupMirror.Value && !Mirrors._baseGrabActive) MelonCoroutines.Start(Mirrors.pickupBase());
+                    if (Main._base_CanPickupMirror.Value) Mirrors.customPickupStart("Base", _mirrorBase);
                 }
                 else
                 {
@@ -337,11 +348,11 @@ namespace PortableMirror
                 _mirror45.transform.position += _mirror45.transform.forward * (Main._45_MirrorDistance.Value - _oldMirrorDistance45);
                 _mirror45.transform.rotation = _mirror45.transform.rotation * Quaternion.AngleAxis(45, Vector3.left);
 
-                _mirror45.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
-                _mirror45.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
+                _mirror45.GetOrAddComponent<BoxCollider>().enabled = false; //Main._45_CanPickupMirror.Value;
+                _mirror45.GetOrAddComponent<CVRPickupObject>().enabled = false; //Main._45_CanPickupMirror.Value;
                 _mirror45.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
-                if (Main._45_MirrorState.Value == "MirrorCutout" || Main._45_MirrorState.Value == "MirrorTransparent" || Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
+                //if (Main._45_MirrorState.Value == "MirrorCutout" || Main._45_MirrorState.Value == "MirrorTransparent" || Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
                 for (int i = 0; i < _mirror45.transform.childCount; i++)
                     _mirror45.transform.GetChild(i).gameObject.SetActive(false);
                 var childMirror = _mirror45.transform.Find(Main._45_MirrorState.Value);
@@ -361,6 +372,18 @@ namespace PortableMirror
                 if (Main._45_MirrorState.Value == "MirrorCutoutSolo" || Main._45_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._45_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
 
+                if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
+                {
+
+                    if (Main._45_CanPickupMirror.Value) Mirrors.customPickupStart("45", _mirror45);
+                }
+                else
+                {
+
+                    _mirrorCeiling.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
+                    _mirrorCeiling.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
+                }
+
             }
             _oldMirrorScaleY45 = Main._45_MirrorScaleY.Value;
             _oldMirrorDistance45 = Main._45_MirrorDistance.Value;
@@ -372,11 +395,11 @@ namespace PortableMirror
                 _mirrorCeiling.transform.localScale = new Vector3(Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value, 0.05f);
                 _mirrorCeiling.transform.position = new Vector3(_mirrorCeiling.transform.position.x, _mirrorCeiling.transform.position.y + (Main._ceil_MirrorDistance.Value - _oldMirrorDistanceCeiling), _mirrorCeiling.transform.position.z);
 
-                _mirrorCeiling.GetOrAddComponent<BoxCollider>().enabled = Main._ceil_CanPickupMirror.Value;
-                _mirrorCeiling.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
+                _mirrorCeiling.GetOrAddComponent<BoxCollider>().enabled = false;//Main._ceil_CanPickupMirror.Value;
+                _mirrorCeiling.GetOrAddComponent<CVRPickupObject>().enabled = false;// Main._ceil_CanPickupMirror.Value;
                 _mirrorCeiling.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
-                if (Main._ceil_MirrorState.Value == "MirrorCutout" || Main._ceil_MirrorState.Value == "MirrorTransparent" || Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
+                //if (Main._ceil_MirrorState.Value == "MirrorCutout" || Main._ceil_MirrorState.Value == "MirrorTransparent" || Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
                 for (int i = 0; i < _mirrorCeiling.transform.childCount; i++)
                     _mirrorCeiling.transform.GetChild(i).gameObject.SetActive(false);
                 var childMirror = _mirrorCeiling.transform.Find(Main._ceil_MirrorState.Value);
@@ -395,6 +418,18 @@ namespace PortableMirror
                 Mirrors.FixFrame(_mirrorCeiling, Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value);
                 if (Main._ceil_MirrorState.Value == "MirrorCutoutSolo" || Main._ceil_MirrorState.Value == "MirrorTransparentSolo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, false));
                 if (Main._ceil_MirrorState.Value == "MirrorTransCutCombo") MelonCoroutines.Start(Mirrors.FixMirrorLayer(childMirror, true));
+
+                if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
+                {
+
+                    if (Main._ceil_CanPickupMirror.Value) Mirrors.customPickupStart("Ceiling", _mirrorCeiling);
+                }
+                else
+                {
+
+                    _mirrorCeiling.GetOrAddComponent<CVRPickupObject>().enabled = Main._ceil_CanPickupMirror.Value;
+                    _mirrorCeiling.GetOrAddComponent<BoxCollider>().enabled = Main._ceil_CanPickupMirror.Value;
+                }
 
             }
             _oldMirrorDistanceCeiling = Main._ceil_MirrorDistance.Value;
@@ -417,7 +452,7 @@ namespace PortableMirror
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().enabled = false;
                 _mirrorMicro.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
-                if (Main._micro_MirrorState.Value == "MirrorCutout" || Main._micro_MirrorState.Value == "MirrorTransparent" || Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
+                //if (Main._micro_MirrorState.Value == "MirrorCutout" || Main._micro_MirrorState.Value == "MirrorTransparent" || Main._micro_MirrorState.Value == "MirrorCutoutSolo" || Main._micro_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
                 for (int i = 0; i < _mirrorMicro.transform.childCount; i++)
                     _mirrorMicro.transform.GetChild(i).gameObject.SetActive(false);
                 var childMirror = _mirrorMicro.transform.Find(Main._micro_MirrorState.Value);
@@ -437,7 +472,7 @@ namespace PortableMirror
 
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
-                    if (Main._micro_CanPickupMirror.Value && !Mirrors._microGrabActive) MelonCoroutines.Start(Mirrors.pickupMicro());
+                    if (Main._micro_CanPickupMirror.Value) Mirrors.customPickupStart("Micro", _mirrorMicro);
                 }
                 else
                 {
@@ -464,7 +499,7 @@ namespace PortableMirror
                 _mirrorTrans.GetOrAddComponent<CVRPickupObject>().enabled = false;      
                 _mirrorTrans.GetOrAddComponent<CVRPickupObject>().gripType = Main.PickupToHand.Value ? CVRPickupObject.GripType.Origin : CVRPickupObject.GripType.Free;
 
-                if (Main._trans_MirrorState.Value == "MirrorCutout" || Main._trans_MirrorState.Value == "MirrorTransparent" || Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
+                //if (Main._trans_MirrorState.Value == "MirrorCutout" || Main._trans_MirrorState.Value == "MirrorTransparent" || Main._trans_MirrorState.Value == "MirrorCutoutSolo" || Main._trans_MirrorState.Value == "MirrorTransparentSolo") Mirrors.SetAllMirrorsToIgnoreShader();
                 for (int i = 0; i < _mirrorTrans.transform.childCount; i++)
                     _mirrorTrans.transform.GetChild(i).gameObject.SetActive(false);
                 var childMirror = _mirrorTrans.transform.Find(Main._trans_MirrorState.Value);
@@ -488,7 +523,7 @@ namespace PortableMirror
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
 
-                    if (Main._trans_CanPickupMirror.Value && !Mirrors._transGrabActive) MelonCoroutines.Start(Mirrors.pickupTrans());
+                    if (Main._trans_CanPickupMirror.Value) Mirrors.customPickupStart("Trans", _mirrorTrans);
                 }
                 else
                 {
