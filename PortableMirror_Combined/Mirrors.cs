@@ -560,7 +560,7 @@ namespace PortableMirror
             {
                 try
                 {
-                    if (!held ? CVRInputManager.Instance.interactRightValue > .5f : CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f)
+                    if (!held ? CVRInputManager.Instance.interactRightValue > .5f : CVRInputManager.Instance.gripRightValue > Main.customGrab_gripRightValue.Value && CVRInputManager.Instance.interactRightValue > .5f)
                     {//Allow laser to object while holding trigger without grabbing it
 
                         var hitFound = false;
@@ -570,11 +570,12 @@ namespace PortableMirror
 
                         foreach (var mirror in customGrabs)
                         { //Find the nearest mirror to the raycast
+
                             if (mirror.Value?.Equals(null) ?? true)
                             {
-                                Main.Logger.Msg($"Removing mirror {mirror.Key}");
+                                //Main.Logger.Msg($"Removing mirror {mirror.Key}");
                                 customGrabs.Remove(mirror.Key);
-                                Main.Logger.Msg($"Removed");
+                                //Main.Logger.Msg($"Removed");
                                 break;
                             }
 
@@ -594,7 +595,7 @@ namespace PortableMirror
                         {
                             var dist = nearest.Item3;
 
-                            if (held || (CVRInputManager.Instance.gripRightValue > .5f && CVRInputManager.Instance.interactRightValue > .5f && !(nearest.Item2?.Equals(null) ?? true)))
+                            if (held || (CVRInputManager.Instance.gripRightValue > Main.customGrab_gripRightValue.Value && CVRInputManager.Instance.interactRightValue > .5f && !(nearest.Item2?.Equals(null) ?? true)))
                             {//Grab or continue grabbing
                                 if (!held)
                                 {
@@ -649,8 +650,8 @@ namespace PortableMirror
                                 default: toTracking = false; break;
                             }
 
-                            if (toTracking) lastHeld.Item2.transform.SetParent(null);
-                            else lastHeld.Item2.transform.SetParent(PlayerSetup.Instance.transform, true);
+                            if (toTracking) lastHeld.Item2.transform.SetParent(PlayerSetup.Instance.transform, true);
+                            else lastHeld.Item2.transform.SetParent(null);
                         }
                         held = false;
                     }
@@ -658,6 +659,7 @@ namespace PortableMirror
                 catch (System.Exception ex) { Main.Logger.Error("Error in pickupObjs - Aborting:\n" +  ex.ToString()); pickupObjsRunning = false; yield break; }
                 yield return null;        
             }
+            pickupLine.SetActive(false);
             pickupObjsRunning = false;
         }
 

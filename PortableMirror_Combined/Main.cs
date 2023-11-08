@@ -24,7 +24,7 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.1.11";
+        public const string versionStr = "2.1.12";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -52,7 +52,7 @@ namespace PortableMirror
 
         public static MelonPreferences_Entry<bool> customGrab_en;
         public static MelonPreferences_Entry<bool> customGrabLine;
-
+        public static MelonPreferences_Entry<float> customGrab_gripRightValue;
         public static MelonPreferences_Entry<float> customGrabSpeed;
 
         public static MelonPreferences_Entry<float> _base_MirrorScaleX;
@@ -145,7 +145,8 @@ namespace PortableMirror
             followGazeDeadBandSettle = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSettle2", 3f, "FG DeadBand - Settle Angle");
             followGazeDeadBandSeconds = MelonPreferences.CreateEntry<float>("PortableMirror", "followGazeDeadBandSeconds", .5f, "FG DeadBand - Settle Seconds (0 to disable)");
 
-            customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", false, "Use custom mirror pickup in VR (Base/Micro/Trans mirrors)");
+            customGrab_en = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrab_en", false, "Use custom mirror pickup in VR");
+            customGrab_gripRightValue = MelonPreferences.CreateEntry<float>("PortableMirror", "customGrab_gripRightValue", .5f, "Custom pickup grab strength (0-1)");
             customGrabSpeed = MelonPreferences.CreateEntry<float>("PortableMirror", "grabTestSpeed", 5f, "Custom pickup push/pull speed");
             customGrabLine = MelonPreferences.CreateEntry<bool>("PortableMirror", "customGrabLine", true, "Custom pickup line");
 
@@ -324,6 +325,11 @@ namespace PortableMirror
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
                     if (Main._base_CanPickupMirror.Value) Mirrors.customPickupStart("Base", _mirrorBase);
+                    else
+                    {
+                        if (Mirrors.customGrabs.ContainsKey("Base"))
+                            Mirrors.customGrabs.Remove("Base");
+                    }
                 }
                 else
                 {
@@ -376,6 +382,11 @@ namespace PortableMirror
                 {
 
                     if (Main._45_CanPickupMirror.Value) Mirrors.customPickupStart("45", _mirror45);
+                    else
+                    {
+                        if (Mirrors.customGrabs.ContainsKey("45"))
+                            Mirrors.customGrabs.Remove("45");
+                    }
                 }
                 else
                 {
@@ -423,6 +434,11 @@ namespace PortableMirror
                 {
 
                     if (Main._ceil_CanPickupMirror.Value) Mirrors.customPickupStart("Ceiling", _mirrorCeiling);
+                    else
+                    {
+                        if (Mirrors.customGrabs.ContainsKey("Ceiling"))
+                            Mirrors.customGrabs.Remove("Ceiling");
+                    }
                 }
                 else
                 {
@@ -473,6 +489,11 @@ namespace PortableMirror
                 if (MetaPort.Instance.isUsingVr && Main.customGrab_en.Value)
                 {
                     if (Main._micro_CanPickupMirror.Value) Mirrors.customPickupStart("Micro", _mirrorMicro);
+                    else
+                    {
+                        if (Mirrors.customGrabs.ContainsKey("Micro"))
+                            Mirrors.customGrabs.Remove("Micro");
+                    }
                 }
                 else
                 {
@@ -524,6 +545,11 @@ namespace PortableMirror
                 {
 
                     if (Main._trans_CanPickupMirror.Value) Mirrors.customPickupStart("Trans", _mirrorTrans);
+                    else
+                    {
+                        if (Mirrors.customGrabs.ContainsKey("Trans"))
+                            Mirrors.customGrabs.Remove("Trans");
+                    }
                 }
                 else
                 {
