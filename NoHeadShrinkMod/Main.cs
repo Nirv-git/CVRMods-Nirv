@@ -9,6 +9,7 @@ using ABI_RC.Core;
 using ABI_RC.Core.Player;
 using HarmonyLib;
 using ABI_RC.Systems.MovementSystem;
+using ABI_RC.Core.Util;
 
 [assembly: MelonGame(null, "ChilloutVR")]
 [assembly: MelonInfo(typeof(NoHeadShrinkMod.Main), "NoHeadShrinkMod", NoHeadShrinkMod.Main.versionStr, "Nirvash")]
@@ -149,7 +150,7 @@ namespace NoHeadShrinkMod
 
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(TransformHiderForMainCamera), "IsMainCamera")]
+        [HarmonyPatch(typeof(TransformHiderForMainCamera), nameof(TransformHiderForMainCamera.IsMainCamera))]
         public static bool OnIsMainCamera(ref bool __result)
         {
             if (Main.disableHeadShrink.Value)
