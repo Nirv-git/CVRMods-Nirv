@@ -103,7 +103,7 @@ namespace SitLaydown
 
                 if (MetaPort.Instance.isUsingVr)
                 {
-                    cat.AddToggle("Adjust Offsets\n(VR)", $"Adjust VR player position offset{(Main.autoDisableOffsetAdj.Value ? "Auto disables in 120 sec after last movement" : "")}", Main.moveOffsets).OnValueUpdated += action =>
+                    cat.AddToggle("Adjust Offsets\n(VR)", $"Adjust VR player position offset{(Main.autoDisableOffsetAdj.Value ? "\nAuto disables in 120 sec after last movement" : "")}", Main.moveOffsets).OnValueUpdated += action =>
                     {
                         Main.moveOffsets = action;
                         if (Main.autoDisableOffsetAdj.Value)
@@ -129,7 +129,7 @@ namespace SitLaydown
                             if (!Main.moveOffsets)
                                 movePos(Main._baseObj.transform.position + Main._baseObj.transform.up * Main._DistAdj);
                             else if (Main.PosOffset != null && Main.RotOffset != null)
-                                movePosOffset(Main.PosOffset.localPosition + new Vector3(0f, Main._DistAdj, 0f));
+                                movePosOffset(Main.PosOffset.position + Main._baseObj.transform.up * Main._DistAdj / 2);
                         }
                     };
 
@@ -140,7 +140,7 @@ namespace SitLaydown
                             if (!Main.moveOffsets)
                                 movePos(Main._baseObj.transform.position + Main._baseObj.transform.forward * Main._DistAdj);
                             else if (Main.PosOffset != null && Main.RotOffset != null)
-                                movePosOffset(Main.PosOffset.localPosition + new Vector3(0f, 0f, Main._DistAdj));
+                                movePosOffset(Main.PosOffset.position + Main._baseObj.transform.forward * Main._DistAdj / 2);
                         }
                     };
 
@@ -151,7 +151,7 @@ namespace SitLaydown
                             if (!Main.moveOffsets)
                                 movePos(Main._baseObj.transform.position + Main._baseObj.transform.up * Main._DistAdj * 4);
                             else if (Main.PosOffset != null && Main.RotOffset != null)
-                                movePosOffset(Main.PosOffset.localPosition + new Vector3(0f, Main._DistAdj * 4, 0f));
+                                movePosOffset(Main.PosOffset.position + Main._baseObj.transform.up * Main._DistAdj * 4 / 2);
                         }
                     };
 
@@ -176,7 +176,7 @@ namespace SitLaydown
                             if (!Main.moveOffsets)
                                 movePos(Main._baseObj.transform.position - Main._baseObj.transform.right * Main._DistAdj);
                             else if (Main.PosOffset != null && Main.RotOffset != null)
-                                movePosOffset(Main.PosOffset.localPosition + new Vector3(-Main._DistAdj, 0f, 0f));
+                                movePosOffset(Main.PosOffset.position - Main._baseObj.transform.right * Main._DistAdj / 2);
                         }
                     };
 
@@ -204,7 +204,7 @@ namespace SitLaydown
                             if (!Main.moveOffsets)
                                 movePos(Main._baseObj.transform.position + Main._baseObj.transform.right * Main._DistAdj);
                             else if (Main.PosOffset != null && Main.RotOffset != null)
-                                movePosOffset(Main.PosOffset.localPosition + new Vector3(Main._DistAdj, 0f, 0f));
+                                movePosOffset(Main.PosOffset.position + Main._baseObj.transform.right * Main._DistAdj / 2);
                         }
                     };
 
@@ -231,7 +231,7 @@ namespace SitLaydown
                             if (!Main.moveOffsets)
                                 movePos(Main._baseObj.transform.position - Main._baseObj.transform.up * Main._DistAdj);
                             else if (Main.PosOffset != null && Main.RotOffset != null)
-                                movePosOffset(Main.PosOffset.localPosition + new Vector3(0f, -Main._DistAdj, 0f));
+                                movePosOffset(Main.PosOffset.position - Main._baseObj.transform.up * Main._DistAdj / 2);
                         }
                     };
 
@@ -242,7 +242,7 @@ namespace SitLaydown
                             if (!Main.moveOffsets)
                                 movePos(Main._baseObj.transform.position - Main._baseObj.transform.forward * Main._DistAdj);
                             else if (Main.PosOffset != null && Main.RotOffset != null)
-                                movePosOffset(Main.PosOffset.localPosition + new Vector3(0f, 0f, -Main._DistAdj));
+                                movePosOffset(Main.PosOffset.position - Main._baseObj.transform.forward * Main._DistAdj / 2);
                         }
                     };
 
@@ -253,7 +253,7 @@ namespace SitLaydown
                             if (!Main.moveOffsets)
                                 movePos(Main._baseObj.transform.position - Main._baseObj.transform.up * Main._DistAdj * 4);
                             else if (Main.PosOffset != null && Main.RotOffset != null)
-                                movePosOffset(Main.PosOffset.localPosition + new Vector3(0f, -Main._DistAdj * 4, 0f));
+                                movePosOffset(Main.PosOffset.position - Main._baseObj.transform.up * Main._DistAdj * 4 / 2);
                         }
                     };
 
@@ -285,7 +285,7 @@ namespace SitLaydown
                 void movePosOffset(Vector3 newPos)
                 {
 
-                    if (newPos.magnitude > 5f)
+                    if (Vector3.Distance(newPos, Main.spawnPos) > 5f)
                     {
                         Main.distFlagActive = true;
                         SetMovementFlag(true);
@@ -295,7 +295,7 @@ namespace SitLaydown
                         Main.distFlagActive = false;
                         SetMovementFlag(false);
                     }
-                    if (newPos.magnitude < 5.25f)
+                    if (Vector3.Distance(newPos, Main.spawnPos) < 5.25f)
                     {
                         Main.PosOffset.position = newPos;
                     }

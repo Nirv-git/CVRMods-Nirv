@@ -36,19 +36,18 @@ namespace SitLaydown
         }
 
 
-
         [HarmonyPrefix]
         [HarmonyPatch(typeof(CVRSeat), nameof(CVRSeat.ExitSeat))]
         internal static bool OnExitSeat()
         {
-            Main.Logger.Msg(ConsoleColor.Yellow, $"1-1 OnExitSeat");
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"1-1 OnExitSeat");
             try
             {
                 if (Main.inChair && Main.preventLeavingSeat.Value)
                 {
                     ViewManager.Instance.UiStateToggle(!ViewManager.Instance.gameMenuView.Enabled);
-                    Main.Logger.Msg(ConsoleColor.Yellow, $"1-5 Not leaving chair, skipping method");
-                    if (Main.lastHUDnotif < Time.time + 10)
+                    //Main.Logger.Msg(ConsoleColor.Yellow, $"1-5 Not leaving chair, skipping method");
+                    if (Main.lastHUDnotif + 300 < Time.time)
                     {
                         CohtmlHud.Instance.ViewDropTextImmediate("SitLaydown", "Prevented Seat Exit", "Mod prevented you from leaving your seat, use the SitLaydown UI or Respawn.");
                         Main.lastHUDnotif = Time.time;
@@ -60,7 +59,7 @@ namespace SitLaydown
             {
                 Main.Logger.Error("Error in OnExitSeat patch. \n" + ex.ToString());
             }
-            Main.Logger.Msg(ConsoleColor.Yellow, $"1-10 End and return True");
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"1-10 End and return True");
             return true;
         }
 
@@ -68,19 +67,18 @@ namespace SitLaydown
         [HarmonyPatch(typeof(RootLogic), nameof(RootLogic.Respawn))]
         internal static void OnRespawn()
         {
-            Main.Logger.Msg(ConsoleColor.Yellow, $"2-1 OnRespawn");
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"2-1 OnRespawn");
             try
             {
                 if (Main.inChair)
                 {
                     Main.ToggleChair(false);
-                    Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to Respawn");
+                    //Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to Respawn");
                 }
             }
             catch (Exception ex)
             {
                 Main.Logger.Error("Error in OnRespawn patch. \n" + ex.ToString());
-
             }
         }
 
@@ -88,14 +86,13 @@ namespace SitLaydown
         [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
         internal static void OnSetupAvatarGeneral()
         {
-
-            Main.Logger.Msg(ConsoleColor.Yellow, $"2-1 OnSetupAvatarGeneral");
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"2-1 OnSetupAvatarGeneral");
             try
             {
                 if (Main.inChair)
                 {
                     Main.ToggleChair(false);
-                    Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to Avatar Change");
+                    //Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to Avatar Change");
                 }
             }
             catch (Exception ex)
@@ -104,6 +101,5 @@ namespace SitLaydown
 
             }
         }
-
     }
 }

@@ -23,7 +23,7 @@ namespace SitLaydown
 
     public class Main : MelonMod
     {
-        public const string versionStr = "1.1";
+        public const string versionStr = "1.1.1";
         public static MelonLogger.Instance Logger;
 
         public static Main Instance;
@@ -91,7 +91,7 @@ namespace SitLaydown
 
         public static IEnumerator JoyMove()
         {
-            Logger.Msg("Joymove Started");
+            //Logger.Msg("Joymove Started");
 
             distFlagActive = false;
             BTKUI_Cust.SetMovementFlag(false);
@@ -99,14 +99,18 @@ namespace SitLaydown
 
             while (_baseObj != null && joyMoveActive)
             {
-                if (CVRInputManager.Instance.movementVector.z > .05f || CVRInputManager.Instance.movementVector.z > .05f)
+                if (Mathf.Abs(CVRInputManager.Instance.movementVector.x) > .05f || Mathf.Abs(CVRInputManager.Instance.movementVector.z) > .05f || Mathf.Abs(CVRInputManager.Instance.lookVector.x) > .05f)
                 {
                     if (moveOffsets)
                     {
-                        var newPos = PosOffset.localPosition;
-                        newPos += new Vector3((CVRInputManager.Instance.movementVector.z * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value, 0f, 10f) / 10 / 4, 0f,
-                            (CVRInputManager.Instance.movementVector.x * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value, 0f, 10f) / 10 / 4);
+                        //var newPos = PosOffset.localPosition;
+                        //newPos += new Vector3((CVRInputManager.Instance.movementVector.z * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value, 0f, 10f) / 10 / 4, 0f,
+                        //    (CVRInputManager.Instance.movementVector.x * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value, 0f, 10f) / 10 / 4);
 
+                        var newPos = PosOffset.position;
+                        newPos += _baseObj.transform.forward * (CVRInputManager.Instance.movementVector.z * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value, 0f, 10f) / 10 / 4;
+                        newPos += _baseObj.transform.right * (CVRInputManager.Instance.movementVector.x * Time.deltaTime) * Mathf.Clamp(joyMoveMult.Value, 0f, 10f) / 10 / 4;
+                         
                         if (newPos.magnitude > 5f)
                         {
                             distFlagActive = true;
@@ -119,7 +123,7 @@ namespace SitLaydown
                         }
                         if (newPos.magnitude < 5.25f)
                         {
-                            PosOffset.localPosition = newPos;
+                            PosOffset.position = newPos;
                         }
 
                         RotOffset.transform.RotateAround(RotOffset.transform.position, Vector3.up, CVRInputManager.Instance.lookVector.x * Time.deltaTime * 7.5f * Mathf.Clamp(joyRotMult.Value, 0f, 10f));
@@ -199,7 +203,7 @@ namespace SitLaydown
 
         public static void ToggleChair(bool enableChair, bool reseat = false)
         {
-            Logger.Msg(enableChair);
+            //Logger.Msg(enableChair);
             if (!enableChair && _baseObj != null && inChair)
             {
                 inChair = false;
@@ -207,12 +211,12 @@ namespace SitLaydown
                 lastRot = _baseObj.transform.rotation;
                 if (!(_baseObj.transform?.GetChild(0)?.GetChild(0)?.GetChild(0)?.GetChild(0).Equals(null) ?? true))
                 {
-                    Logger.Msg("Saving Vectors");
+                    //Logger.Msg("Saving Vectors");
                     lastPosOffset = _baseObj.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).localPosition; //ChairPrefab(Clone)/SittingPosition/VR Sitting Position/VR Sitting Rotation Offset/VR Sitting Position Offset
                     lastRotOffset = _baseObj.transform.GetChild(0).GetChild(0).GetChild(0).rotation; //ChairPrefab(Clone)/SittingPosition/VR Sitting Position/VR Sitting Rotation Offset/
                     lastPosTime = Time.time;
-                    Logger.Msg($"Pos Offsets x:{lastPosOffset.x} y:{lastPosOffset.y} z:{lastPosOffset.z}");
-                    Logger.Msg($"Rot Offsets x:{lastRotOffset.x} y:{lastRotOffset.y} z:{lastRotOffset.z}");
+                    //Logger.Msg($"Pos Offsets x:{lastPosOffset.x} y:{lastPosOffset.y} z:{lastPosOffset.z}");
+                    //Logger.Msg($"Rot Offsets x:{lastRotOffset.x} y:{lastRotOffset.y} z:{lastRotOffset.z}");
                 }
                 else
                     lastPosTime = 0f;
@@ -229,9 +233,9 @@ namespace SitLaydown
                 var playerPos = PlayerSetup.Instance.GetPlayerPosition();
                 var rotTo = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
 
-                Logger.Msg($"playerPos x:{playerPos.x} y:{playerPos.y} z:{playerPos.z}");
-                Logger.Msg($"Original Player Rot {PlayerSetup.Instance.transform.rotation.y}");
-                Logger.Msg($"rotTo {rotTo.y}");
+                //Logger.Msg($"playerPos x:{playerPos.x} y:{playerPos.y} z:{playerPos.z}");
+                //Logger.Msg($"Original Player Rot {PlayerSetup.Instance.transform.rotation.y}");
+                //Logger.Msg($"rotTo {rotTo.y}");
 
                 var reseatValid = (reseat && lastPosTime > Time.time - 5f);
                 if (reseatValid)
@@ -248,7 +252,7 @@ namespace SitLaydown
                 }
                 spawnPos = baseObj.transform.position;
 
-                Logger.Msg($"After Player Rot {PlayerSetup.Instance.transform.rotation.y}");
+                //Logger.Msg($"After Player Rot {PlayerSetup.Instance.transform.rotation.y}");
 
                 baseObj.GetComponent<CVRInteractable>().actions[0].operations[0].animationVal = GetChairAnim();
                 
@@ -264,7 +268,7 @@ namespace SitLaydown
                 {
                     ToggleChair(false);
                     BTKUI_Cust.SetMovementFlag(false);
-                    Logger.Msg("Left chair, toggling off");
+                    //Logger.Msg("Left chair, toggling off");
                 }
                 ));
             _baseObj.GetComponent<CVRInteractable>().CustomTrigger();
@@ -274,17 +278,16 @@ namespace SitLaydown
 
             PosOffset = _baseObj.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0); //ChairPrefab(Clone)/SittingPosition/VR Sitting Position/VR Sitting Rotation Offset/VR Sitting Position Offset
             RotOffset = _baseObj.transform.GetChild(0).GetChild(0).GetChild(0); //ChairPrefab(Clone)/SittingPosition/VR Sitting Position/VR Sitting Rotation Offset/
-            Logger.Msg($"Before adj Pos Offsets x:{PosOffset.localPosition.x} y:{PosOffset.localPosition.y} z:{PosOffset.localPosition.z}");
-            Logger.Msg($"Before adj Rot Offsets x:{RotOffset.rotation.x} y:{RotOffset.rotation.y} z:{RotOffset.rotation.z}");
+            //Logger.Msg($"Before adj Pos Offsets x:{PosOffset.localPosition.x} y:{PosOffset.localPosition.y} z:{PosOffset.localPosition.z}");
+            //Logger.Msg($"Before adj Rot Offsets x:{RotOffset.rotation.x} y:{RotOffset.rotation.y} z:{RotOffset.rotation.z}");
 
             if (reseat)
             {
-                Logger.Msg("Restoring offsets");
+                //Logger.Msg("Restoring offsets");
                 PosOffset.localPosition = lastPosOffset; //ChairPrefab(Clone)/SittingPosition/VR Sitting Position/VR Sitting Rotation Offset/VR Sitting Position Offset
                 RotOffset.rotation = lastRotOffset; //ChairPrefab(Clone)/SittingPosition/VR Sitting Position/VR Sitting Rotation Offset/
-                Logger.Msg($"After adj Pos Offsets x:{PosOffset.localPosition.x} y:{PosOffset.localPosition.y} z:{PosOffset.localPosition.z}");
-                Logger.Msg($"After adj Rot Offsets x:{RotOffset.rotation.x} y:{RotOffset.rotation.y} z:{RotOffset.rotation.z}");
-
+                //Logger.Msg($"After adj Pos Offsets x:{PosOffset.localPosition.x} y:{PosOffset.localPosition.y} z:{PosOffset.localPosition.z}");
+                //Logger.Msg($"After adj Rot Offsets x:{RotOffset.rotation.x} y:{RotOffset.rotation.y} z:{RotOffset.rotation.z}");
             } 
             else
             {
@@ -384,7 +387,7 @@ namespace SitLaydown
                     {
                         inChair = false;
                         Main.ToggleChair(false);
-                        Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnLoad");
+                        //Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnLoad");
                     }
                 }
                 catch (Exception e)
@@ -402,7 +405,7 @@ namespace SitLaydown
                     {
                         inChair = false;
                         Main.ToggleChair(false);
-                        Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnUnload");
+                        //Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnUnload");
                     }
                 }
                 catch (Exception e)
@@ -412,77 +415,77 @@ namespace SitLaydown
                 }
             });
 
-            CVRGameEventSystem.Instance.OnConnected.AddListener((message) =>
-            {
-                try
-                {
-                    if (Main.inChair)
-                    {
-                        inChair = false;
-                        Main.ToggleChair(false);
-                        Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnConnected");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("An error occured within !");
-                    Logger.Error(e);
-                }
-            });
+            //CVRGameEventSystem.Instance.OnConnected.AddListener((message) =>
+            //{
+            //    try
+            //    {
+            //        if (Main.inChair)
+            //        {
+            //            inChair = false;
+            //            Main.ToggleChair(false);
+            //            Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnConnected");
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Logger.Error("An error occured within !");
+            //        Logger.Error(e);
+            //    }
+            //});
 
-            CVRGameEventSystem.Instance.OnConnectionLost.AddListener((message) =>
-            {
-                try
-                {
-                    if (Main.inChair)
-                    {
-                        inChair = false;
-                        Main.ToggleChair(false);
-                        Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnConnectionLost");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("An error occured within OnConnectionLost!");
-                    Logger.Error(e);
-                }
-            });
+            //CVRGameEventSystem.Instance.OnConnectionLost.AddListener((message) =>
+            //{
+            //    try
+            //    {
+            //        if (Main.inChair)
+            //        {
+            //            inChair = false;
+            //            Main.ToggleChair(false);
+            //            Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnConnectionLost");
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Logger.Error("An error occured within OnConnectionLost!");
+            //        Logger.Error(e);
+            //    }
+            //});
 
-            CVRGameEventSystem.Instance.OnConnectionRecovered.AddListener((message) =>
-            {
-                try
-                {
-                    if (Main.inChair)
-                    {
-                        inChair = false;
-                        Main.ToggleChair(false);
-                        Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnReocvered");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("An error occured within OnConnectionRecovered!");
-                    Logger.Error(e);
-                }
-            });
+            //CVRGameEventSystem.Instance.OnConnectionRecovered.AddListener((message) =>
+            //{
+            //    try
+            //    {
+            //        if (Main.inChair)
+            //        {
+            //            inChair = false;
+            //            Main.ToggleChair(false);
+            //            Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to OnReocvered");
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Logger.Error("An error occured within OnConnectionRecovered!");
+            //        Logger.Error(e);
+            //    }
+            //});
 
-            CVRGameEventSystem.Instance.OnDisconnected.AddListener((message) =>
-            {
-                try
-                {
-                    if (Main.inChair)
-                    {
-                        inChair = false;
-                        Main.ToggleChair(false);
-                        Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to onDisconnect");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("An error occured within OnDisconnected!");
-                    Logger.Error(e);
-                }
-            });
+            //CVRGameEventSystem.Instance.OnDisconnected.AddListener((message) =>
+            //{
+            //    try
+            //    {
+            //        if (Main.inChair)
+            //        {
+            //            inChair = false;
+            //            Main.ToggleChair(false);
+            //            Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to onDisconnect");
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Logger.Error("An error occured within OnDisconnected!");
+            //        Logger.Error(e);
+            //    }
+            //});
 
         }
 
