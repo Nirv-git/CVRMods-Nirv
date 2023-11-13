@@ -6,9 +6,9 @@
 
 [HideDragonWingsMod](HideDragonWingsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/HideWings-0.0.1/HideDragonWings.dll)     
 [QMShutdownOptionsMod](QMShutdownOptionsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.7_QMShut0.0.6/QMShutdownOptionsMod.dll)    
-[WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/WorldDetailsPage.dll)     
+[WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/PlayerLocator.dll)        
-[RemoveChairs](RemoveChairs) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/RemoveChairs.dll)   
+[ViewPointTweaks](ViewPointTweaks) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/Viewpoint0.1.1/ViewPointTweaks.dll)   
 
 
 # PortableMirror
@@ -160,12 +160,6 @@ Provides a list of all the props in a world with details such as the player that
 You can access the settings using BTKUI with the 'Props' page. (Toggle in MelonPrefs to switch to NirvMisc Page)      
 ![image](https://user-images.githubusercontent.com/81605232/229889735-8e482ca6-1c86-464f-aa65-1eafcd53f332.png)   
 
-# QMShutdownOptionsMod
-Adds options to Shutdown/Sleep/Hibernate your computer from your QuickMenu
-     
-You can access the settings using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)      
-![image](https://user-images.githubusercontent.com/81605232/230750400-2688c9d0-547e-43c6-800d-257adcdf3e16.png)
-
 
 # NoHeadShrinkMod
 By default your local avatar's head is shrunk down to make it not visible in the normal first person camera.      
@@ -177,5 +171,12 @@ This is a niche mod, but can be very useful in certain circumstances.
 Optional support for BTKUI with settings in the NirvMisc or default Misc page. (Toggle in MelonPrefs)                
 ![image](https://user-images.githubusercontent.com/81605232/233871748-ecc13889-4849-44fe-b284-2669e04be5f8.png)
 
-     
+
+# RemoveChairs
+Buttons to simply disable or enable active chairs in the world. (For those worlds covered in chair with no easy toggle to disable them)
+_You understand that disabling stuff in a world can break stuff_ 
+ 
+You can access the settings using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)   
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/a851bc77-659b-4542-bef7-f86367bbb240)
+
       
