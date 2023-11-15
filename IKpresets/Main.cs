@@ -29,7 +29,7 @@ namespace IKpresetsMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.5";
+        public const string versionStr = "0.6.1";
 
         public static string tempString = "N/A";
         public static MelonPreferences_Category cat;
@@ -41,42 +41,69 @@ namespace IKpresetsMod
         public static MelonPreferences_Entry<string> savedAvatarPrefs;
         public static MelonPreferences_Entry<bool> autoLoadAvatarPresets;
 
+        public static AvatarConfig config_Slots;
+        public static AvatarConfig config_Avatars;
+
+        public static string config_path = "UserData/IKpresets";
+        public static string config_Slots_file = "ikpresets_slots.json";
+        public static string config_Avatars_file = "ikpresets_avatars.json";
+
         public static string avatarGUID, avatarName;
 
-        public static class Config
-        {   //Default settings
-            static public int IKCalibrationMode = 0; //0 InPlace, 1 FollowHead, 2FullyFollowHead
-            static public bool IKPitchYawShoulders = true;
-            static public bool IKPlantFeet = false;
-            static public bool IKHipPinned = true;
-            static public bool IKStraightenNeck = false;
-            static public bool IKHipShifting = true;
-            static public bool IKPreStraightenSpine = false;
-            static public int IKSpineRelaxIterations = 10;
-            static public int IKMaxSpineAngleFwd = 30;
-            static public int IKMaxSpineAngleBack = 30;
-            static public int IKMaxNeckAngleFwd = 30;
-            static public int IKMaxNeckAngleBack = 15;
-            static public int IKNeckPriority = 2;
-            static public int IKStraightSpineAngle = 15;
-            static public int IKStraightSpinePower = 2;
-            static public float IKTrackingSmoothing = 5f;
-            static public bool GeneralEnableRunningAnimationFullBody = false;
+
+
+        public class AvatarConfig
+        {
+            public Dictionary<string, AvatarSettings> Settings;
+
+            public class AvatarSettings
+            {
+                public bool IKPitchYawShoulders = true;
+                public bool IKPlantFeet = false;
+                public bool IKHipPinned = true;
+                public bool IKStraightenNeck = false;
+                public bool IKHipShifting = true;
+                public bool IKPreStraightenSpine = false;
+                public int IKSpineRelaxIterations = 10;
+                public int IKMaxSpineAngleFwd = 30;
+                public int IKMaxSpineAngleBack = 30;
+                public int IKMaxNeckAngleFwd = 30;
+                public int IKMaxNeckAngleBack = 15;
+                public int IKNeckPriority = 2;
+                public int IKStraightSpineAngle = 15;
+                public int IKStraightSpinePower = 2;
+                public float IKTrackingSmoothing = 5f;
+                public bool GeneralEnableRunningAnimationFullBody = false;
+                public int GeneralPlayerHeight = -1;
+                public int IKCalibrationMode = -1; //0 InPlace, 1 FollowHead, 2FullyFollowHead
+                public string AvatarName = "N/A";
+                public string SlotName = "N/A";
+            }
         }
 
         public override void OnApplicationStart()
         {
-            SaveSlots.MigrateData();
+            
 
             Logger = new MelonLogger.Instance("IKpresets", ConsoleColor.DarkRed);
 
             cat = MelonPreferences.CreateCategory(catagory, "IKpresets");
             //saveWithEveryChange = MelonPreferences.CreateEntry(catagory, nameof(saveWithEveryChange), true, "MelonPreferences.Save with every edit in EditMenu");
             useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
-            savedPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedPrefs), "1,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;2,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;3,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;4,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;5,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;6,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;7,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;8,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;9,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;10,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;11,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;12,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;13,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;14,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;15,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0;16,True,False,True,False,True,False,10,30,30,30,15,2,15,2,5.,false,0", "savedPrefs", "", true);
-            savedPrefNames = MelonPreferences.CreateEntry(catagory, nameof(savedPrefNames), "1,N/A;2,N/A;3,N/A;4,N/A;5,N/A;6,N/A;7,N/A;8,N/A;9,N/A;10,N/A;11,N/A;12,N/A;13,N/A;14,N/A;15,N/A;16,N/A", "savedSlotNames", "", true);
+            savedPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedPrefs), "Migrated__null", "savedPrefs", "", true);
+            savedPrefNames = MelonPreferences.CreateEntry(catagory, nameof(savedPrefNames), "Migrated__null", "savedSlotNames", "", true);
             autoLoadAvatarPresets = MelonPreferences.CreateEntry(catagory, nameof(autoLoadAvatarPresets), true, "Auto load specific avatar presets");
-            savedAvatarPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedAvatarPrefs), "", "savedPrefs", "", true);
+            savedAvatarPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedAvatarPrefs), "Migrated__null", "savedPrefs", "", true);
+
+            SaveSlots.LoadConfigSlots();
+            SaveSlots.LoadConfigAvatars();
+
+            if (!savedPrefs.Value.Contains("Migrated__"))
+            {
+                Logger.Msg(ConsoleColor.Magenta, "Staring data migration from 0.5.x to 0.6.x format");
+                SaveSlots.MigrateOldDataSlots();
+                SaveSlots.MigrateOldDataAvatars();
+            }
 
             BTKUI_Cust.SetupUI();
 
@@ -94,10 +121,10 @@ namespace IKpresetsMod
             avatarName = name;
             if (autoLoadAvatarPresets.Value)
             {
-                if (SaveSlots.AvatarGetSaved().ContainsKey(guid))
+                if (config_Avatars.Settings.ContainsKey(guid))
                 {
                     Logger.Msg($"Auto loading IK settings for:{name} - {guid}");
-                    SaveSlots.AvatarLoadSlot(guid);
+                    SaveSlots.LoadAvatars(guid);
                     BTKUI_Cust.SaveChanges();
                 }
             }
@@ -111,7 +138,7 @@ namespace IKpresetsMod
             if (AvatarsNamesCache.ContainsKey(avatarGuid)) avatarName = AvatarsNamesCache[avatarGuid];
             if (avatarName == null)
             {
-                avatarName = await ApiRequests.RequestAvatarDetailsPageTask(avatarGuid);
+                avatarName = Utils.ReturnCleanASCII(await ApiRequests.RequestAvatarDetailsPageTask(avatarGuid));
             }
             //Logger.Msg($"OnAnimatorManagerUpdate - {avatarName}");
             Main.OnAvatarDetailsReceived(avatarGuid, avatarName);

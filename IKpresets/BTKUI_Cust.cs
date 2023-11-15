@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Reflection;
 using BTKUILib;
 using BTKUILib.UIObjects;
+using BTKUILib.UIObjects.Objects;
 using ABI_RC.Core.Savior;
 using ABI_RC.Core.InteractionSystem;
 using cohtml;
@@ -168,6 +169,15 @@ namespace IKpresetsMod
                         MetaPort.Instance.settings.SetSettingsBool(setting, action);
                         SaveChanges();
                     };
+                }
+
+                {
+                    var calMode = toggles.AddButton("Calibration Mode", "null", "Select what calibration mode should be used"); ////0 InPlace, 1 FollowHead, 2FullyFollowHead
+                    var multiSel_calMode = new MultiSelection("Calibration Mode", new string[] { "In Place", "Follow Head", "Fully FollowHead" }, MetaPort.Instance.settings.GetSettingInt("IKCalibrationMode"));
+                    multiSel_calMode.OnOptionUpdated += value => MetaPort.Instance.settings.SetSettingsInt("IKCalibrationMode", value);
+                    SaveChanges();
+                    calMode.OnPress += () => BTKUILib.QuickMenuAPI.OpenMultiSelect(multiSel_calMode);
+
                 }
             }
 
@@ -474,14 +484,13 @@ namespace IKpresetsMod
                     string desc = "Player Height as set in General Settings";
                     int value = MetaPort.Instance.settings.GetSettingInt(setting);
 
-                    //https://stackoverflow.com/a/22590456
+                    var cat = page.AddCategory(catText());
+                    string catText() {
+                        //https://stackoverflow.com/a/22590456
                         int totalInches = (int)(value / 2.54); // This will take a floor function of Centimetres/2.54
                         int Feet = (totalInches - totalInches % 12) / 12; // This will make it divisible by 12
                         int inches = totalInches % 12; // This will give you the remainder after you divide by 12
-                    
-
-                    var cat = page.AddCategory(catText());
-                    string catText() { return $"Player Height: {value}cm - {Feet}\' {inches}\""; }
+                        return $"Player Height: {value}cm - {Feet}\' {inches}\""; }
                     void UpdateSet()
                     {
                         value = MetaPort.Instance.settings.GetSettingInt(setting);
@@ -529,21 +538,20 @@ namespace IKpresetsMod
             };
             try
             {
-                var slotNames = SaveSlots.GetSavedSlotNames();
-                foreach (System.Collections.Generic.KeyValuePair<int, (bool, bool, bool, bool, bool, bool, int, int, int, int, int, int, int, int, float, bool, int)>
-                    slot in SaveSlots.GetSaved())
+                //var slotNames = Main.config_Slots.Settings;
+                foreach (var slot in Main.config_Slots.Settings)
                 {
-                    string label = $"Slot: {slot.Key} - {slotNames[slot.Key]}";
+                    string label = $"Slot: {slot.Key} - {slot.Value.SlotName}";
                     var cat = page.AddCategory(label);
 
-                    var desc = $"PitchYaw:{Utils.CompactTF(slot.Value.Item1)}_HipPin:{Utils.CompactTF(slot.Value.Item3)}_" +
-                            $"StrNeck:{Utils.CompactTF(slot.Value.Item4)}_HipShift:{Utils.CompactTF(slot.Value.Item5)}_StrSpine:{Utils.CompactTF(slot.Value.Item6)}_" +
-                            $"RelxIter:{slot.Value.Item7} SpineFwd:{slot.Value.Item8}Bck:{slot.Value.Item9}_" +
-                            $"NeckFwd:{slot.Value.Item10}Bck:{slot.Value.Item11}_NeckPri:{slot.Value.Item12}_" +
-                            $"StrSpine:{slot.Value.Item13}Pow:{slot.Value.Item14}Height:{slot.Value.Item17}";
+                    var desc = $"PitchYaw:{Utils.CompactTF(slot.Value.IKPitchYawShoulders)}_HipPin:{Utils.CompactTF(slot.Value.IKHipPinned)}_" +
+                       $"StrNeck:{Utils.CompactTF(slot.Value.IKStraightenNeck)}_HipShift:{Utils.CompactTF(slot.Value.IKHipShifting)}_StrSpine:{Utils.CompactTF(slot.Value.IKPreStraightenSpine)}_" +
+                       $"RelxIter:{slot.Value.IKSpineRelaxIterations} SpineFwd:{slot.Value.IKMaxSpineAngleFwd}Bck:{slot.Value.IKMaxSpineAngleBack}_" +
+                       $"NeckFwd:{slot.Value.IKMaxNeckAngleFwd}Bck:{slot.Value.IKMaxNeckAngleBack}_NeckPri:{slot.Value.IKNeckPriority}_" +
+                       $"StrSpine:{slot.Value.IKStraightSpineAngle}Pow:{slot.Value.IKStraightSpinePower}Height:{slot.Value.GeneralPlayerHeight}";
                     cat.AddButton("Load", "Load", desc).OnPress += () =>
                     {
-                        if (slotNames[slot.Key] == "N/A")
+                        if (slot.Value.SlotName == "N/A")
                         {
                             QuickMenuAPI.ShowConfirm("Loading from default slot name.", "This slot has no name set, are you sure you want to load from it?", () =>
                             {
@@ -561,7 +569,7 @@ namespace IKpresetsMod
                     };
                     cat.AddButton("Save", "Save", "Save current IK settings to this slot").OnPress += () =>
                     {
-                        SaveSlots.Store(slot.Key);
+                        SaveSlots.StoreSlot(slot.Key);
                         SaveLoad();
                     };
                 }
@@ -598,25 +606,26 @@ namespace IKpresetsMod
             pageEditSlotName_Text = page.AddCategory($"Current string: {Main.tempString}");
             pageEditSlotName_Text.AddButton("Edit String", "blank", "Edit String").OnPress += () =>
             {
-                SetName();
+                QuickMenuAPI.OpenKeyboard(Main.tempString, (action) => { Main.tempString = action; EditSlotNames();});
+                
             };
 
             try
             {
-                var slotNames = SaveSlots.GetSavedSlotNames();
-                foreach (System.Collections.Generic.KeyValuePair<int, string> slot in slotNames)
+                foreach (var slot in Main.config_Slots.Settings)
                 {
-                    string label = $"Slot: {slot.Key}\n{slot.Value}";
+                    string label = $"Slot: {slot.Key}\n{slot.Value.SlotName}";
                     var cat = page.AddCategory(label);
 
                     cat.AddButton("Load String", "blank", "Load String from slot into current string").OnPress += () =>
                     {
-                        Main.tempString = slot.Value;
+                        Main.tempString = slot.Value.SlotName;
                         EditSlotNames();
                     };
                     cat.AddButton("Set String", "blank", "Set String into this slot name").OnPress += () =>
                     {
-                        SaveSlots.StoreSlotNames(slot.Key, Main.tempString);
+                        slot.Value.SlotName = Main.tempString;
+                        SaveSlots.SaveConfigSlots();
                         EditSlotNames();
                     };
                 }
@@ -629,49 +638,7 @@ namespace IKpresetsMod
             page.OpenPage();
         }
 
-        public static void SetName()
-        {
-            var chars = "abcdefghijklmnopqrstuvwxyz-_ ".ToCharArray();
-            bool cas = true;
-
-            var page = pageSetName;
-            page.ClearChildren();
-
-            page.MenuTitle = "Editing the current string";
-            void SetCustomSub()
-            {
-                page.MenuSubtitle = $"Current name: {Main.tempString}";
-            }
-            SetCustomSub();
-
-            var cat1 = page.AddCategory("");
-            var cat2 = page.AddCategory("");
-
-            cat1.AddButton("BackSpace", "blank", "").OnPress += () =>
-            {
-                if (Main.tempString.Length > 0) Main.tempString = Main.tempString.Remove(Main.tempString.Length - 1, 1); SetCustomSub();
-            };
-            cat1.AddButton("Clear", "blank", "").OnPress += () =>
-            {
-                Main.tempString = ""; SetCustomSub();
-            };
-            cat1.AddToggle("Upper Case", "Toggle Upper/Lower Case", cas).OnValueUpdated += action =>
-            {
-                cas = action;
-            };
-
-            foreach (char c in chars)
-            {
-                var s = c.ToString();
-                cat2.AddButton(s.ToUpper(), "blank", $"{s.ToUpper()}/{s.ToLower()}").OnPress += () =>
-                {
-                    Main.tempString += cas ? s.ToUpper() : s.ToLower(); SetCustomSub();
-                    pageEditSlotName_Text.CategoryName = $"Current string: {Main.tempString}";
-                };
-            }
-            page.OpenPage();
-        }
-
+       
         private static void AvatarSaveLoad()
         {
             var page = pageAvatarSaveLoad;
@@ -683,7 +650,7 @@ namespace IKpresetsMod
             catMain.AddButton("Save this avatar config", "Save", "Save current IK settings").OnPress += () =>
             {
                 //Main.Logger.Msg($"{Main.avatarGUID} - {MetaPort.Instance.currentAvatarGuid} - {Main.avatarName}");
-                SaveSlots.AvatarStore(MetaPort.Instance.currentAvatarGuid, Main.avatarName);
+                SaveSlots.StoreAvatars(MetaPort.Instance.currentAvatarGuid, Main.avatarName);
                 AvatarSaveLoad();
             };
         
@@ -700,33 +667,31 @@ namespace IKpresetsMod
             try
             {
                 var currentID = MetaPort.Instance.currentAvatarGuid;
-                if (SaveSlots.AvatarGetSaved().ContainsKey(currentID))
+                if (Main.config_Avatars.Settings.ContainsKey(currentID))
                 {
-                    SlotLine(true, new System.Collections.Generic.KeyValuePair<string, (bool, bool, bool, bool, bool, bool, int, int, int, int, int, int, int, int, float, bool, int, string)>(
-                        currentID, SaveSlots.AvatarGetSaved()[currentID]));
+                    SlotLine(true, new System.Collections.Generic.KeyValuePair<string, Main.AvatarConfig.AvatarSettings>(currentID, Main.config_Avatars.Settings[currentID]));
                 }
 
-                foreach (System.Collections.Generic.KeyValuePair<string, (bool, bool, bool, bool, bool, bool, int, int, int, int, int, int, int, int, float, bool, int, string)>
-                    slot in SaveSlots.AvatarGetSaved().Reverse())
+                foreach (var slot in Main.config_Avatars.Settings.Reverse())
                 {
                     if (slot.Key == currentID)
                         continue; //Don't repeat the current one if it matches
                     SlotLine(false, slot);
                 }
-                void SlotLine(bool current, System.Collections.Generic.KeyValuePair<string, (bool, bool, bool, bool, bool, bool, int, int, int, int, int, int, int, int, float, bool, int, string)>
+                void SlotLine(bool current, System.Collections.Generic.KeyValuePair<string, Main.AvatarConfig.AvatarSettings>
                     slot)
                 {
-                    string label = $"{(current ? "*Current avatar* " : "")}{slot.Value.Item17} - {slot.Key}";
+                    string label = $"{(current ? "*Current avatar* " : "")}{slot.Value.AvatarName} - {slot.Key}";
                     var cat = page.AddCategory(label);
 
-                    var desc = $"PitchYaw:{Utils.CompactTF(slot.Value.Item1)}_HipPin:{Utils.CompactTF(slot.Value.Item3)}_" +
-                            $"StrNeck:{Utils.CompactTF(slot.Value.Item4)}_HipShift:{Utils.CompactTF(slot.Value.Item5)}_StrSpine:{Utils.CompactTF(slot.Value.Item6)}_" +
-                            $"RelxIter:{slot.Value.Item7} SpineFwd:{slot.Value.Item8}Bck:{slot.Value.Item9}_" +
-                            $"NeckFwd:{slot.Value.Item10}Bck:{slot.Value.Item11}_NeckPri:{slot.Value.Item12}_" +
-                            $"StrSpine:{slot.Value.Item13}Pow:{slot.Value.Item14}Height{slot.Value.Item17}";
+                    var desc = $"PitchYaw:{Utils.CompactTF(slot.Value.IKPitchYawShoulders)}_HipPin:{Utils.CompactTF(slot.Value.IKHipPinned)}_" +
+                       $"StrNeck:{Utils.CompactTF(slot.Value.IKStraightenNeck)}_HipShift:{Utils.CompactTF(slot.Value.IKHipShifting)}_StrSpine:{Utils.CompactTF(slot.Value.IKPreStraightenSpine)}_" +
+                       $"RelxIter:{slot.Value.IKSpineRelaxIterations} SpineFwd:{slot.Value.IKMaxSpineAngleFwd}Bck:{slot.Value.IKMaxSpineAngleBack}_" +
+                       $"NeckFwd:{slot.Value.IKMaxNeckAngleFwd}Bck:{slot.Value.IKMaxNeckAngleBack}_NeckPri:{slot.Value.IKNeckPriority}_" +
+                       $"StrSpine:{slot.Value.IKStraightSpineAngle}Pow:{slot.Value.IKStraightSpinePower}Height:{slot.Value.GeneralPlayerHeight}";
                     cat.AddButton("Load", "Load", desc).OnPress += () =>
                     {
-                        SaveSlots.AvatarLoadSlot(slot.Key);
+                        SaveSlots.LoadAvatars(slot.Key);
                         SaveChanges();
                         UpdateText();
                     };
