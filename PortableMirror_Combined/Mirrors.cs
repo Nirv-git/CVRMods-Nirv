@@ -168,6 +168,7 @@ namespace PortableMirror
                 pos.y += (Main._base_MirrorScaleY.Value - 1) / 2;
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
+                mirror.layer = CVRLayers.CVRReserved3;
                 mirror.transform.localScale = new Vector3(Main._base_MirrorScaleX.Value, Main._base_MirrorScaleY.Value, 0.05f);
                 mirror.name = "PortableMirror";
 
@@ -241,6 +242,7 @@ namespace PortableMirror
                 pos.y += (Main._45_MirrorScaleY.Value - 1) / 2;
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
+                mirror.layer = CVRLayers.CVRReserved3;
                 mirror.transform.localScale = new Vector3(Main._45_MirrorScaleX.Value, Main._45_MirrorScaleY.Value, 0.05f);
                 mirror.name = "PortableMirror45";
 
@@ -310,6 +312,7 @@ namespace PortableMirror
                 //Main.Logger.Msg($"x:{GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/HipTarget").transform.position.x}, y:{GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/HipTarget").transform.position.y}, z:{GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/HipTarget").transform.position.z}");
                 pos.y += Main._ceil_MirrorDistance.Value;
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
+                mirror.layer = CVRLayers.CVRReserved3;
                 mirror.transform.position = pos;
                 mirror.transform.rotation = Quaternion.Euler(-90f, cam.transform.rotation.eulerAngles.y, cam.transform.rotation.eulerAngles.z);
                 //mirror.transform.rotation = Quaternion.AngleAxis(90, Vector3.left);  // Sets the transform's current rotation to a new rotation that rotates 90 degrees around the y-axis(Vector3.up)
@@ -372,6 +375,7 @@ namespace PortableMirror
                 //pos.y += Main._micro_MirrorScaleY.Value / 4;///This will need turning
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
+                mirror.layer = CVRLayers.CVRReserved3;
                 mirror.transform.localScale = new Vector3(Main._micro_MirrorScaleX.Value, Main._micro_MirrorScaleY.Value, 0.05f);
                 mirror.name = "PortableMirrorMicro";
 
@@ -444,6 +448,7 @@ namespace PortableMirror
                 pos.y += (Main._trans_MirrorScaleY.Value - 1) / 2;
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
+                mirror.layer = CVRLayers.CVRReserved3;
                 mirror.transform.localScale = new Vector3(Main._trans_MirrorScaleX.Value, Main._trans_MirrorScaleY.Value, 0.05f);
                 mirror.name = "PortableMirrorTrans";
 
