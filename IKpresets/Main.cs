@@ -100,7 +100,7 @@ namespace IKpresetsMod
 
             if (!savedPrefs.Value.Contains("Migrated__"))
             {
-                Logger.Msg(ConsoleColor.Magenta, "Staring data migration from 0.5.x to 0.6.x format");
+                Logger.Msg(ConsoleColor.Magenta, "Starting data migration from 0.5.x to 0.6.x format");
                 SaveSlots.MigrateOldDataSlots();
                 SaveSlots.MigrateOldDataAvatars();
             }
