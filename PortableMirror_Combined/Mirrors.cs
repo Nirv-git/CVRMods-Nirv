@@ -515,7 +515,7 @@ namespace PortableMirror
                 myLine.transform.localPosition = Vector3.zero;
                 myLine.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
                 myLine.AddComponent<LineRenderer>();
-                myLine.layer = CVRLayers.UI;
+                myLine.layer = CVRLayers.UIInternal;
                 LineRenderer lr = myLine.GetComponent<LineRenderer>();
                 lr.material = new Material(Shader.Find("Particles/Standard Unlit"));
                 lr.useWorldSpace = false;

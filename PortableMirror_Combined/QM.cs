@@ -25,7 +25,7 @@ namespace PortableMirror
             settingsLeft = settings.transform.Find("MenuLeft").gameObject;
             settingsTop = settings.transform.Find("MenuTop").gameObject;
 
-
+            
 
 
             if (Main.QMsmaller.Value)
