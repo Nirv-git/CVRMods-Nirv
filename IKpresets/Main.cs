@@ -29,7 +29,7 @@ namespace IKpresetsMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.6.1";
+        public const string versionStr = "0.6.2";
 
         public static string tempString = "N/A";
         public static MelonPreferences_Category cat;
@@ -90,9 +90,10 @@ namespace IKpresetsMod
             cat = MelonPreferences.CreateCategory(catagory, "IKpresets");
             //saveWithEveryChange = MelonPreferences.CreateEntry(catagory, nameof(saveWithEveryChange), true, "MelonPreferences.Save with every edit in EditMenu");
             useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
+            autoLoadAvatarPresets = MelonPreferences.CreateEntry(catagory, nameof(autoLoadAvatarPresets), true, "Auto load specific avatar presets");
+
             savedPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedPrefs), "Migrated__null", "savedPrefs", "", true);
             savedPrefNames = MelonPreferences.CreateEntry(catagory, nameof(savedPrefNames), "Migrated__null", "savedSlotNames", "", true);
-            autoLoadAvatarPresets = MelonPreferences.CreateEntry(catagory, nameof(autoLoadAvatarPresets), true, "Auto load specific avatar presets");
             savedAvatarPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedAvatarPrefs), "Migrated__null", "savedPrefs", "", true);
 
             SaveSlots.LoadConfigSlots();
@@ -100,8 +101,12 @@ namespace IKpresetsMod
 
             if (!savedPrefs.Value.Contains("Migrated__"))
             {
-                Logger.Msg(ConsoleColor.Magenta, "Starting data migration from 0.5.x to 0.6.x format");
+                Logger.Msg(ConsoleColor.Magenta, "Starting data migration from 0.5.x to 0.6.x format for slots");
                 SaveSlots.MigrateOldDataSlots();
+            }
+            if (!savedAvatarPrefs.Value.Contains("Migrated__"))
+            {
+                Logger.Msg(ConsoleColor.Magenta, "Starting data migration from 0.5.x to 0.6.x format for avatars");
                 SaveSlots.MigrateOldDataAvatars();
             }
 
