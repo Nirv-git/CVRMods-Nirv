@@ -9,6 +9,7 @@
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/PlayerLocator.dll)        
 [ViewPointTweaks](ViewPointTweaks) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/Viewpoint0.1.1/ViewPointTweaks.dll)   
+[NoMenuTouch](NoMenuTouch) [Download]()
 
 
 # PortableMirror
@@ -179,4 +180,7 @@ _You understand that disabling stuff in a world can break stuff_
 You can access the settings using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)   
 ![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/a851bc77-659b-4542-bef7-f86367bbb240)
 
-      
+# NoMenuTouch
+CVR be default allows you to 'touch' your MainMenu and QuickMenu as an input option, while neat this can result in unintentional inputs specially when you open your QuickMenu with your hands near each other.    
+**This mod simply disables that feature with a toggle in UIX/MelonPrefs.**    
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/fc713e2d-3152-46e4-9f27-1d8d4eba70d3)       
