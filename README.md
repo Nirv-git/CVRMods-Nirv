@@ -9,7 +9,7 @@
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/PlayerLocator.dll)        
 [ViewPointTweaks](ViewPointTweaks) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/Viewpoint0.1.1/ViewPointTweaks.dll)      
-[ShrinkOtherHeads](NoMenuTouch) [Download]()  
+[ShrinkOtherHeads](ShrinkOtherHeads) [Download]()  
 [NoMenuTouch](NoMenuTouch) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/IKPresets0.6.2_PortMirror2.1.15_NoMenu0.0.2/NoMenuTouch.dll)   
 
 
