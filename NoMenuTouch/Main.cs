@@ -60,21 +60,17 @@ namespace NoMenuTouch
 
             for (int i = 0; i < code.Count - 1; i++) // -1 since we will be checking i + 1
             {
-                if (code[i].opcode == OpCodes.Stloc_S)
-                { 
-                    Logger.Msg("aa- " + i);
-                }
 
                 if (code[i].opcode == OpCodes.Stloc_S && code[i].operand is LocalBuilder local && local.LocalIndex == 4)
                 {
                     insertionIndex = i + 1; //Inserts after 'float num = 0.15f * PlayerSetup.Instance.GetPlaySpaceScale();' (This is matching the store instruction, hence the +1)
-                    Logger.Msg("Index - " + insertionIndex);
+                    //Logger.Msg("Index - " + insertionIndex);
                 }
 
                 if (code[i].LoadsField(instanceField))
                 {
                     instanceField_count++;
-                    Logger.Msg("Field_count - " + instanceField_count);
+                    //Logger.Msg("Field_count - " + instanceField_count);
                     if(instanceField_count == 4)
                     {
                         code[i].labels.Add(skipTouch);
@@ -93,7 +89,6 @@ namespace NoMenuTouch
             else
                 Logger.Error($"Field Count is incorrect or Index is wrong! Not patching code. Fields:{instanceField_count} Index:{insertionIndex}\nPlease contact mod author!!!");
 
-       
             return code;
         }
 
