@@ -11,6 +11,7 @@
 [ViewPointTweaks](ViewPointTweaks) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/Viewpoint0.1.1/ViewPointTweaks.dll)      
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()  
 [NoMenuTouch](NoMenuTouch) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/IKPresets0.6.2_PortMirror2.1.15_NoMenu0.0.2/NoMenuTouch.dll)   
+[CVRCameraDontOverrender](CVRCameraDontOverrender) [Download]()
 
 
 # PortableMirror
@@ -197,4 +198,14 @@ The way this mod functions is a _tad_ hacky, it grew from an odd start.
 # NoMenuTouch
 CVR be default allows you to 'touch' your MainMenu and QuickMenu as an input option, while neat this can result in unintentional inputs specially when you open your QuickMenu with your hands near each other.    
 **This mod simply disables that feature with a toggle in UIX/MelonPrefs.**    
-![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/fc713e2d-3152-46e4-9f27-1d8d4eba70d3)       
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/fc713e2d-3152-46e4-9f27-1d8d4eba70d3) 
+
+
+# CVRCameraDontOverrender
+
+Stops the Camera from over rendering your local player. Now you can see your hands when interacting with it!    
+
+*Yes I know there is the experimental option to have your player overrender the UI, but that is the ENTIRE UI.*       
+
+This toggle can be accessed from UIX/Melonprefs         
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/e40b99a5-a038-42a6-999b-c370e5ad08dd)         
