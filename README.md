@@ -181,6 +181,19 @@ _You understand that disabling stuff in a world can break stuff_
 You can access the settings using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)   
 ![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/a851bc77-659b-4542-bef7-f86367bbb240)
 
+
+# ViewPointTweaks
+**[VR Only]**
+This mod provides the ability to change your avatar's viewpoint position+rotation (really the camera) live in game, along with the much more niche feature of adjusting the scale of the VR camera to adjust it's 'IPD'.     
+  
+You can save these settings per avatar and have them autoload.   
+ 
+You can access the settings using BTKUI with the NirvMisc or default Misc page. (Toggle in MelonPrefs)     
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/9e16a67a-e2c0-49d5-8649-a704e955c671)    
+
+The way this mod functions is a _tad_ hacky, it grew from an odd start. 
+
+
 # NoMenuTouch
 CVR be default allows you to 'touch' your MainMenu and QuickMenu as an input option, while neat this can result in unintentional inputs specially when you open your QuickMenu with your hands near each other.    
 **This mod simply disables that feature with a toggle in UIX/MelonPrefs.**    
