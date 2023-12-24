@@ -20,7 +20,7 @@ namespace QMShutdownOptionsMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.0.6";
+        public const string versionStr = "0.7.1";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "QMShutdownOptions";
