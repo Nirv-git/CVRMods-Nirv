@@ -9,7 +9,7 @@ namespace HeadLightMod
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.6.3";
+        public const string versionStr = "0.7.1";
         public static MelonLogger.Instance Logger;
         public static MelonPreferences_Category cat;
         private const string catagory = "HeadLightMod";
