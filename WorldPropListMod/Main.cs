@@ -5,10 +5,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using System.Reflection;
+using HarmonyLib;
 using ABI_RC.Core;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
 using ABI_RC.Core.Util;
+using ABI_RC.Core.Util.AssetFiltering;
 using HighlightPlus;
 using UnityEngine.Networking;
 using BTKUILib;
@@ -29,11 +31,12 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.15";
+        public const string versionStr = "0.7.1";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
         public static MelonPreferences_Entry<bool> useNirvMiscPage;
+        public static MelonPreferences_Entry<bool> useNirvMiscPageLast;
         public static MelonPreferences_Entry<int> lineLifespan;
         public static MelonPreferences_Entry<int> onPropDetailSelect;
         public static MelonPreferences_Entry<bool> usePropBlockList;
@@ -68,14 +71,29 @@ namespace WorldPropListMod
 
             cat = MelonPreferences.CreateCategory(catagory, "WorldPropListMod");
             useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), false, "BTKUI - Use 'NirvMisc' page instead of custom page. (Restart req)");
+            useNirvMiscPageLast = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPageLast), false, "check if this changed", "", true);
             lineLifespan = MelonPreferences.CreateEntry(catagory, nameof(lineLifespan), 7, "How long the line render should last (max 30)");
             onPropDetailSelect = MelonPreferences.CreateEntry(catagory, nameof(onPropDetailSelect), 3, "0-None, 1-Highlight, 2-Line, 3-Both");
             usePropBlockList = MelonPreferences.CreateEntry(catagory, nameof(usePropBlockList), true, "Use prop block list to prevent prop loading");
             showHUDNotification = MelonPreferences.CreateEntry(catagory, nameof(showHUDNotification), true, "Show notification on HUD when a prop is blocked");
             printAPIrequestsToConsole = MelonPreferences.CreateEntry(catagory, nameof(printAPIrequestsToConsole), false, "Prints logging of API requests to console");
+
             SaveLoad.InitFileListOrLoad();
-            BTKUI_Cust.SetupUI();      
+            BTKUI_Cust.SetupUI();
+
+            //Logger.Msg("Starting transpiler");
+            //HarmonyInstance.Patch(typeof(AssetFilter).GetMethod(nameof(AssetFilter.FilterProp), BindingFlags.Static | BindingFlags.Public),
+            //    transpiler: new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.FilterPropTranspiler), BindingFlags.Static | BindingFlags.Public)));
+            //Logger.Msg("Executed transpiler");
+
+            if (useNirvMiscPage.Value != useNirvMiscPageLast.Value)
+            {
+                useNirvMiscPageLast.Value = useNirvMiscPage.Value;
+                PropNamesCache.Clear();
+                SaveLoad.SaveListFiles();
+            }
         }
+
         public override void OnPreferencesSaved()
         {
             if(init) SaveLoad.SaveListFiles();
@@ -256,7 +274,7 @@ namespace WorldPropListMod
                     // Create a new MemoryStream from the byte array
                     MemoryStream stream = new MemoryStream(pngBytes);
                     // Use the stream as needed
-                    QuickMenuAPI.PrepareIcon("WorldPropList", guid, stream);
+                    QuickMenuAPI.PrepareIcon(BTKUI_Cust.ModName, guid, stream);
                 }
             }
         }

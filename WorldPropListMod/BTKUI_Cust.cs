@@ -13,6 +13,7 @@ using cohtml;
 using ABI_RC.Core.Player;
 using ABI_RC.Core;
 using ABI_RC.Core.Util;
+using Semver;
 
 
 namespace WorldPropListMod
@@ -21,34 +22,31 @@ namespace WorldPropListMod
     {
         public static void loadAssets()
         {
-            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.NirvMisc.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Delete.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Reset.png")); 
-            QuickMenuAPI.PrepareIcon("WorldPropList", "Select", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Select.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "LineHighlight", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.LineHighlight.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "LineProp", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.LineProp.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "WorldProps", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.WorldProps.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "Block", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Block.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "BlockTrash", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.BlockTrash.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "Unblock", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Unblock.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "UnblockAll", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.UnblockAll.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "Props", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Props.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "BlockList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.BlockList.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "ResetList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.ResetList.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "PropList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.PropList.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "DeleteLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.DeleteLess.png"));
-            QuickMenuAPI.PrepareIcon("WorldPropList", "Cube", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Cube.png"));
-            //QuickMenuAPI.PrepareIcon("WorldPropList", "", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons..png"));
+            QuickMenuAPI.PrepareIcon(ModName, "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.NirvMisc.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Delete.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Reset.png")); 
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-Select", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Select.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-LineHighlight", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.LineHighlight.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-LineProp", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.LineProp.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-WorldProps", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.WorldProps.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-Block", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Block.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-BlockTrash", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.BlockTrash.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-Unblock", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Unblock.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-UnblockAll", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.UnblockAll.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-Props", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Props.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-BlockList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.BlockList.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-ResetList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.ResetList.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-PropList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.PropList.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-DeleteLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.DeleteLess.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-Cube", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Cube.png"));
+            //QuickMenuAPI.PrepareIcon(ModName, "worldProp-", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons..png"));
         }
+
+        public static string ModName = "NirvBTKUI";
+        private static MethodInfo _btkGetCreatePageAdapter;
 
         public static Page pagePropRoot, pagePropList, pagePropSingle, pagePropBlocks, pagePropBlockHistory, pagePropHistory;
 
-        private static FieldInfo _uiInstance = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetField("Instance", BindingFlags.NonPublic | BindingFlags.Static);
-        private static MethodInfo _registerRootPage = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetMethod("RegisterRootPage", BindingFlags.NonPublic | BindingFlags.Instance);
-        public static void HackRegisterRoot(Page element)
-        {
-            _registerRootPage.Invoke(_uiInstance.GetValue(null), new object[] { element });
-        }
 
         //private static string GetPropImageUrl(string guid)
         //{
@@ -57,69 +55,89 @@ namespace WorldPropListMod
 
         public static void SetupUI()
         {
+            if (MelonMod.RegisteredMelons.Any(x => x.Info.Name.Equals("BTKUILib") && x.Info.SemanticVersion.CompareByPrecedence(new SemVersion(1, 9)) > 0))
+            {
+                //We're working with UILib 2.0.0, let's reflect the get create page function
+                _btkGetCreatePageAdapter = typeof(Page).GetMethod("GetOrCreatePage", BindingFlags.Public | BindingFlags.Static);
+                Main.Logger.Msg($"BTKUILib 2.0.0 detected, attempting to grab GetOrCreatePage function: {_btkGetCreatePageAdapter != null}");
+            }
+            if (!Main.useNirvMiscPage.Value)
+            {
+                ModName = "worldPropMod";
+            }
+
             loadAssets();
             QuickMenuAPI.OnBackAction += PropDetailMenuBack;
 
-            pagePropList = new Page("WorldPropList", "World Prop List - All Props", false);
-            HackRegisterRoot(pagePropList);
-            pagePropSingle = new Page("WorldPropList", "World Prop List - Prop Detail", false);
-            HackRegisterRoot(pagePropSingle);
-            pagePropBlocks = new Page("WorldPropList", "World Prop List - Blocked Props", false);
-            HackRegisterRoot(pagePropBlocks);
-            pagePropBlockHistory = new Page("WorldPropList", "World Prop List - Blocked Props History", false);
-            HackRegisterRoot(pagePropBlockHistory);
-            pagePropHistory = new Page("WorldPropList", "World Prop List - Props History", false);
-            HackRegisterRoot(pagePropHistory);
+            pagePropList = new Page(ModName, "World Prop List - All Props", false);
+            QuickMenuAPI.AddRootPage(pagePropList);
+            pagePropSingle = new Page(ModName, "World Prop List - Prop Detail", false);
+            QuickMenuAPI.AddRootPage(pagePropSingle);
+            pagePropBlocks = new Page(ModName, "World Prop List - Blocked Props", false);
+            QuickMenuAPI.AddRootPage(pagePropBlocks);
+            pagePropBlockHistory = new Page(ModName, "World Prop List - Blocked Props History", false);
+            QuickMenuAPI.AddRootPage(pagePropBlockHistory);
+            pagePropHistory = new Page(ModName, "World Prop List - Props History", false);
+            QuickMenuAPI.AddRootPage(pagePropHistory);
 
             var page = pagePropRoot;
             if (Main.useNirvMiscPage.Value)
             {
-                var pageNirv = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                //var pageNirv = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                Page pageNirv = null;
+                if (_btkGetCreatePageAdapter != null)
+                    pageNirv = (Page)_btkGetCreatePageAdapter.Invoke(null, new object[] { ModName, "Nirv Misc Page", true, "NirvMisc", null, false });
+                else
+                    pageNirv = new Page(ModName, "Nirv Misc Page", true, "NirvMisc");
+
+
                 pageNirv.MenuTitle = "Nirv Misc Page";
                 pageNirv.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
 
-                var catNirv = pageNirv.AddCategory("World Prop List", "WorldPropList");
-                page = new Page("WorldPropList", "World Prop List", false);
-                HackRegisterRoot(page);
-                catNirv.AddButton("Open Props Menu", "Props", "Lists all props in the world with options to locate, delete and block").OnPress += () =>
+                var catNirv = pageNirv.AddCategory("World Prop List");
+                page = new Page(ModName, "World Prop List", false);
+
+                QuickMenuAPI.AddRootPage(page);
+                catNirv.AddButton("Open Props Menu", "worldProp-Props", "Lists all props in the world with options to locate, delete and block").OnPress += () =>
                 {
                     page.OpenPage();
                 };
             }
             else
             {
-                page = new Page("WorldPropList", "World Prop List", true, "Props");
+                page = new Page(ModName, "World Prop List", true, "worldProp-Props");
             }
+            pagePropRoot = page;
 
             page.MenuTitle = "World Prop List";
             page.MenuSubtitle = "Lists all props in the world with options to locate and delete";
             var cat = page.AddCategory("");
-            var cat2 = page.AddCategory("History");
-            var cat3 = page.AddCategory("Delete Props");
+            var cat2 = page.AddCategory("History", true, false);
+            var cat3 = page.AddCategory("Delete Props", true, false);
 
-            cat.AddButton("Props in World", "WorldProps", "Lists all props in the world with options to locate and delete").OnPress += () =>
+            cat.AddButton("Props in World", "worldProp-WorldProps", "Lists all props in the world with options to locate and delete").OnPress += () =>
             {
                 PropMenu(true);
             };
-            cat.AddButton("Blocked Props List", "Block", "Lists all props that you have blocked").OnPress += () =>
+            cat.AddButton("Blocked Props List", "worldProp-Block", "Lists all props that you have blocked").OnPress += () =>
             {
                 PropBlockMenu();
             };
             //
-            cat2.AddButton("Spawned this Session", "PropList", "Lists all props that have spawned this session").OnPress += () =>
+            cat2.AddButton("Spawned this Session", "worldProp-PropList", "Lists all props that have spawned this session").OnPress += () =>
             {
                 PropHistoryMenu();
             };
-            cat2.AddButton("Blocked this Session", "BlockList", "Lists all props that have been blocked from spawning this session").OnPress += () =>
+            cat2.AddButton("Blocked this Session", "worldProp-BlockList", "Lists all props that have been blocked from spawning this session").OnPress += () =>
             {
                 PropBlockHistoryMenu();
             };
             //
-            cat3.AddButton("Delete Your Props", "DeleteLess", "Delete your props from the world").OnPress += () =>
+            cat3.AddButton("Delete Your Props", "worldProp-DeleteLess", "Delete your props from the world").OnPress += () =>
             {
                 QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete all of YOUR props in the world", () => { CVRSyncHelper.DeleteMyProps(); }, () => { }, "Yes", "No");
             };
-            cat3.AddButton("Delete All Props", "Delete", "Delete all props in the world").OnPress += () =>
+            cat3.AddButton("Delete All Props", "worldProp-Delete", "Delete all props in the world").OnPress += () =>
             {
                 QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete ALL props in the world", () => { CVRSyncHelper.DeleteAllProps(); }, () => { }, "Yes", "No");
             };
@@ -144,13 +162,13 @@ namespace WorldPropListMod
                 SetCustomSub();
 
                 var cat1 = page.AddCategory("");
-                var cat2 = page.AddCategory($"Props - {CVRSyncHelper.Props.ToArray().Count()}");
+                var cat2 = page.AddCategory($"Props - {CVRSyncHelper.Props.ToArray().Count()}", true, false);
 
-                cat1.AddButton("Delete All Props", "Delete", "Delete all props in the world").OnPress += () =>
+                cat1.AddButton("Delete All Props", "worldProp-Delete", "Delete all props in the world").OnPress += () =>
                 {
                     QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete all props in the world", () => { CVRSyncHelper.DeleteAllProps(); PropMenu(true); }, () => { }, "Yes", "No");         
                 };
-                cat1.AddButton("Refresh", "Reset", "Refresh this page").OnPress += () =>
+                cat1.AddButton("Refresh", "worldProp-Reset", "Refresh this page").OnPress += () =>
                 {
                     PropMenu(true);
                 };
@@ -168,7 +186,7 @@ namespace WorldPropListMod
                         default: return $"Error:{Main.onPropDetailSelect.Value}";
                     }
                 }
-                var selectButt = cat1.AddButton($"--OnSelect-- {SelectString()}", "LineHighlight", $"Action to do on selecting a prop | None/Highlight/Line/Both<p>Currently: {SelectString()}");
+                var selectButt = cat1.AddButton($"--OnSelect-- {SelectString()}", "worldProp-LineHighlight", $"Action to do on selecting a prop | None/Highlight/Line/Both<p>Currently: {SelectString()}");
                 selectButt.OnPress += () =>
                 {
                     if (Main.onPropDetailSelect.Value <= 2)
@@ -212,7 +230,7 @@ namespace WorldPropListMod
                     page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
-                    page.AddCategory("Props are not allowed in this world");
+                    page.AddCategory("Props are not allowed in this world", true, false);
                 }
 
                 if(openPage) page.OpenPage();
@@ -276,15 +294,15 @@ namespace WorldPropListMod
                 cat1.AddToggle("Highlight", "Highlight Prop", (Main.onPropDetailSelect.Value == 1 || Main.onPropDetailSelect.Value == 3)).OnValueUpdated += action =>
                 {
                     if (!propData?.Spawnable?.gameObject.Equals(null) ?? false) Main.HighlightObj(propData.Spawnable.gameObject, action);
-                    else { PropMenu(false);  page.ClearChildren(); page.AddCategory("Prop was deleted"); }
+                    else { PropMenu(false);  page.ClearChildren(); page.AddCategory("Prop was deleted", true, false); }
                 };
-                cat1.AddButton("Show Line to Prop", "LineProp", $"Line from your right hand to the prop, stays active for {Main.lineLifespan.Value}s").OnPress += () =>
+                cat1.AddButton("Show Line to Prop", "worldProp-LineProp", $"Line from your right hand to the prop, stays active for {Main.lineLifespan.Value}s").OnPress += () =>
                 {
                     if(!propData?.Spawnable?.gameObject.Equals(null) ?? false) Main.LineObj(propData.Spawnable.gameObject);
-                    else { PropMenu(false); page.ClearChildren(); page.AddCategory("Prop was deleted"); }
+                    else { PropMenu(false); page.ClearChildren(); page.AddCategory("Prop was deleted", true, false); }
                 };
 
-                cat1.AddButton("Prop Details Page", "Cube", $"Opens the CVR Prop Details Page for this Prop").OnPress += () =>
+                cat1.AddButton("Prop Details Page", "worldProp-Cube", $"Opens the CVR Prop Details Page for this Prop").OnPress += () =>
                 {
                     if (propisPub)
                     {
@@ -295,7 +313,7 @@ namespace WorldPropListMod
                         QuickMenuAPI.ShowAlertToast($"Prop is private, can not open details page.", 3);
                 };
 
-                cat2.AddButton("Delete Prop", "Delete", "Delete this prop").OnPress += () =>
+                cat2.AddButton("Delete Prop", "worldProp-Delete", "Delete this prop").OnPress += () =>
                 {
                     if (propData.SpawnedBy != "SYSTEM" && propData.SpawnedBy != "LocalServer")
                     {
@@ -308,10 +326,10 @@ namespace WorldPropListMod
                         QuickMenuAPI.ShowAlertToast($"Can not delete, prop spawned by server: {name}", 3);
                     PropMenu(false);
                     page.ClearChildren();
-                    page.AddCategory("Prop was deleted");
+                    page.AddCategory("Prop was deleted", true, false);
                 };
 
-                cat2.AddButton("Block Prop and Delete", "BlockTrash", "Add this prop to the block list and Delete all instances of it in the world").OnPress += () =>
+                cat2.AddButton("Block Prop and Delete", "worldProp-BlockTrash", "Add this prop to the block list and Delete all instances of it in the world").OnPress += () =>
                 {
                     QuickMenuAPI.ShowConfirm("Confirm Block", "Are you sure you want to block and delete this prop?", () => {
                         if (propData.SpawnedBy != "SYSTEM" && propData.SpawnedBy != "LocalServer")
@@ -340,23 +358,26 @@ namespace WorldPropListMod
                             }
                             PropMenu(false);
                             page.ClearChildren();
-                            page.AddCategory("Prop was deleted");
+                            page.AddCategory("Prop was deleted", true, false);
                         }
                         else
                             QuickMenuAPI.ShowAlertToast($"Can not block and delete, prop spawned by server: {name}", 3);
                     }, () => { }, "Yes", "No");
                 };
-
-                if (Main.blockedProps.ContainsKey(guid)) page.AddCategory("PROP IS IN BLOCK LIST");
-                var catName = page.AddCategory($"Name: {name}");
-                var catAuthor = page.AddCategory($"Prop author: {propAuthor}");
-                var catSpawnBy = page.AddCategory($"Spawned by: {player}");
-                var catDist = page.AddCategory($"Distance: {dist}m, " +
-                    $"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}");
+                var catText = "";
+                if (Main.blockedProps.ContainsKey(guid)) catText += "PROP IS IN BLOCK LIST<p>";
+                catText += $"Name: {name}<p>";
+                catText += $"Prop author: {propAuthor}<p>";
+                catText += $"Spawned by: {player}<p>";
+                catText += $"Distance: {dist}m, " +
+                    $"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}<p>";
                 //var catPos = page.AddCategory($"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}");
-                var catDetails = page.AddCategory($"{propFileSize}MB, {propUpdatedAt}, {(propisPub ? "Published Publicly" : "Not Published")}");
-                var catTags = page.AddCategory($"Tags: {propTags}");
-                var catDesc = page.AddCategory($"Desc: {propDesc}");
+                catText += $"{propFileSize}MB, {propUpdatedAt}, {(propisPub ? "Published Publicly" : "Not Published")}<p>";
+                catText += $"Tags: {propTags}<p>";
+                catText += $"Desc: {propDesc}<p>";
+
+                var detailsCat = page.AddCategory("temp", true, false);
+                detailsCat.CategoryName = catText;
 
                 page.OpenPage();
             }
@@ -377,9 +398,9 @@ namespace WorldPropListMod
                 page.MenuSubtitle = $"List of all blocked props. Clicking each entry will unblock";
 
                 var cat1 = page.AddCategory("");
-                var cat2 = page.AddCategory("Blocked Props List");
+                var cat2 = page.AddCategory("Blocked Props List", true, false);
 
-                cat1.AddButton("Unblock all Props", "UnblockAll", "Clear the block list").OnPress += () =>
+                cat1.AddButton("Unblock all Props", "worldProp-UnblockAll", "Clear the block list").OnPress += () =>
                 {
                     QuickMenuAPI.ShowConfirm("Unblock all Props", "Are you sure you want to remove all props from the block list?", () => 
                     {
@@ -397,7 +418,7 @@ namespace WorldPropListMod
                 {
                     foreach (var blockedProp in Main.blockedProps.Reverse())
                     {
-                        cat2.AddButton(blockedProp.Value, "Unblock", $"Unblock prop: {blockedProp.Value}<p>GUID:{blockedProp.Key}").OnPress += () =>
+                        cat2.AddButton(blockedProp.Value, "worldProp-Unblock", $"Unblock prop: {blockedProp.Value}<p>GUID:{blockedProp.Key}").OnPress += () =>
                         {
                             QuickMenuAPI.ShowConfirm("Unblock Prop", "Are you sure you want to unblock this prop?", () =>
                             {
@@ -414,7 +435,7 @@ namespace WorldPropListMod
                     page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
-                    page.AddCategory("Prop blocklist is empty");
+                    page.AddCategory("Prop blocklist is empty", true, false);
                 }
                 page.OpenPage();
             }
@@ -432,14 +453,14 @@ namespace WorldPropListMod
                 page.MenuSubtitle = $"List of props that have been blocked from spawning this session";
 
                 var cat1 = page.AddCategory("");
-                var cat2 = page.AddCategory("Blocked Props History");
+                var cat2 = page.AddCategory("Blocked Props History", true, false);
 
-                cat1.AddButton("Clear History", "ResetList", "Clear the history").OnPress += () =>
+                cat1.AddButton("Clear History", "worldProp-ResetList", "Clear the history").OnPress += () =>
                 {
                     Main.BlockedThisSession.Clear();
                     PropBlockHistoryMenu();
                 };
-                cat1.AddButton("Refresh", "Reset", "Refresh this page").OnPress += () =>
+                cat1.AddButton("Refresh", "worldProp-Reset", "Refresh this page").OnPress += () =>
                 {
                     PropBlockHistoryMenu();
                 };
@@ -474,7 +495,7 @@ namespace WorldPropListMod
                     page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
-                    page.AddCategory("List is empty");
+                    page.AddCategory("List is empty", true, false);
                 }
                 page.OpenPage();
             }
@@ -492,13 +513,13 @@ namespace WorldPropListMod
                 page.MenuSubtitle = $"List of props that have been spawned this session. Click to block props.";
 
                 var cat1 = page.AddCategory("");
-                var cat2 = page.AddCategory("Props History");
-                cat1.AddButton("Clear History", "ResetList", "Clear the history").OnPress += () =>
+                var cat2 = page.AddCategory("Props History", true, false);
+                cat1.AddButton("Clear History", "worldProp-ResetList", "Clear the history").OnPress += () =>
                 {
                     Main.PropsThisSession.Clear();
                     PropHistoryMenu();
                 };
-                cat1.AddButton("Refresh", "Reset", "Refresh this page").OnPress += () =>
+                cat1.AddButton("Refresh", "worldProp-Reset", "Refresh this page").OnPress += () =>
                 {
                     PropHistoryMenu();
                 };
@@ -533,7 +554,7 @@ namespace WorldPropListMod
                     page.AddCategory("");
                     page.AddCategory("");
                     page.AddCategory("");
-                    page.AddCategory("List is empty");
+                    page.AddCategory("List is empty", true, false);
                 }  
                 page.OpenPage();
             }
