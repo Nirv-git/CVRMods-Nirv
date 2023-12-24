@@ -7,6 +7,8 @@ using System.Reflection;
 using BTKUILib;
 using BTKUILib.UIObjects;
 using ABI.CCK.Components;
+using System.Linq;
+using Semver;
 
 namespace LocalLightMod
 {
@@ -14,61 +16,57 @@ namespace LocalLightMod
     {
         public static void loadAssets()
         {
-            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.NirvMisc.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Settings", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Settings.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "AngleMinus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.AngleMinus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "AnglePlus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.AnglePlus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "BrightnessHigher", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.BrightnessHigher.png"));//
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "BrightnessLower", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.BrightnessLower.png"));//
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "SizeMinus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.SizeMinus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "SizePlus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.SizePlus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Reset.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Red-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Red-Minus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Red-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Red-Plus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Green-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Green-Minus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Green-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Green-Plus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Blue-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Blue-Minus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Blue-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Blue-Plus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "White-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.White-Minus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "White-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.White-Plus.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Color-Blue", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Blue.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Color-Cyan", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Cyan.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Color-Green", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Green.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Color-Magenta", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Magenta.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Color-Red", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Red.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Color-Yellow", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Yellow.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Color-White", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-White.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Color-Black", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Black.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "flashLight", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.flashLight.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "flashLight-save", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.flashLight-save.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "LightOn", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LightOn.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "UpdateLight", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.UpdateLight.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "LightSave", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LightSave.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "SpotPoint", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.SpotPoint.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Save", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Save.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Load", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Load.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "LayerMask", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LayerMask.png"));                                                                                                                         //QuickMenuAPI.PrepareIcon("LocalLightMod", "", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons..png"));//
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "ShadowsLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.ShadowsLess.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "ShadowsMore", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.ShadowsMore.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Delete.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "ShadowType", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.ShadowType.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "LightFromConfig", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LightFromConfig.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "LightToConfig", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LightToConfig.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "Select", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Select.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "PixelLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.PixelLess.png"));
-            QuickMenuAPI.PrepareIcon("LocalLightMod", "PixelMore", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.PixelMore.png"));
-            //QuickMenuAPI.PrepareIcon("LocalLightMod", "", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons..png"));//
+            QuickMenuAPI.PrepareIcon(ModName, "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.NirvMisc.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Settings", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Settings.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-AngleMinus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.AngleMinus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-AnglePlus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.AnglePlus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-BrightnessHigher", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.BrightnessHigher.png"));//
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-BrightnessLower", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.BrightnessLower.png"));//
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-SizeMinus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.SizeMinus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-SizePlus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.SizePlus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Reset.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Red-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Red-Minus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Red-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Red-Plus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Green-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Green-Minus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Green-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Green-Plus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Blue-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Blue-Minus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Blue-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Blue-Plus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-White-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.White-Minus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-White-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.White-Plus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Color-Blue", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Blue.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Color-Cyan", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Cyan.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Color-Green", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Green.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Color-Magenta", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Magenta.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Color-Red", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Red.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Color-Yellow", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Yellow.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Color-White", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-White.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Color-Black", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Color-Black.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-flashLight", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.flashLight.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-flashLight-save", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.flashLight-save.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-LightOn", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LightOn.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-UpdateLight", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.UpdateLight.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-LightSave", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LightSave.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-SpotPoint", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.SpotPoint.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Save", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Save.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Load", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Load.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-LayerMask", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LayerMask.png"));                                                                                                                         //QuickMenuAPI.PrepareIcon(ModName, "", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons..png"));//
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-ShadowsLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.ShadowsLess.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-ShadowsMore", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.ShadowsMore.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Delete.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-ShadowType", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.ShadowType.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-LightFromConfig", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LightFromConfig.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-LightToConfig", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.LightToConfig.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Select", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Select.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-PixelLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.PixelLess.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-PixelMore", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.PixelMore.png"));
+            //QuickMenuAPI.PrepareIcon(ModName, "", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons..png"));//
         }
+
+        public static string ModName = "NirvBTKUI";
+        private static MethodInfo _btkGetCreatePageAdapter;
 
         public static Page pageLightConfig, pageCustomColors, pageSelectLight, pageSetName, pageLayers, pageSavedColors, pageSavedSlots;
         public static BTKUILib.UIObjects.Components.Button pageLightConfig_Name;
-        
-        private static FieldInfo _uiInstance = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetField("Instance", BindingFlags.NonPublic | BindingFlags.Static);
-        private static MethodInfo _registerRootPage = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetMethod("RegisterRootPage", BindingFlags.NonPublic | BindingFlags.Instance);
-        public static void HackRegisterRoot(Page element)
-        {
-            _registerRootPage.Invoke(_uiInstance.GetValue(null), new object[] { element });
-        }
 
         public static void UpDateActiveOnChange()
         {
@@ -78,48 +76,65 @@ namespace LocalLightMod
 
         public static void SetupUI()
         {
+            if (MelonMod.RegisteredMelons.Any(x => x.Info.Name.Equals("BTKUILib") && x.Info.SemanticVersion.CompareByPrecedence(new SemVersion(1, 9)) > 0))
+            {
+                //We're working with UILib 2.0.0, let's reflect the get create page function
+                _btkGetCreatePageAdapter = typeof(Page).GetMethod("GetOrCreatePage", BindingFlags.Public | BindingFlags.Static);
+                Main.Logger.Msg($"BTKUILib 2.0.0 detected, attempting to grab GetOrCreatePage function: {_btkGetCreatePageAdapter != null}");
+            }
+            if (!Main.useNirvMiscPage.Value)
+            {
+                ModName = "localLightMod";
+            }
+
+
             loadAssets();
-            pageSetName = new Page("LocalLightMod", "Light - Set Name", false);
-            HackRegisterRoot(pageSetName);
-            pageLayers = new Page("LocalLightMod", "Light - Layers", false);
-            HackRegisterRoot(pageLayers);
-            pageSavedColors = new Page("LocalLightMod", "Light - Saved Colors", false);
-            HackRegisterRoot(pageSavedColors);
-            pageSavedSlots = new Page("LocalLightMod", "Light - Saved Slots", false);
-            HackRegisterRoot(pageSavedSlots);
-            pageCustomColors = new Page("LocalLightMod", "Light - Colors", false);
-            HackRegisterRoot(pageCustomColors);
+            pageSetName = new Page(ModName, "Light - Set Name", false);
+            QuickMenuAPI.AddRootPage(pageSetName);
+            pageLayers = new Page(ModName, "Light - Layers", false);
+            QuickMenuAPI.AddRootPage(pageLayers);
+            pageSavedColors = new Page(ModName, "Light - Saved Colors", false);
+            QuickMenuAPI.AddRootPage(pageSavedColors);
+            pageSavedSlots = new Page(ModName, "Light - Saved Slots", false);
+            QuickMenuAPI.AddRootPage(pageSavedSlots);
+            pageCustomColors = new Page(ModName, "Light - Colors", false);
+            QuickMenuAPI.AddRootPage(pageCustomColors);
 
             Category cat = null;
             if (Main.useNirvMiscPage.Value)
             {
-                var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                //var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                Page page = null;
+                if (_btkGetCreatePageAdapter != null)
+                    page = (Page)_btkGetCreatePageAdapter.Invoke(null, new object[] { ModName, "Nirv Misc Page", true, "NirvMisc", null, false });
+                else
+                    page = new Page(ModName, "Nirv Misc Page", true, "NirvMisc");
                 page.MenuTitle = "Nirv Misc Page";
                 page.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
-                cat = page.AddCategory("Local Lights", "LocalLightMod");
+                cat = page.AddCategory("Local Lights");
             }
             else
             {
-                cat = QuickMenuAPI.MiscTabPage.AddCategory("Local Lights", "LocalLightMod");
+                cat = QuickMenuAPI.MiscTabPage.AddCategory("Local Lights", ModName);
             }
-            cat.AddButton("Create Light", "LightOn", "Create a new light with current settings").OnPress += () =>
+            cat.AddButton("Create Light", "localLight-LightOn", "Create a new light with current settings").OnPress += () =>
             {
                 Main.CreateLight();
             };
-            pageLightConfig = new Page("LocalLightMod", "Light - Config", false);
-            HackRegisterRoot(pageLightConfig);
-            cat.AddButton("Light Config", "Settings", "Light Configuration Settings").OnPress += () =>
+            pageLightConfig = new Page(ModName, "Light - Config", false);
+            QuickMenuAPI.AddRootPage(pageLightConfig);
+            cat.AddButton("Light Config", "localLight-Settings", "Light Configuration Settings").OnPress += () =>
             {
                 LightConfig();
             };
-            pageSelectLight = new Page("LocalLightMod", "Light - Select Specific", false);
-            HackRegisterRoot(pageSelectLight);
-            cat.AddButton("Select Light", "Select", "Select a created light for editing").OnPress += () =>
+            pageSelectLight = new Page(ModName, "Light - Select Specific", false);
+            QuickMenuAPI.AddRootPage(pageSelectLight);
+            cat.AddButton("Select Light", "localLight-Select", "Select a created light for editing").OnPress += () =>
             {
                 SelectSpecific();
             };
 
-            cat.AddButton("Delete All Lights", "Delete", "Delete All Lights").OnPress += () =>
+            cat.AddButton("Delete All Lights", "localLight-Delete", "Delete All Lights").OnPress += () =>
             {
                 QuickMenuAPI.ShowConfirm("Delete All Lights?", "This will delete all lights in the world", () => { Main.CleanupVisObjects(); }, () => { }, "Yes", "No");
             };
@@ -142,15 +157,15 @@ namespace LocalLightMod
             page.MenuTitle = "Options for Light creation";
             page.MenuSubtitle = "";
 
-            catSettings1.AddButton("Create", "LightOn", "Create a new light with the settings from below").OnPress += () =>
+            catSettings1.AddButton("Create", "localLight-LightOn", "Create a new light with the settings from below").OnPress += () =>
             {
                 Main.CreateLight();
             };
-            catSettings1.AddButton("Update Active Light", "UpdateLight", "Update currently selected light with settings from below").OnPress += () =>
+            catSettings1.AddButton("Update Active Light", "localLight-UpdateLight", "Update currently selected light with settings from below").OnPress += () =>
             {
                 Main.UpdateLight(Main.activeLight);
             };
-            catSettings1.AddButton("Reset to Defaults", "Reset", "Reset to Defaults").OnPress += () =>
+            catSettings1.AddButton("Reset to Defaults", "localLight-Reset", "Reset to Defaults").OnPress += () =>
             {
                 QuickMenuAPI.ShowConfirm("Reset to Defaults", "Reset to Defaults?", () => {
                     Main.Config.name = "DefaultName";
@@ -169,7 +184,7 @@ namespace LocalLightMod
                     LightConfig();
                 }, () => { }, "Yes", "No");
             };
-            catSettings1.AddButton("Saved Presets", "LightSave", "Open a menu for saving and loading presets").OnPress += () =>
+            catSettings1.AddButton("Saved Presets", "localLight-LightSave", "Open a menu for saving and loading presets").OnPress += () =>
             {
                 SavedPrefSlots();
             };
@@ -198,7 +213,7 @@ namespace LocalLightMod
             {
                 Main.textureLights.Value = action;
             };
-            var lightType = catSettings2.AddButton($"Light Type: {Main.Config.lightType}", "SpotPoint", "Toggle light type: Spot/Point/Directional");
+            var lightType = catSettings2.AddButton($"Light Type: {Main.Config.lightType}", "localLight-SpotPoint", "Toggle light type: Spot/Point/Directional");
             lightType.OnPress += () =>
             {
                 switch (Main.Config.lightType)
@@ -212,15 +227,15 @@ namespace LocalLightMod
                 UpDateActiveOnChange();
             };
 
-            catSettings2.AddButton($"Change Color", "flashLight", "Change the color of the light").OnPress += () =>
+            catSettings2.AddButton($"Change Color", "localLight-flashLight", "Change the color of the light").OnPress += () =>
             {
                 CustomColorSelect();
             };
-            catSettings2.AddButton($"Saved Colors", "flashLight-save", "Open a menu for saving and loading color presets").OnPress += () =>
+            catSettings2.AddButton($"Saved Colors", "localLight-flashLight-save", "Open a menu for saving and loading color presets").OnPress += () =>
             {
                 StoredColorsMenu();
             };
-            catSettings2.AddButton($"LayerMask", "LayerMask", $"Edit the layer make that lights effect - Current: {Main.Config.cullingMask}").OnPress += () =>
+            catSettings2.AddButton($"LayerMask", "localLight-LayerMask", $"Edit the layer make that lights effect - Current: {Main.Config.cullingMask}").OnPress += () =>
             {
                 LightLayerMask();
             };
@@ -237,16 +252,16 @@ namespace LocalLightMod
             {
                 BTKUILib.UIObjects.Components.Button angleReset = null;
                 var fast = false;
-                catSettings4.AddButton("Intensity -", "BrightnessLower", "").OnPress += () =>
+                catSettings4.AddButton("Intensity -", "localLight-BrightnessLower", "").OnPress += () =>
                 {
                     Main.Config.lightIntensity = Utils.Clamp(Main.Config.lightIntensity - (fast ? 1 : .1f), 0f, 1000f); UpdateText(); UpDateActiveOnChange();
                 };
-                angleReset = catSettings4.AddButton("--Reset--", "Reset", "");
+                angleReset = catSettings4.AddButton("--Reset--", "localLight-Reset", "");
                 angleReset.OnPress += () =>
                 {
                     Main.Config.lightIntensity = 1f; UpdateText(); UpDateActiveOnChange();
                 };
-                catSettings4.AddButton("Intensity +", "BrightnessHigher", "").OnPress += () =>
+                catSettings4.AddButton("Intensity +", "localLight-BrightnessHigher", "").OnPress += () =>
                 { 
                     Main.Config.lightIntensity += fast ? 1 : .1f; UpdateText(); UpDateActiveOnChange();
                 };
@@ -264,16 +279,16 @@ namespace LocalLightMod
             {
                 BTKUILib.UIObjects.Components.Button reset = null;
                 var fast = false;
-                catSettings5.AddButton("Range -", "SizeMinus", "").OnPress += () =>
+                catSettings5.AddButton("Range -", "localLight-SizeMinus", "").OnPress += () =>
                 {
                     Main.Config.lightRange = Utils.Clamp(Main.Config.lightRange - (fast ? 5 : .5f), 0f, 10000f); UpdateText(); UpDateActiveOnChange();
                 };
-                reset = catSettings5.AddButton("--Reset--", "Reset", "");
+                reset = catSettings5.AddButton("--Reset--", "localLight-Reset", "");
                 reset.OnPress += () =>
                 {
                     Main.Config.lightRange = 10f; UpdateText(); UpDateActiveOnChange();
                 };
-                catSettings5.AddButton("Range +", "SizePlus", "").OnPress += () =>
+                catSettings5.AddButton("Range +", "localLight-SizePlus", "").OnPress += () =>
                 {
                     Main.Config.lightRange += fast ? 5 : .5f; UpdateText(); UpDateActiveOnChange();
                 };
@@ -291,17 +306,17 @@ namespace LocalLightMod
             {
                 BTKUILib.UIObjects.Components.Button reset = null;
                 var fast = false;
-                catSettings6.AddButton("Angle -", "AngleMinus", "").OnPress += () =>
+                catSettings6.AddButton("Angle -", "localLight-AngleMinus", "").OnPress += () =>
                 {
                     Main.Config.lightSpotAngle = Utils.Clamp(Main.Config.lightSpotAngle - (fast ? 10 : .2f), 0f, 300f); UpdateText(); UpDateActiveOnChange();
 
                 };
-                reset = catSettings6.AddButton("--Reset--", "Reset", "");
+                reset = catSettings6.AddButton("--Reset--", "localLight-Reset", "");
                 reset.OnPress += () =>
                 {
                     Main.Config.lightSpotAngle = 30f; UpdateText(); UpDateActiveOnChange();
                 };
-                catSettings6.AddButton("Angle +", "AnglePlus", "").OnPress += () =>
+                catSettings6.AddButton("Angle +", "localLight-AnglePlus", "").OnPress += () =>
                 {
                     Main.Config.lightSpotAngle += fast ? 10 : 2f; UpdateText(); UpDateActiveOnChange();
                 };
@@ -319,16 +334,16 @@ namespace LocalLightMod
             {
                 BTKUILib.UIObjects.Components.Button rest = null;
                 var fast = false;
-                catSettings10.AddButton("Shadow Str -", "ShadowsLess", "Shadow Strength").OnPress += () =>
+                catSettings10.AddButton("Shadow Str -", "localLight-ShadowsLess", "Shadow Strength").OnPress += () =>
                 {
                     Main.Config.lightShadowStr = Utils.Clamp(Main.Config.lightShadowStr - (fast ? 1 : .1f), 0f, 1000f); UpdateText(); UpDateActiveOnChange();
                 };
-                rest = catSettings10.AddButton("--Reset--", "Reset", "Shadow Strength Reset");
+                rest = catSettings10.AddButton("--Reset--", "localLight-Reset", "Shadow Strength Reset");
                 rest.OnPress += () =>
                 {
                     Main.Config.lightShadowStr = 1f; UpdateText(); UpDateActiveOnChange();
                 };
-                catSettings10.AddButton("Shadow Str +", "ShadowsMore", "Shadow Strength").OnPress += () =>
+                catSettings10.AddButton("Shadow Str +", "localLight-ShadowsMore", "Shadow Strength").OnPress += () =>
                 {
                     Main.Config.lightShadowStr += fast ? 1 : .1f; UpdateText(); UpDateActiveOnChange();
                 };
@@ -344,16 +359,16 @@ namespace LocalLightMod
             //Shadow Settings
             {
                 BTKUILib.UIObjects.Components.Button rest = null;
-                catSettings10.AddButton("Shadow Cust Res -", "PixelLess", "Shadow Resolution").OnPress += () =>
+                catSettings10.AddButton("Shadow Cust Res -", "localLight-PixelLess", "Shadow Resolution").OnPress += () =>
                 {
                     Main.Config.lightShadowCustRes = Main.Config.lightShadowCustRes > 2 ? Main.Config.lightShadowCustRes / 2 : Main.Config.lightShadowCustRes; UpdateText(); UpDateActiveOnChange();
                 };
-                rest = catSettings10.AddButton("--Reset--", "Reset", "Shadow Resolution Reset");
+                rest = catSettings10.AddButton("--Reset--", "localLight-Reset", "Shadow Resolution Reset");
                 rest.OnPress += () =>
                 {
                     Main.Config.lightShadowCustRes = 2048; UpdateText(); UpDateActiveOnChange();
                 };
-                catSettings10.AddButton("Shadow Cust Res +", "PixelMore", "Shadow Resolution").OnPress += () =>
+                catSettings10.AddButton("Shadow Cust Res +", "localLight-PixelMore", "Shadow Resolution").OnPress += () =>
                 {
                     Main.Config.lightShadowCustRes = Main.Config.lightShadowCustRes < 8192 ? Main.Config.lightShadowCustRes * 2 : Main.Config.lightShadowCustRes; UpdateText(); UpDateActiveOnChange();
                 };
@@ -395,42 +410,42 @@ namespace LocalLightMod
             SetCustomColorsSub();
             //Color Presets
             {
-                var buttonWhite = catColors.AddButton("White", "Color-White", "");
+                var buttonWhite = catColors.AddButton("White", "localLight-Color-White", "");
                 buttonWhite.OnPress += () =>
                 {
                     Main.Config.lightColor = Color.white; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonRed = catColors.AddButton("Red", "Color-Red", "");
+                var buttonRed = catColors.AddButton("Red", "localLight-Color-Red", "");
                 buttonRed.OnPress += () =>
                 {
                     Main.Config.lightColor = Color.red; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonGreen = catColors.AddButton("Green", "Color-Green", ""); SetCustomColorsSub();
+                var buttonGreen = catColors.AddButton("Green", "localLight-Color-Green", ""); SetCustomColorsSub();
                 buttonGreen.OnPress += () =>
                 {
                     Main.Config.lightColor = Color.green; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonBlue = catColors.AddButton("Blue", "Color-Blue", "");
+                var buttonBlue = catColors.AddButton("Blue", "localLight-Color-Blue", "");
                 buttonBlue.OnPress += () =>
                 {
                     Main.Config.lightColor = Color.blue; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonBlack = catColors.AddButton("Black", "Color-Black", "");
+                var buttonBlack = catColors.AddButton("Black", "localLight-Color-Black", "");
                 buttonBlack.OnPress += () =>
                 {
                     Main.Config.lightColor = Color.black; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonMagenta = catColors.AddButton("Magenta", "Color-Magenta", "");
+                var buttonMagenta = catColors.AddButton("Magenta", "localLight-Color-Magenta", "");
                 buttonMagenta.OnPress += () =>
                 {
                     Main.Config.lightColor = Color.magenta; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonYellow = catColors.AddButton("Yellow", "Color-Yellow", "");
+                var buttonYellow = catColors.AddButton("Yellow", "localLight-Color-Yellow", "");
                 buttonYellow.OnPress += () =>
                 {
                     Main.Config.lightColor = Color.yellow; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonCyan = catColors.AddButton("Cyan", "Color-Cyan", "");
+                var buttonCyan = catColors.AddButton("Cyan", "localLight-Color-Cyan", "");
                 buttonCyan.OnPress += () =>
                 {
                     Main.Config.lightColor = Color.cyan; SetCustomColorsSub(); UpDateActiveOnChange();
@@ -440,22 +455,22 @@ namespace LocalLightMod
             var catCustomColors = page.AddCategory("Custom Colors");
             //Colors Plus
             {
-                var buttonRedPlus = catCustomColors.AddButton("Red +", "Red-Plus", "");
+                var buttonRedPlus = catCustomColors.AddButton("Red +", "localLight-Red-Plus", "");
                 buttonRedPlus.OnPress += () =>
                 {
                     Main.Config.lightColor.r = Utils.Clamp(Main.Config.lightColor.r + .1f, 0f, 2f); SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonGreenPlus = catCustomColors.AddButton("Green +", "Green-Plus", "");
+                var buttonGreenPlus = catCustomColors.AddButton("Green +", "localLight-Green-Plus", "");
                 buttonGreenPlus.OnPress += () =>
                 {
                     Main.Config.lightColor.g = Utils.Clamp(Main.Config.lightColor.g + .1f, 0f, 2f); SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonBluePlus = catCustomColors.AddButton("Blue +", "Blue-Plus", "");
+                var buttonBluePlus = catCustomColors.AddButton("Blue +", "localLight-Blue-Plus", "");
                 buttonBluePlus.OnPress += () =>
                 {
                     Main.Config.lightColor.b = Utils.Clamp(Main.Config.lightColor.b + .1f, 0f, 2f); SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonAllPlus = catCustomColors.AddButton("All +", "White-Plus", "");
+                var buttonAllPlus = catCustomColors.AddButton("All +", "localLight-White-Plus", "");
                 buttonAllPlus.OnPress += () =>
                 {
                     Main.Config.lightColor.r = Utils.Clamp(Main.Config.lightColor.r + .1f, 0f, 2f);
@@ -466,22 +481,22 @@ namespace LocalLightMod
             }
             //Colors Minus
             {
-                var buttonRedMinus = catCustomColors.AddButton("Red -", "Red-Minus", "");
+                var buttonRedMinus = catCustomColors.AddButton("Red -", "localLight-Red-Minus", "");
                 buttonRedMinus.OnPress += () =>
                 {
                     Main.Config.lightColor.r = Utils.Clamp(Main.Config.lightColor.r - .1f, 0f, 2f); SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonGreenMinus = catCustomColors.AddButton("Green -", "Green-Minus", "");
+                var buttonGreenMinus = catCustomColors.AddButton("Green -", "localLight-Green-Minus", "");
                 buttonGreenMinus.OnPress += () =>
                 {
                     Main.Config.lightColor.g = Utils.Clamp(Main.Config.lightColor.g - .1f, 0f, 2f); SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonBlueMinus = catCustomColors.AddButton("Blue -", "Blue-Minus", "");
+                var buttonBlueMinus = catCustomColors.AddButton("Blue -", "localLight-Blue-Minus", "");
                 buttonBlueMinus.OnPress += () =>
                 {
                     Main.Config.lightColor.b = Utils.Clamp(Main.Config.lightColor.b - .1f, 0f, 2f); SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonAllMinus = catCustomColors.AddButton("All -", "White-Minus", "");
+                var buttonAllMinus = catCustomColors.AddButton("All -", "localLight-White-Minus", "");
                 buttonAllMinus.OnPress += () =>
                 {
                     Main.Config.lightColor.r = Utils.Clamp(Main.Config.lightColor.r - .1f, 0f, 2f);
@@ -492,22 +507,22 @@ namespace LocalLightMod
             }
             //Colors Reset
             {
-                var buttonRedReset = catCustomColors.AddButton("Red Reset", "Reset", "");
+                var buttonRedReset = catCustomColors.AddButton("Red Reset", "localLight-Reset", "");
                 buttonRedReset.OnPress += () =>
                 {
                     Main.Config.lightColor.r = 1f; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonGreenReset = catCustomColors.AddButton("Green Reset", "Reset", "");
+                var buttonGreenReset = catCustomColors.AddButton("Green Reset", "localLight-Reset", "");
                 buttonGreenReset.OnPress += () =>
                 {
                     Main.Config.lightColor.g = 1f; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonBlueReset = catCustomColors.AddButton("Blue Reset", "Reset", "");
+                var buttonBlueReset = catCustomColors.AddButton("Blue Reset", "localLight-Reset", "");
                 buttonBlueReset.OnPress += () =>
                 {
                     Main.Config.lightColor.b = 1f; SetCustomColorsSub(); UpDateActiveOnChange();
                 };
-                var buttonAllReset = catCustomColors.AddButton("All Reset", "Reset", "");
+                var buttonAllReset = catCustomColors.AddButton("All Reset", "localLight-Reset", "");
                 buttonAllReset.OnPress += () =>
                 {
                     Main.Config.lightColor.r = 1f;
@@ -534,25 +549,25 @@ namespace LocalLightMod
                 if (!obj?.Equals(null) ?? false)
                 {
                     i++;
-                    var cat = pageSelectLight.AddCategory((obj==Main.activeLight?"*":"") + Main.LightDetailsString(obj) + (obj == Main.activeLight ? "*" : ""));
+                    var cat = pageSelectLight.AddCategory((obj==Main.activeLight?"*":"") + Main.LightDetailsString(obj) + (obj == Main.activeLight ? "*" : ""), true, false);
 
-                    cat.AddButton("Set as Active", "Select", "Set as active light | THIS DOES NOT LOAD SETTINGS INTO CONFIG - USE THE LOAD LIGHT'S SETTINGS BUTTON FOR THAT").OnPress += () =>
+                    cat.AddButton("Set as Active", "localLight-Select", "Set as active light | THIS DOES NOT LOAD SETTINGS INTO CONFIG - USE THE LOAD LIGHT'S SETTINGS BUTTON FOR THAT").OnPress += () =>
                     {
                         Main.activeLight = obj;
                         SelectSpecific();
                     };
-                    cat.AddButton("Update w/ Cur Settings", "LightFromConfig", "Updates this light's settings with the current config").OnPress += () =>
+                    cat.AddButton("Update w/ Cur Settings", "localLight-LightFromConfig", "Updates this light's settings with the current config").OnPress += () =>
                     {
                         Main.UpdateLight(obj);
                         SelectSpecific();
                     };
-                    cat.AddButton("Load Light's Settings", "LightToConfig", "Load this light's settings into the current config").OnPress += () =>
+                    cat.AddButton("Load Light's Settings", "localLight-LightToConfig", "Load this light's settings into the current config").OnPress += () =>
                     {
                         Main.LoadLightSettings(obj);
                         SelectSpecific();
                     };
                     
-                    cat.AddButton("Delete", "Delete", "").OnPress += () =>
+                    cat.AddButton("Delete", "localLight-Delete", "").OnPress += () =>
                     {
                         Main.CleanupOneObject(obj);
                         SelectSpecific();
@@ -588,11 +603,11 @@ namespace LocalLightMod
             var cat1 = page.AddCategory("");
             var cat2 = page.AddCategory("");
 
-            cat1.AddButton("BackSpace", "blank", "").OnPress += () =>
+            cat1.AddButton("BackSpace", "localLight-blank", "").OnPress += () =>
             {
                 if (Main.Config.name.Length > 0) Main.Config.name = Main.Config.name.Remove(Main.Config.name.Length - 1, 1); SetCustomSub();
             };
-            cat1.AddButton("Clear", "blank", "").OnPress += () =>
+            cat1.AddButton("Clear", "localLight-blank", "").OnPress += () =>
             {
                 Main.Config.name = ""; SetCustomSub();
             };
@@ -604,7 +619,7 @@ namespace LocalLightMod
             foreach (char c in chars)
             {
                 var s = c.ToString();
-                cat2.AddButton(s.ToUpper(), "blank", $"{s.ToUpper()}/{s.ToLower()}").OnPress += () =>
+                cat2.AddButton(s.ToUpper(), "localLight-blank", $"{s.ToUpper()}/{s.ToLower()}").OnPress += () =>
                 {
                     Main.Config.name += cas ? s.ToUpper() : s.ToLower(); SetCustomSub();
                     pageLightConfig_Name.ButtonText = $"Name: {Main.Config.name}";
@@ -623,17 +638,17 @@ namespace LocalLightMod
             var cat1 = page.AddCategory("");
             var cat2 = page.AddCategory("");
 
-            cat1.AddButton("Enable All", "blank", "").OnPress += () =>
+            cat1.AddButton("Enable All", "localLight-blank", "").OnPress += () =>
             {
                 Main.Config.cullingMask = -1; LightLayerMask();
                 UpDateActiveOnChange();
             };
-            cat1.AddButton("Disable All", "blank", "").OnPress += () =>
+            cat1.AddButton("Disable All", "localLight-blank", "").OnPress += () =>
             {
                 Main.Config.cullingMask = 0; LightLayerMask();
                 UpDateActiveOnChange();
             };
-            cat1.AddButton("Only Players", "blank", "Only enable layers used by players").OnPress += () =>
+            cat1.AddButton("Only Players", "localLight-blank", "Only enable layers used by players").OnPress += () =>
             {
                 Main.Config.cullingMask = 0 | (1 << 8) | (1 << 9) | (1 << 10) | (1 << 11); LightLayerMask();
                 UpDateActiveOnChange();
@@ -663,23 +678,23 @@ namespace LocalLightMod
 
             var catMain = page.AddCategory("");
 
-            catMain.AddButton("Update Active Light", "UpdateLight", "").OnPress += () =>
+            catMain.AddButton("Update Active Light", "localLight-UpdateLight", "").OnPress += () =>
             {
                 Main.UpdateLight(Main.activeLight);
             };
             foreach (KeyValuePair<int, System.Tuple<float, float, float>> slot in SaveSlots.GetSavedColors())
             {
                 string label = $"Slot: {slot.Key}\nR:{Utils.NumFormat(slot.Value.Item1)}\nG:{Utils.NumFormat(slot.Value.Item2)}\nB:{Utils.NumFormat(slot.Value.Item3)}";
-                var cat = page.AddCategory(label);
+                var cat = page.AddCategory(label, true, false);
 
-                cat.AddButton("Load", "Load", "").OnPress += () =>
+                cat.AddButton("Load", "localLight-Load", "").OnPress += () =>
                 {
                     Main.Config.lightColor.r = slot.Value.Item1;
                     Main.Config.lightColor.g = slot.Value.Item2;
                     Main.Config.lightColor.b = slot.Value.Item3;
                     StoredColorsMenu();
                 };
-                cat.AddButton("Save", "Save", "").OnPress += () =>
+                cat.AddButton("Save", "localLight-Save", "").OnPress += () =>
                 {
                     SaveSlots.Store(slot.Key, new System.Tuple<float, float, float>(Main.Config.lightColor.r, Main.Config.lightColor.g, Main.Config.lightColor.b));
                     StoredColorsMenu();
@@ -697,7 +712,7 @@ namespace LocalLightMod
             page.MenuSubtitle = current;
 
             var catMain = page.AddCategory("");
-            catMain.AddButton("Update Active Light", "UpdateLight", "").OnPress += () =>
+            catMain.AddButton("Update Active Light", "localLight-UpdateLight", "").OnPress += () =>
             {
                 Main.UpdateLight(Main.activeLight);
             };
@@ -705,9 +720,9 @@ namespace LocalLightMod
             foreach (KeyValuePair<int, (bool, bool, LightType, float, float, Color, float, float, LightShadows, float, string, bool, int)> slot in SaveSlots.GetSavedPrefs())
             {
                 string label = $"Slot:{slot.Key} {slot.Value.Item11} {slot.Value.Item3} R:{slot.Value.Item6.r}G:{slot.Value.Item6.g}B:{slot.Value.Item6.b} Inten:{slot.Value.Item7} Range:{slot.Value.Item4} Hidden:{slot.Value.Item12}";//\nUp:{Utils.NumberFormat(slot.Value.Item1)}\nForward:{Utils.NumberFormat(slot.Value.Item2)}\nSide:{Utils.NumberFormat(slot.Value.Item3)}"
-                var cat = page.AddCategory(label);
+                var cat = page.AddCategory(label, true, false);
 
-                cat.AddButton("Load", "Load", "").OnPress += () =>
+                cat.AddButton("Load", "localLight-Load", "").OnPress += () =>
                 {
                     Main.Config.name = slot.Value.Item11;
                     Main.Config.pickupOrient = slot.Value.Item1;
@@ -725,7 +740,7 @@ namespace LocalLightMod
                     SavedPrefSlots();
                 };
 
-                cat.AddButton("Save", "Save", "").OnPress += () =>
+                cat.AddButton("Save", "localLight-Save", "").OnPress += () =>
                 {
                     SaveSlots.StorePrefs(slot.Key, (Main.Config.pickupOrient, Main.Config.pickupable, Main.Config.lightType, Main.Config.lightRange, Main.Config.lightSpotAngle, Main.Config.lightColor, Main.Config.lightIntensity, Main.Config.lightBounceIntensity, Main.Config.lightShadows, Main.Config.lightShadowStr, Main.Config.name, Main.Config.hideMeshRender, Main.Config.cullingMask));
                     SavedPrefSlots();
