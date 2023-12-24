@@ -4,14 +4,11 @@
 
 # Mods not published on CVRMG
 
-[HideDragonWingsMod](HideDragonWingsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/HideWings-0.0.1/HideDragonWings.dll)     
-[QMShutdownOptionsMod](QMShutdownOptionsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.7_QMShut0.0.6/QMShutdownOptionsMod.dll)    
-[WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
-[PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/PlayerLocator.dll)        
-[ViewPointTweaks](ViewPointTweaks) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/Viewpoint0.1.1/ViewPointTweaks.dll)      
-[ShrinkOtherHeads](ShrinkOtherHeads) [Download]()  
-[NoMenuTouch](NoMenuTouch) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/IKPresets0.6.2_PortMirror2.1.15_NoMenu0.0.2/NoMenuTouch.dll)   
-[CVRCameraDontOverrender](CVRCameraDontOverrender) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVRCamDont0.0.1/CVRCameraDontOverrender.dll)
+[HideDragonWingsMod](HideDragonWingsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/HideDragonWings.dll)     
+[QMShutdownOptionsMod](QMShutdownOptionsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/QMShutdownOptionsMod.dll)    
+[WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
+[PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/PlayerLocator.dll)            
+[ShrinkOtherHeads](ShrinkOtherHeads) [Download]()    
 
 
 # PortableMirror
