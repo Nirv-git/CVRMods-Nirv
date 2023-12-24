@@ -6,6 +6,9 @@ using System.Linq;
 using BTKUILib;
 using BTKUILib.UIObjects;
 using ABI.CCK.Components;
+using MelonLoader;
+using System.Linq;
+using Semver;
 
 namespace RemoveChairs
 {
@@ -13,27 +16,46 @@ namespace RemoveChairs
     {
         public static void loadAssets()
         {
-            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoveChairs.Icons.NirvMisc.png"));
-            QuickMenuAPI.PrepareIcon("RemoveChairs", "remChairs-Chair_en", Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoveChairs.Icons.Chair_en.png"));
-            QuickMenuAPI.PrepareIcon("RemoveChairs", "remChairs-Chair_dis", Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoveChairs.Icons.Chair_dis.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoveChairs.Icons.NirvMisc.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "remChairs-Chair_en", Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoveChairs.Icons.Chair_en.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "remChairs-Chair_dis", Assembly.GetExecutingAssembly().GetManifestResourceStream("RemoveChairs.Icons.Chair_dis.png"));
         }
+
+        public static string ModName = "NirvBTKUI";
+        private static MethodInfo _btkGetCreatePageAdapter;
 
         public static Category mainCat;
 
         public static void InitUi()
         {
+            if (MelonMod.RegisteredMelons.Any(x => x.Info.Name.Equals("BTKUILib") && x.Info.SemanticVersion.CompareByPrecedence(new SemVersion(1, 9)) > 0))
+            {
+                //We're working with UILib 2.0.0, let's reflect the get create page function
+                _btkGetCreatePageAdapter = typeof(Page).GetMethod("GetOrCreatePage", BindingFlags.Public | BindingFlags.Static);
+                Main.Logger.Msg($"BTKUILib 2.0.0 detected, attempting to grab GetOrCreatePage function: {_btkGetCreatePageAdapter != null}");
+            }
+            if (!Main.useNirvMiscPage.Value)
+            {
+                ModName = "removeChairsMod";
+            }
+
             loadAssets();
             Category cat = null;
             if (Main.useNirvMiscPage.Value)
             {
-                var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                //var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                Page page = null;
+                if (_btkGetCreatePageAdapter != null)
+                    page = (Page)_btkGetCreatePageAdapter.Invoke(null, new object[] { ModName, "Nirv Misc Page", true, "NirvMisc", null, false });
+                else
+                    page = new Page(ModName, "Nirv Misc Page", true, "NirvMisc");
                 page.MenuTitle = "Nirv Misc Page";
                 page.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
-                cat = page.AddCategory("Remove Chairs", "RemoveChairs");
+                cat = page.AddCategory("Remove Chairs");
             }
             else
             {
-                cat = QuickMenuAPI.MiscTabPage.AddCategory("Remove Chairs", "RemoveChairs");
+                cat = QuickMenuAPI.MiscTabPage.AddCategory("Remove Chairs", ModName);
             }
             mainCat = cat;
             PopulateButtons();
