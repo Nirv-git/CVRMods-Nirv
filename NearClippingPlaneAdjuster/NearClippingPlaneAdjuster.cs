@@ -17,7 +17,7 @@ namespace NearClipPlaneAdj
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.6.6";
+        public const string versionStr = "0.7.1";
         public static MelonLogger.Instance Logger;
 
         public static MelonPreferences_Entry<bool> useNirvMiscPage;
