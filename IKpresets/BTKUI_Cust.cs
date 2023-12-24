@@ -13,6 +13,7 @@ using ABI_RC.Core.InteractionSystem;
 using cohtml;
 using ABI_RC.Core.Player;
 using ABI_RC.Core;
+using Semver;
 
 namespace IKpresetsMod
 {
@@ -20,30 +21,27 @@ namespace IKpresetsMod
     {
         public static void loadAssets()
         {
-            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.NirvMisc.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "ConfigIK", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.ConfigIK.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "IKSaveLoad", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.IKSaveLoad.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "Load", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Load.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Reset.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "Save", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Save.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "Select", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Select.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "White-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.White-Minus.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "White-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.White-Plus.png")); 
-            QuickMenuAPI.PrepareIcon("IKpresets", "Recal", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Recal.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Delete.png"));
-            QuickMenuAPI.PrepareIcon("IKpresets", "IKSaveLoadSlots", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.IKSaveLoadSlots.png"));
-            //QuickMenuAPI.PrepareIcon("IKpresets", "", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons..png"));
+            QuickMenuAPI.PrepareIcon(ModName, "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.NirvMisc.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-ConfigIK", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.ConfigIK.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-IKSaveLoad", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.IKSaveLoad.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-Load", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Load.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Reset.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-Save", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Save.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-Select", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Select.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-White-Minus", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.White-Minus.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-White-Plus", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.White-Plus.png")); 
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-Recal", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Recal.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Delete.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-IKSaveLoadSlots", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.IKSaveLoadSlots.png"));
+            //QuickMenuAPI.PrepareIcon(ModName, "", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons..png"));
         }
+
+        public static string ModName = "NirvBTKUI";
+        private static MethodInfo _btkGetCreatePageAdapter;
 
         public static Page pageEditSettings, pageSaveLoad, pageSetName, pageEditSlotName, pageAvatarSaveLoad;
         public static BTKUILib.UIObjects.Category pageEditSlotName_Text;
-        
-        private static FieldInfo _uiInstance = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetField("Instance", BindingFlags.NonPublic | BindingFlags.Static);
-        private static MethodInfo _registerRootPage = typeof(QMUIElement).Assembly.GetType("BTKUILib.UserInterface").GetMethod("RegisterRootPage", BindingFlags.NonPublic | BindingFlags.Instance);
-        public static void HackRegisterRoot(Page element)
-        {
-            _registerRootPage.Invoke(_uiInstance.GetValue(null), new object[] { element });
-        }
+       
 
         public static void SaveChanges()
         {
@@ -54,42 +52,58 @@ namespace IKpresetsMod
 
         public static void SetupUI()
         {
+            if (MelonMod.RegisteredMelons.Any(x => x.Info.Name.Equals("BTKUILib") && x.Info.SemanticVersion.CompareByPrecedence(new SemVersion(1, 9)) > 0))
+            {
+                //We're working with UILib 2.0.0, let's reflect the get create page function
+                _btkGetCreatePageAdapter = typeof(Page).GetMethod("GetOrCreatePage", BindingFlags.Public | BindingFlags.Static);
+                Main.Logger.Msg($"BTKUILib 2.0.0 detected, attempting to grab GetOrCreatePage function: {_btkGetCreatePageAdapter != null}");
+            }
+            if (!Main.useNirvMiscPage.Value)
+            {
+                ModName = "ikPresetsMod";
+            }
+
             loadAssets();
-            pageEditSettings = new Page("IKpresets", "IK Presets - Editing", false);
-            HackRegisterRoot(pageEditSettings);
-            pageSaveLoad = new Page("IKpresets", "IK Presets - Save/Load", false);
-            HackRegisterRoot(pageSaveLoad);
-            pageSetName = new Page("IKpresets", "IK Presets - Set Name", false);
-            HackRegisterRoot(pageSetName);
-            pageEditSlotName = new Page("IKpresets", "IK Presets - Edit slot names", false);
-            HackRegisterRoot(pageEditSlotName);
-            pageAvatarSaveLoad = new Page("IKpresets", "IK Presets - Avatar Slots", false);
-            HackRegisterRoot(pageAvatarSaveLoad);
+            pageEditSettings = new Page(ModName, "IK Presets - Editing", false);
+            QuickMenuAPI.AddRootPage(pageEditSettings);
+            pageSaveLoad = new Page(ModName, "IK Presets - Save/Load", false);
+            QuickMenuAPI.AddRootPage(pageSaveLoad);
+            pageSetName = new Page(ModName, "IK Presets - Set Name", false);
+            QuickMenuAPI.AddRootPage(pageSetName);
+            pageEditSlotName = new Page(ModName, "IK Presets - Edit slot names", false);
+            QuickMenuAPI.AddRootPage(pageEditSlotName);
+            pageAvatarSaveLoad = new Page(ModName, "IK Presets - Avatar Slots", false);
+            QuickMenuAPI.AddRootPage(pageAvatarSaveLoad);
             Category cat = null;
             if (Main.useNirvMiscPage.Value)
             {
-                var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                //var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                Page page = null;
+                if (_btkGetCreatePageAdapter != null)
+                    page = (Page)_btkGetCreatePageAdapter.Invoke(null, new object[] { ModName, "Nirv Misc Page", true, "NirvMisc", null, false });
+                else
+                    page = new Page(ModName, "Nirv Misc Page", true, "NirvMisc");
                 page.MenuTitle = "Nirv Misc Page";
                 page.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
-                cat = page.AddCategory("IK Presets", "IKpresets");
+                cat = page.AddCategory("IK Presets");
             }
             else
             {
-                cat = QuickMenuAPI.MiscTabPage.AddCategory("IK Presets", "IKpresets");
+                cat = QuickMenuAPI.MiscTabPage.AddCategory("IK Presets", ModName);
             }
-            cat.AddButton("Edit current values", "ConfigIK", "Edit current IK settings. Same options as in the big menu").OnPress += () =>
+            cat.AddButton("Edit current values", "ikPre-ConfigIK", "Edit current IK settings. Same options as in the big menu").OnPress += () =>
             {
                 EditSettings();
             };
-            cat.AddButton("Per Avatar Presets", "IKSaveLoad", "Presets for specific avatars").OnPress += () =>
+            cat.AddButton("Per Avatar Presets", "ikPre-IKSaveLoad", "Presets for specific avatars").OnPress += () =>
             {
                 AvatarSaveLoad();
             };
-            cat.AddButton("Save/Load Slots", "IKSaveLoadSlots", "Save and load preset slots").OnPress += () =>
+            cat.AddButton("Save/Load Slots", "ikPre-IKSaveLoadSlots", "Save and load preset slots").OnPress += () =>
             {
                 SaveLoad();
             };
-            cat.AddButton("ReCalibrate", "Recal", "ReCalibrate Avatar").OnPress += () =>
+            cat.AddButton("ReCalibrate", "ikPre-Recal", "ReCalibrate Avatar").OnPress += () =>
             {
                 PlayerSetup.Instance.ReCalibrateAvatar();
             };
@@ -199,16 +213,16 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value - (fast ? 5 : 1), 0, 25)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Reset to 10", "Reset", desc).OnPress += () =>
+                    cat.AddButton("Reset to 10", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, 10); UpdateSet(); SaveChanges();
                         //MetaPort.Instance.settings.SetSetting(setting, 10.ToString(), true);
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value + (fast ? 5 : 1), 0, 25)); UpdateSet(); SaveChanges();
                         //MetaPort.Instance.settings.SetSetting(setting, 13.ToString(), false);
@@ -234,15 +248,15 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value - (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Reset to 30", "Reset", desc).OnPress += () =>
+                    cat.AddButton("Reset to 30", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, 30); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value + (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
@@ -267,15 +281,15 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value - (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Reset to 30", "Reset", desc).OnPress += () =>
+                    cat.AddButton("Reset to 30", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, 30); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value + (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
@@ -299,15 +313,15 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value - (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Reset to 30", "Reset", desc).OnPress += () =>
+                    cat.AddButton("Reset to 30", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, 30); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value + (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
@@ -332,15 +346,15 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value - (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Reset to 15", "Reset", desc).OnPress += () =>
+                    cat.AddButton("Reset to 15", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, 15); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value + (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
@@ -364,15 +378,15 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value - (fast ? 2 : 1), 1, 10)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Reset to 2", "Reset", desc).OnPress += () =>
+                    cat.AddButton("Reset to 2", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, 2); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value + (fast ? 2 : 1), 1, 10)); UpdateSet(); SaveChanges();
                     };
@@ -397,15 +411,15 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value - (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Reset to 15", "Reset", desc).OnPress += () =>
+                    cat.AddButton("Reset to 15", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, 15); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value + (fast ? 10 : 1), -60, 60)); UpdateSet(); SaveChanges();
                     };
@@ -429,15 +443,15 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value - (fast ? 2 : 1), 1, 10)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Reset to 2", "Reset", desc).OnPress += () =>
+                    cat.AddButton("Reset to 2", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, 2); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value + (fast ? 2 : 1), 1, 10)); UpdateSet(); SaveChanges();
                     };
@@ -461,15 +475,15 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsFloat(setting, Utils.Clamp(value - (fast ? 5f : 1f), 0f, 50f)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Reset to 5", "Reset", desc).OnPress += () =>
+                    cat.AddButton("Reset to 5", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsFloat(setting, 5); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsFloat(setting, Utils.Clamp(value + (fast ? 5f : 1f), 0f, 50f)); UpdateSet(); SaveChanges();
                     };
@@ -498,15 +512,15 @@ namespace IKpresetsMod
                     }
 
                     var fast = false;
-                    cat.AddButton("Decrease", "White-Minus", desc).OnPress += () =>
+                    cat.AddButton("Decrease", "ikPre-White-Minus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value - (fast ? 5 : 1), 1, 305)); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton($"Reset to {value}", "Reset", desc).OnPress += () =>
+                    cat.AddButton($"Reset to {value}", "ikPre-Reset", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, value); UpdateSet(); SaveChanges();
                     };
-                    cat.AddButton("Increase", "White-Plus", desc).OnPress += () =>
+                    cat.AddButton("Increase", "ikPre-White-Plus", desc).OnPress += () =>
                     {
                         MetaPort.Instance.settings.SetSettingsInt(setting, Utils.Clamp(value + (fast ? 5 : 1), 1, 305)); UpdateSet(); SaveChanges();
                     };
@@ -528,11 +542,11 @@ namespace IKpresetsMod
             page.MenuSubtitle = Text();
 
             var catMain = page.AddCategory("");
-            catMain.AddButton("Edit Slot Names", "blank", "Edit Slot Names").OnPress += () =>
+            catMain.AddButton("Edit Slot Names", "ikPre-blank", "Edit Slot Names").OnPress += () =>
             {
                 EditSlotNames();
             };
-            catMain.AddButton("Refresh", "Reset", "Refresh Names").OnPress += () =>
+            catMain.AddButton("Refresh", "ikPre-Reset", "Refresh Names").OnPress += () =>
             {
                 SaveLoad();
             };
@@ -542,14 +556,14 @@ namespace IKpresetsMod
                 foreach (var slot in Main.config_Slots.Settings)
                 {
                     string label = $"Slot: {slot.Key} - {slot.Value.SlotName}";
-                    var cat = page.AddCategory(label);
+                    var cat = page.AddCategory(label, true, false);
 
                     var desc = $"PitchYaw:{Utils.CompactTF(slot.Value.IKPitchYawShoulders)}_HipPin:{Utils.CompactTF(slot.Value.IKHipPinned)}_" +
                        $"StrNeck:{Utils.CompactTF(slot.Value.IKStraightenNeck)}_HipShift:{Utils.CompactTF(slot.Value.IKHipShifting)}_StrSpine:{Utils.CompactTF(slot.Value.IKPreStraightenSpine)}_" +
                        $"RelxIter:{slot.Value.IKSpineRelaxIterations} SpineFwd:{slot.Value.IKMaxSpineAngleFwd}Bck:{slot.Value.IKMaxSpineAngleBack}_" +
                        $"NeckFwd:{slot.Value.IKMaxNeckAngleFwd}Bck:{slot.Value.IKMaxNeckAngleBack}_NeckPri:{slot.Value.IKNeckPriority}_" +
                        $"StrSpine:{slot.Value.IKStraightSpineAngle}Pow:{slot.Value.IKStraightSpinePower}Height:{slot.Value.GeneralPlayerHeight}";
-                    cat.AddButton("Load", "Load", desc).OnPress += () =>
+                    cat.AddButton("Load", "ikPre-Load", desc).OnPress += () =>
                     {
                         if (slot.Value.SlotName == "N/A")
                         {
@@ -567,7 +581,7 @@ namespace IKpresetsMod
                             SaveChanges();
                         }
                     };
-                    cat.AddButton("Save", "Save", "Save current IK settings to this slot").OnPress += () =>
+                    cat.AddButton("Save", "ikPre-Save", "Save current IK settings to this slot").OnPress += () =>
                     {
                         SaveSlots.StoreSlot(slot.Key);
                         SaveLoad();
@@ -577,7 +591,7 @@ namespace IKpresetsMod
             catch (System.Exception ex)
             {
                 Main.Logger.Error($"Error loading slots\n" + ex.ToString());
-                page.AddCategory("Error loading slots");
+                page.AddCategory("Error loading slots", true, false);
             }
             void UpdateText()
             {
@@ -603,8 +617,8 @@ namespace IKpresetsMod
             page.MenuTitle = "Edit Slot Names";
             page.MenuSubtitle = "Used for changing the names of the slots";
 
-            pageEditSlotName_Text = page.AddCategory($"Current string: {Main.tempString}");
-            pageEditSlotName_Text.AddButton("Edit String", "blank", "Edit String").OnPress += () =>
+            pageEditSlotName_Text = page.AddCategory($"Current string: {Main.tempString}", true, false);
+            pageEditSlotName_Text.AddButton("Edit String", "ikPre-blank", "Edit String").OnPress += () =>
             {
                 QuickMenuAPI.OpenKeyboard(Main.tempString, (action) => { Main.tempString = action; EditSlotNames();});
                 
@@ -615,14 +629,14 @@ namespace IKpresetsMod
                 foreach (var slot in Main.config_Slots.Settings)
                 {
                     string label = $"Slot: {slot.Key}\n{slot.Value.SlotName}";
-                    var cat = page.AddCategory(label);
+                    var cat = page.AddCategory(label, true, false);
 
-                    cat.AddButton("Load String", "blank", "Load String from slot into current string").OnPress += () =>
+                    cat.AddButton("Load String", "ikPre-blank", "Load String from slot into current string").OnPress += () =>
                     {
                         Main.tempString = slot.Value.SlotName;
                         EditSlotNames();
                     };
-                    cat.AddButton("Set String", "blank", "Set String into this slot name").OnPress += () =>
+                    cat.AddButton("Set String", "ikPre-blank", "Set String into this slot name").OnPress += () =>
                     {
                         slot.Value.SlotName = Main.tempString;
                         SaveSlots.SaveConfigSlots();
@@ -633,7 +647,7 @@ namespace IKpresetsMod
             catch (System.Exception ex)
             {
                 Main.Logger.Error($"Error loading names\n" + ex.ToString());
-                page.AddCategory("Error loading names");
+                page.AddCategory("Error loading names", true, false);
             }
             page.OpenPage();
         }
@@ -647,7 +661,7 @@ namespace IKpresetsMod
             page.MenuSubtitle = Text();
 
             var catMain = page.AddCategory("");
-            catMain.AddButton("Save this avatar config", "Save", "Save current IK settings").OnPress += () =>
+            catMain.AddButton("Save this avatar config", "ikPre-Save", "Save current IK settings").OnPress += () =>
             {
                 //Main.Logger.Msg($"{Main.avatarGUID} - {MetaPort.Instance.currentAvatarGuid} - {Main.avatarName}");
                 SaveSlots.StoreAvatars(MetaPort.Instance.currentAvatarGuid, Main.avatarName);
@@ -658,7 +672,7 @@ namespace IKpresetsMod
             {
                 Main.autoLoadAvatarPresets.Value = action;
             };
-            //catMain.AddButton("Refresh", "Reset", "Refresh").OnPress += () =>
+            //catMain.AddButton("Refresh", "ikPre-Reset", "Refresh").OnPress += () =>
             //{
             //    AvatarSaveLoad();
             //};
@@ -682,20 +696,20 @@ namespace IKpresetsMod
                     slot)
                 {
                     string label = $"{(current ? "*Current avatar* " : "")}{slot.Value.AvatarName} - {slot.Key}";
-                    var cat = page.AddCategory(label);
+                    var cat = page.AddCategory(label, true, false);
 
                     var desc = $"PitchYaw:{Utils.CompactTF(slot.Value.IKPitchYawShoulders)}_HipPin:{Utils.CompactTF(slot.Value.IKHipPinned)}_" +
                        $"StrNeck:{Utils.CompactTF(slot.Value.IKStraightenNeck)}_HipShift:{Utils.CompactTF(slot.Value.IKHipShifting)}_StrSpine:{Utils.CompactTF(slot.Value.IKPreStraightenSpine)}_" +
                        $"RelxIter:{slot.Value.IKSpineRelaxIterations} SpineFwd:{slot.Value.IKMaxSpineAngleFwd}Bck:{slot.Value.IKMaxSpineAngleBack}_" +
                        $"NeckFwd:{slot.Value.IKMaxNeckAngleFwd}Bck:{slot.Value.IKMaxNeckAngleBack}_NeckPri:{slot.Value.IKNeckPriority}_" +
                        $"StrSpine:{slot.Value.IKStraightSpineAngle}Pow:{slot.Value.IKStraightSpinePower}Height:{slot.Value.GeneralPlayerHeight}";
-                    cat.AddButton("Load", "Load", desc).OnPress += () =>
+                    cat.AddButton("Load", "ikPre-Load", desc).OnPress += () =>
                     {
                         SaveSlots.LoadAvatars(slot.Key);
                         SaveChanges();
                         UpdateText();
                     };
-                    cat.AddButton("Delete", "Delete", "Remove this slot").OnPress += () =>
+                    cat.AddButton("Delete", "ikPre-Delete", "Remove this slot").OnPress += () =>
                     {
                         SaveSlots.AvatarSlotDelete(slot.Key);
                         AvatarSaveLoad();
@@ -705,7 +719,7 @@ namespace IKpresetsMod
             catch (System.Exception ex)
             {
                 Main.Logger.Error($"Error loading avatar slots\n" + ex.ToString());
-                page.AddCategory("Error loading avatar slots");
+                page.AddCategory("Error loading avatar slots", true, false);
             }
             void UpdateText()
             {

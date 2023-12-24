@@ -29,7 +29,7 @@ namespace IKpresetsMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.6.2";
+        public const string versionStr = "0.7.1";
 
         public static string tempString = "N/A";
         public static MelonPreferences_Category cat;
