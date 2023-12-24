@@ -9,6 +9,7 @@ using ABI_RC.Core.Savior;
 using ABI_RC.Core.InteractionSystem;
 using MelonLoader;
 using System.Linq;
+using Semver;
 
 namespace ViewPointTweaks
 {
@@ -16,26 +17,29 @@ namespace ViewPointTweaks
     {
         public static void loadAssets()
         {
-            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.NirvMisc.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Wider", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Wider.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Wide", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Wide.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Narrower", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Narrower.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Narrow", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Narrow.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Back", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Back.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Down", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Back.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Left", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Left.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Forward", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Forward.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Right", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Right.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Rotate-Left", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Rotate-Left.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Rotate-Right", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Rotate-Right.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Up", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Up.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Reset.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Delete.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Save", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Save.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-Load", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Load.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-ViewPointPos", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.ViewPointPos.png"));
-            QuickMenuAPI.PrepareIcon("ViewPointTweaks", "vrcadj-FloppyDisk", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.FloppyDisk.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.NirvMisc.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Wider", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Wider.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Wide", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Wide.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Narrower", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Narrower.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Narrow", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Narrow.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Back", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Back.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Down", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Back.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Left", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Left.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Forward", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Forward.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Right", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Right.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Rotate-Left", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Rotate-Left.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Rotate-Right", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Rotate-Right.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Up", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Up.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Reset.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Delete.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Save", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Save.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-Load", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.Load.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-ViewPointPos", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.ViewPointPos.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "vrcadj-FloppyDisk", Assembly.GetExecutingAssembly().GetManifestResourceStream("ViewPointTweaks.Icons.FloppyDisk.png"));
         }
+
+        public static string ModName = "NirvBTKUI";
+        private static MethodInfo _btkGetCreatePageAdapter;
 
         public static Category mainCat;
         public static Page scaleAdjPage, moveAdjPage, pageAvatarSaveLoad;
@@ -45,37 +49,53 @@ namespace ViewPointTweaks
 
         public static void InitUi()
         {
+            if (MelonMod.RegisteredMelons.Any(x => x.Info.Name.Equals("BTKUILib") && x.Info.SemanticVersion.CompareByPrecedence(new SemVersion(1, 9)) > 0))
+            {
+                //We're working with UILib 2.0.0, let's reflect the get create page function
+                _btkGetCreatePageAdapter = typeof(Page).GetMethod("GetOrCreatePage", BindingFlags.Public | BindingFlags.Static);
+                Main.Logger.Msg($"BTKUILib 2.0.0 detected, attempting to grab GetOrCreatePage function: {_btkGetCreatePageAdapter != null}");
+            }
+            if (!Main.useNirvMiscPage.Value)
+            {
+                ModName = "viewPointTweakMod";
+            }
+
             loadAssets();
 
             Category cat = null;
             if (Main.useNirvMiscPage.Value)
             {
-                var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                //var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                Page page = null;
+                if (_btkGetCreatePageAdapter != null)
+                    page = (Page)_btkGetCreatePageAdapter.Invoke(null, new object[] { ModName, "Nirv Misc Page", true, "NirvMisc", null, false });
+                else
+                    page = new Page(ModName, "Nirv Misc Page", true, "NirvMisc");
                 page.MenuTitle = "Nirv Misc Page";
                 page.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
-                cat = page.AddCategory("Viewpoint Pos Adj (VR Only)", "ViewPointTweaks");
+                cat = page.AddCategory("Viewpoint Pos Adj (VR Only)");
             }
             else
             {
-                cat = QuickMenuAPI.MiscTabPage.AddCategory("Viewpoint Adjust (VR Only)", "ViewPointTweaks");
+                cat = QuickMenuAPI.MiscTabPage.AddCategory("Viewpoint Adjust (VR Only)", ModName);
             }
             mainCat = cat;
 
-            moveAdjPage = new Page("ViewPointTweaks", "Position Adjust", false);
+            moveAdjPage = new Page(ModName, "Position Adjust", false);
             QuickMenuAPI.AddRootPage(moveAdjPage);
             mainCat.AddButton($"Viewpoint Position Adj", "vrcadj-ViewPointPos", $"Move the Viewpoint").OnPress += () =>
             {
                 PosAdj();
             };
 
-            scaleAdjPage = new Page("ViewPointTweaks", "Scale Adjust", false);
+            scaleAdjPage = new Page(ModName, "Scale Adjust", false);
             QuickMenuAPI.AddRootPage(scaleAdjPage);
             mainCat.AddButton($"Viewpoint Scale Adj", "vrcadj-Narrow", $"Scale the Viewpoint").OnPress += () =>
             {
                 ScaleAdj();
             };
 
-            pageAvatarSaveLoad = new Page("ViewPointTweaks", "Saved Avatar Slots", false);
+            pageAvatarSaveLoad = new Page(ModName, "Saved Avatar Slots", false);
             QuickMenuAPI.AddRootPage(pageAvatarSaveLoad);
             mainCat.AddButton($"Save/Load Slots", "vrcadj-FloppyDisk", $"Save or Load from settings").OnPress += () =>
             {
@@ -100,7 +120,7 @@ namespace ViewPointTweaks
 
             if (!MetaPort.Instance.isUsingVr)
             {
-                page.AddCategory("!! Mod only functions in VR !!");
+                page.AddCategory("!! Mod only functions in VR !!", true, false);
             }
 
             var titleCat = moveAdjPage.AddCategory("");
@@ -208,7 +228,7 @@ namespace ViewPointTweaks
 
             if (!MetaPort.Instance.isUsingVr)
             {
-                page.AddCategory("!! Mod only functions in VR !!");
+                page.AddCategory("!! Mod only functions in VR !!", true, false);
             }
 
             var titleCat = scaleAdjPage.AddCategory("");
@@ -252,7 +272,7 @@ namespace ViewPointTweaks
             var page = pageAvatarSaveLoad;
             page.ClearChildren();
 
-            var catMain = page.AddCategory("");
+            var catMain = page.AddCategory("temp", true, false);
             UpdateText();
             void UpdateText()
             {
@@ -293,7 +313,7 @@ namespace ViewPointTweaks
             void SlotLine(bool current, System.Collections.Generic.KeyValuePair<string, (float, float, float, float, float, string)> slot)
             {
                 string label = $"{(current ? "*Current avatar* " : "")}{slot.Value.Item6} - {slot.Key}";
-                var cat = page.AddCategory(label);
+                var cat = page.AddCategory(label, true, false);
 
                 var desc = $"Offsets: X:{slot.Value.Item2.ToString("F3").TrimEnd('0')} Y:{slot.Value.Item3.ToString("F3").TrimEnd('0')}" +
                     $"Z:{slot.Value.Item4.ToString("F3").TrimEnd('0')}<p>Rot: {slot.Value.Item5.ToString("F3").TrimEnd('0')} Scale: {slot.Value.Item1.ToString("F3").TrimEnd('0')} ";
