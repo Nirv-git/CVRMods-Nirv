@@ -4,6 +4,9 @@ using System.IO;
 using BTKUILib;
 using BTKUILib.UIObjects;
 using System.Collections.Generic;
+using MelonLoader;
+using System.Linq;
+using Semver;
 
 namespace NoHeadShrinkMod
 {
@@ -11,10 +14,13 @@ namespace NoHeadShrinkMod
     {
         public static void loadAssets()
         {
-            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("NoHeadShrinkMod.Icons.NirvMisc.png"));
-            QuickMenuAPI.PrepareIcon("NoHeadShrinkMod", "Noshrink-Head", Assembly.GetExecutingAssembly().GetManifestResourceStream("NoHeadShrinkMod.Icons.Head.png"));
-            QuickMenuAPI.PrepareIcon("NoHeadShrinkMod", "Noshrink-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("NoHeadShrinkMod.Icons.Reset.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("NoHeadShrinkMod.Icons.NirvMisc.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "Noshrink-Head", Assembly.GetExecutingAssembly().GetManifestResourceStream("NoHeadShrinkMod.Icons.Head.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "Noshrink-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("NoHeadShrinkMod.Icons.Reset.png"));
         }
+
+        public static string ModName = "NirvBTKUI";
+        private static MethodInfo _btkGetCreatePageAdapter;
 
         //This is done to keep BTKUI an optional dependancy 
         public static System.Object mainCat;
@@ -24,18 +30,34 @@ namespace NoHeadShrinkMod
 
         public static void InitUi()
         {
+            if (MelonMod.RegisteredMelons.Any(x => x.Info.Name.Equals("BTKUILib") && x.Info.SemanticVersion.CompareByPrecedence(new SemVersion(1, 9)) > 0))
+            {
+                //We're working with UILib 2.0.0, let's reflect the get create page function
+                _btkGetCreatePageAdapter = typeof(Page).GetMethod("GetOrCreatePage", BindingFlags.Public | BindingFlags.Static);
+                Main.Logger.Msg($"BTKUILib 2.0.0 detected, attempting to grab GetOrCreatePage function: {_btkGetCreatePageAdapter != null}");
+            }
+            if (!Main.useNirvMiscPage.Value)
+            {
+                ModName = "noHeadShrinkMod";
+            }
+
             loadAssets();
             Category cat = null;
             if (Main.useNirvMiscPage.Value)
             {
-                var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                //var page = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                Page page = null;
+                if (_btkGetCreatePageAdapter != null)
+                    page = (Page)_btkGetCreatePageAdapter.Invoke(null, new object[] { ModName, "Nirv Misc Page", true, "NirvMisc", null, false });
+                else
+                    page = new Page(ModName, "Nirv Misc Page", true, "NirvMisc");
                 page.MenuTitle = "Nirv Misc Page";
                 page.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
-                cat = page.AddCategory("No Head Shrink", "NoHeadShrinkMod");
+                cat = page.AddCategory("No Head Shrink");
             }
             else
             {
-                cat = QuickMenuAPI.MiscTabPage.AddCategory("No Head Shrink", "NoHeadShrinkMod");
+                cat = QuickMenuAPI.MiscTabPage.AddCategory("No Head Shrink", ModName);
             }
             mainCat = cat;
             PopulateButtons();
@@ -78,13 +100,13 @@ namespace NoHeadShrinkMod
 
             if (pageSub != null)
                 ((Page)pageSub).Delete();
-            pageSub = ((Category)mainCat).AddPage("Distance & Remeasure", "Noshrink-Head", "Change unshrink distance and Remeasure Avatar Height", "NoHeadShrinkMod");
+            pageSub = ((Category)mainCat).AddPage("Distance & Remeasure", "Noshrink-Head", "Change unshrink distance and Remeasure Avatar Height", ModName);
             var subCat = ((Page)pageSub).AddCategory("");
             subCat.AddButton($"Remeasure Avatar Height", "Noshrink-Reset", "Remeasures current avatar height").OnPress += () =>
             {
                 Main.FindScale();
             };
-            ((Page)pageSub).AddSlider("Unshink distance", "Unshink distance value", Main.unshrinkDistance.Value, 0f, 2f).OnValueUpdated += action =>
+            ((Page)pageSub).AddSlider("Unshink distance", "Unshrink distance value", Main.unshrinkDistance.Value, 0f, 2f).OnValueUpdated += action =>
             {
                 dontUpdate = true;
                 Main.unshrinkDistance.Value = action;

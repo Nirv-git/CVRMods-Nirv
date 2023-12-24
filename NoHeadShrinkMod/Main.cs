@@ -23,7 +23,7 @@ namespace NoHeadShrinkMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.5.7";
+        public const string versionStr = "0.7.1";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "NoHeadShrinkMod";
@@ -102,6 +102,7 @@ namespace NoHeadShrinkMod
                         Vector3.Distance(anim.GetBoneTransform(HumanBodyBones.Chest).position, anim.GetBoneTransform(HumanBodyBones.Neck).position) +
                         Vector3.Distance(anim.GetBoneTransform(HumanBodyBones.Neck).position, anim.GetBoneTransform(HumanBodyBones.Head).position);
                     Logger.Msg($"Height:{height:F2}, Dist:{unshrinkDistance.Value}, Scaled distance will be {unshrinkDistance.Value * height:F2}");
+                    Logger.Msg(ConsoleColor.Magenta, $"{PlayerSetup.Instance.GetAvatarHeight():F2}");
                     scaleAdj = height;
                 }
                 catch (Exception ex) { scaleAdj = 1f; Logger.Error("Error Measuring Height defaulting to 1\n" + ex.ToString()); }
@@ -127,6 +128,7 @@ namespace NoHeadShrinkMod
                 {
                     var newAdj = (curScale.y / lastScale.y) * scaleAdj;
                     Logger.Msg($"Remeasure due to scale changes | Old Height:{scaleAdj:F2}, New:{newAdj:F2} | Dist:{unshrinkDistance.Value}, Old Scaled distance: {unshrinkDistance.Value * scaleAdj:F2}, New: {unshrinkDistance.Value * newAdj:F2}");
+                    Logger.Msg(ConsoleColor.Magenta, $"{PlayerSetup.Instance.GetAvatarHeight():F2}");
                     scaleAdj = newAdj;
                     lastScale = curScale;
                 }
