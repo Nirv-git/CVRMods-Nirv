@@ -11,6 +11,7 @@ using BTKUILib.UIObjects.Objects;
 using ABI_RC.Core.Savior;
 using ABI_RC.Core.InteractionSystem;
 using cohtml;
+using Semver;
 
 namespace SitLaydown
 {
@@ -18,22 +19,25 @@ namespace SitLaydown
     {
         public static void loadAssets()
         {
-            QuickMenuAPI.PrepareIcon("NirvMisc", "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.NirvMisc.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Back", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Back.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Down", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Down.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-DownDown", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.DownDown.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Forward", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Forward.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Left", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Left.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Right", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Right.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Rotate-Left", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Rotate-Left.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Rotate-Right", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Rotate-Right.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-SitLayIcon", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.SitLayIcon.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Up", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Up.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-UpUp", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.UpUp.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Chair", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Chair.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Reset.png"));
-            QuickMenuAPI.PrepareIcon("SitLaydown", "sitlay-Enter", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Enter.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "NirvMisc", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.NirvMisc.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Back", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Back.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Down", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Down.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-DownDown", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.DownDown.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Forward", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Forward.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Left", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Left.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Right", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Right.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Rotate-Left", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Rotate-Left.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Rotate-Right", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Rotate-Right.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-SitLayIcon", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.SitLayIcon.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Up", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Up.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-UpUp", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.UpUp.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Chair", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Chair.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Reset.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "sitlay-Enter", Assembly.GetExecutingAssembly().GetManifestResourceStream("SitLaydownMod.Icons.Enter.png"));
         }
+
+         public static string ModName = "NirvBTKUI";
+        private static MethodInfo _btkGetCreatePageAdapter;
 
         public static Page pageRoot;
         public static Category movementCat;
@@ -41,6 +45,17 @@ namespace SitLaydown
 
         public static void SetupUI()
         {
+            if (MelonMod.RegisteredMelons.Any(x => x.Info.Name.Equals("BTKUILib") && x.Info.SemanticVersion.CompareByPrecedence(new SemVersion(1, 9)) > 0))
+            {
+                //We're working with UILib 2.0.0, let's reflect the get create page function
+                _btkGetCreatePageAdapter = typeof(Page).GetMethod("GetOrCreatePage", BindingFlags.Public | BindingFlags.Static);
+                Main.Logger.Msg($"BTKUILib 2.0.0 detected, attempting to grab GetOrCreatePage function: {_btkGetCreatePageAdapter != null}");
+            }
+            if (!Main.useNirvMiscPage.Value)
+            {
+                ModName = "sitlayMod";
+            }
+
             loadAssets();
             QuickMenuAPI.OnOpenedPage += OnPageOpen;
             QuickMenuAPI.OnBackAction += OnPageBack;
@@ -48,12 +63,18 @@ namespace SitLaydown
             Page page;
             if (Main.useNirvMiscPage.Value)
             {
-                var pageNirv = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                //var pageNirv = new Page("NirvMisc", "Nirv Misc Page", true, "NirvMisc");
+                Page pageNirv = null;
+                if (_btkGetCreatePageAdapter != null)
+                    pageNirv = (Page)_btkGetCreatePageAdapter.Invoke(null, new object[] { ModName, "Nirv Misc Page", true, "NirvMisc", null, false });
+                else
+                    pageNirv = new Page(ModName, "Nirv Misc Page", true, "NirvMisc");
+
                 pageNirv.MenuTitle = "Nirv Misc Page";
                 pageNirv.MenuSubtitle = "Misc page for mods by Nirv, can disable this in MelonPrefs for the individual mods";
 
-                var catNirv = pageNirv.AddCategory("SitLaydown", "SitLaydown");
-                page = new Page("SitLaydown", "SitLaydown", false);
+                var catNirv = pageNirv.AddCategory("SitLaydown");
+                page = new Page(ModName, "SitLaydown", false);
                 QuickMenuAPI.AddRootPage(page);
                 catNirv.AddButton("Open SitLaydown", "sitlay-SitLayIcon", "Opens the menu for SitLaydown").OnPress += () =>
                 {
@@ -65,7 +86,7 @@ namespace SitLaydown
             }
             else
             {
-                page = new Page("SitLaydown", "SitLaydown", true, "sitlay-SitLayIcon");
+                page = new Page(ModName, "SitLaydown", true, "sitlay-SitLayIcon");
             }
             modPageID = page.ElementID;
             GenerateButtons();
@@ -119,8 +140,10 @@ namespace SitLaydown
 
 
                 {
-                    var catControls = page.AddCategory("");
+                    var catControls = page.AddCategory("tempToKeepAlive", true, false);
+                    catControls.CategoryName = "";
                     movementCat = catControls;
+                    SetMovementFlag(Main.distFlagActive);
 
                     catControls.AddButton("Up", "sitlay-Up", $"Move up by: {Main._DistAdj}").OnPress += () =>
                     {
