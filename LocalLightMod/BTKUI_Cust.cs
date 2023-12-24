@@ -59,6 +59,7 @@ namespace LocalLightMod
             QuickMenuAPI.PrepareIcon(ModName, "localLight-Select", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Select.png"));
             QuickMenuAPI.PrepareIcon(ModName, "localLight-PixelLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.PixelLess.png"));
             QuickMenuAPI.PrepareIcon(ModName, "localLight-PixelMore", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.PixelMore.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "localLight-Edit", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons.Edit.png"));
             //QuickMenuAPI.PrepareIcon(ModName, "", Assembly.GetExecutingAssembly().GetManifestResourceStream("LocalLightMod.Icons..png"));//
         }
 
@@ -189,7 +190,7 @@ namespace LocalLightMod
                 SavedPrefSlots();
             };
 
-            pageLightConfig_Name = catSettings2.AddButton($"Name: {Main.Config.name}", "blank", Main.Config.name);
+            pageLightConfig_Name = catSettings2.AddButton($"Name: {Main.Config.name}", "localLight-Edit", Main.Config.name);
             pageLightConfig_Name.OnPress += () =>
             {
                 SetName();

@@ -33,7 +33,8 @@ namespace IKpresetsMod
             QuickMenuAPI.PrepareIcon(ModName, "ikPre-Recal", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Recal.png"));
             QuickMenuAPI.PrepareIcon(ModName, "ikPre-Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Delete.png"));
             QuickMenuAPI.PrepareIcon(ModName, "ikPre-IKSaveLoadSlots", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.IKSaveLoadSlots.png"));
-            //QuickMenuAPI.PrepareIcon(ModName, "", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons..png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-Calibration", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Calibration.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "ikPre-Edit", Assembly.GetExecutingAssembly().GetManifestResourceStream("IKpresetsMod.Icons.Edit.png"));
         }
 
         public static string ModName = "NirvBTKUI";
@@ -186,7 +187,7 @@ namespace IKpresetsMod
                 }
 
                 {
-                    var calMode = toggles.AddButton("Calibration Mode", "null", "Select what calibration mode should be used"); ////0 InPlace, 1 FollowHead, 2FullyFollowHead
+                    var calMode = toggles.AddButton("Calibration Mode", "ikPre-Calibration", "Select what calibration mode should be used"); ////0 InPlace, 1 FollowHead, 2FullyFollowHead
                     var multiSel_calMode = new MultiSelection("Calibration Mode", new string[] { "In Place", "Follow Head", "Fully FollowHead" }, MetaPort.Instance.settings.GetSettingInt("IKCalibrationMode"));
                     multiSel_calMode.OnOptionUpdated += value => MetaPort.Instance.settings.SetSettingsInt("IKCalibrationMode", value);
                     SaveChanges();
@@ -542,7 +543,7 @@ namespace IKpresetsMod
             page.MenuSubtitle = Text();
 
             var catMain = page.AddCategory("");
-            catMain.AddButton("Edit Slot Names", "ikPre-blank", "Edit Slot Names").OnPress += () =>
+            catMain.AddButton("Edit Slot Names", "ikPre-Edit", "Edit Slot Names").OnPress += () =>
             {
                 EditSlotNames();
             };
@@ -618,7 +619,7 @@ namespace IKpresetsMod
             page.MenuSubtitle = "Used for changing the names of the slots";
 
             pageEditSlotName_Text = page.AddCategory($"Current string: {Main.tempString}", true, false);
-            pageEditSlotName_Text.AddButton("Edit String", "ikPre-blank", "Edit String").OnPress += () =>
+            pageEditSlotName_Text.AddButton("Edit String", "ikPre-Edit", "Edit String").OnPress += () =>
             {
                 QuickMenuAPI.OpenKeyboard(Main.tempString, (action) => { Main.tempString = action; EditSlotNames();});
                 
@@ -631,12 +632,12 @@ namespace IKpresetsMod
                     string label = $"Slot: {slot.Key}\n{slot.Value.SlotName}";
                     var cat = page.AddCategory(label, true, false);
 
-                    cat.AddButton("Load String", "ikPre-blank", "Load String from slot into current string").OnPress += () =>
+                    cat.AddButton("Load String", "ikPre-Load", "Load String from slot into current string").OnPress += () =>
                     {
                         Main.tempString = slot.Value.SlotName;
                         EditSlotNames();
                     };
-                    cat.AddButton("Set String", "ikPre-blank", "Set String into this slot name").OnPress += () =>
+                    cat.AddButton("Set String", "ikPre-Save", "Set String into this slot name").OnPress += () =>
                     {
                         slot.Value.SlotName = Main.tempString;
                         SaveSlots.SaveConfigSlots();
