@@ -1,3 +1,4 @@
+
 # VisemeValue
 This mod exposes your current viseme states for use in avatars. (Much like the Parameter Stream for Viseme Loudness)        
 
@@ -16,6 +17,9 @@ Settings:
 - `Individual Parameters 'VisemeMod_xx' (float) for all possible visems 0-14 (sil must exist)`  default value `true`
 	- This will drive all 15 visemes as individual parameters. If you use this option, please optimize your animator, [Direct Blend Trees](https://notes.sleightly.dev/dbt-combining/) are a good option.
  
+ You will need a `Face Mesh` defined and `Use Lip Sync` checked. You do not need any visemes selected        
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/4b4c8c0e-2e8d-4f43-9e3d-3092a1246b21)
+
 
 For reference this uses the [Oculus Lipsync Visemes](https://developer.oculus.com/documentation/unity/audio-ovrlipsync-viseme-reference)      
 |Viseme Parameter | Viseme|
