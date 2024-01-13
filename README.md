@@ -9,7 +9,7 @@
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/PlayerLocator.dll)            
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()    
-
+[VisemeValue](VisemeValue) [Download]()            
 
 # PortableMirror
 This mod allows the user to locally spawn mirrors for themselves in any world.   

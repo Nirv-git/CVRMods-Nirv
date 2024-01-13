@@ -36,6 +36,10 @@ namespace WorldPropListMod
             {
                 Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropTextImmediate due to blocked prop");
                 return false;
+            } else if (cat == "(Local) Client" && headline == "Cannot spawn prop" && small == ".")
+            {
+                Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropTextImmediate due to blocked user");
+                return false;
             }
             return true;
         }
