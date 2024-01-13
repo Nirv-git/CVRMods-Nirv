@@ -171,7 +171,7 @@ namespace IKpresetsMod
                     AvatarName = name
                 };
 
-                Main.config_Avatars.Settings[Main.avatarGUID] = updated;
+                Main.config_Avatars.Settings[guid] = updated;
                 SaveConfigAvatars();
             }
             catch (System.Exception ex) { Main.Logger.Error($"Error storing new saved config for Avatar {name} {guid}\n" + ex.ToString()); }

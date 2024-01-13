@@ -29,9 +29,8 @@ namespace IKpresetsMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.1";
+        public const string versionStr = "0.7.2";
 
-        public static string tempString = "N/A";
         public static MelonPreferences_Category cat;
         private const string catagory = "IKpresets";
         //public static MelonPreferences_Entry<bool> saveWithEveryChange;
@@ -40,6 +39,7 @@ namespace IKpresetsMod
         public static MelonPreferences_Entry<string> savedPrefNames;
         public static MelonPreferences_Entry<string> savedAvatarPrefs;
         public static MelonPreferences_Entry<bool> autoLoadAvatarPresets;
+        public static MelonPreferences_Entry<bool> autoLoadAvatarDefault;
 
         public static AvatarConfig config_Slots;
         public static AvatarConfig config_Avatars;
@@ -91,6 +91,7 @@ namespace IKpresetsMod
             //saveWithEveryChange = MelonPreferences.CreateEntry(catagory, nameof(saveWithEveryChange), true, "MelonPreferences.Save with every edit in EditMenu");
             useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page. (Restart req)");
             autoLoadAvatarPresets = MelonPreferences.CreateEntry(catagory, nameof(autoLoadAvatarPresets), true, "Auto load specific avatar presets");
+            autoLoadAvatarDefault = MelonPreferences.CreateEntry(catagory, nameof(autoLoadAvatarDefault), false, "Auto load default IK settings if avatar doesn't have saved");
 
             savedPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedPrefs), "Migrated__null", "savedPrefs", "", true);
             savedPrefNames = MelonPreferences.CreateEntry(catagory, nameof(savedPrefNames), "Migrated__null", "savedSlotNames", "", true);
@@ -130,6 +131,11 @@ namespace IKpresetsMod
                 {
                     Logger.Msg($"Auto loading IK settings for:{name} - {guid}");
                     SaveSlots.LoadAvatars(guid);
+                    BTKUI_Cust.SaveChanges();
+                } else if (autoLoadAvatarDefault.Value && config_Avatars.Settings.ContainsKey("Default"))
+                {
+                    Logger.Msg($"Auto loading default IK settings");
+                    SaveSlots.LoadAvatars("Default");
                     BTKUI_Cust.SaveChanges();
                 }
             }

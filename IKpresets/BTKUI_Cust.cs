@@ -102,7 +102,7 @@ namespace IKpresetsMod
             };
             cat.AddButton("Save/Load Slots", "ikPre-IKSaveLoadSlots", "Save and load preset slots").OnPress += () =>
             {
-                SaveLoad();
+                SaveLoad(true);
             };
             cat.AddButton("ReCalibrate", "ikPre-Recal", "ReCalibrate Avatar").OnPress += () =>
             {
@@ -535,7 +535,7 @@ namespace IKpresetsMod
             page.OpenPage();
         }
 
-        private static void SaveLoad()
+        private static void SaveLoad(bool open)
         {//type T|F - Pos|Rot
             var page = pageSaveLoad;
             page.ClearChildren();
@@ -549,7 +549,7 @@ namespace IKpresetsMod
             };
             catMain.AddButton("Refresh", "ikPre-Reset", "Refresh Names").OnPress += () =>
             {
-                SaveLoad();
+                SaveLoad(true);
             };
             try
             {
@@ -585,7 +585,7 @@ namespace IKpresetsMod
                     cat.AddButton("Save", "ikPre-Save", "Save current IK settings to this slot").OnPress += () =>
                     {
                         SaveSlots.StoreSlot(slot.Key);
-                        SaveLoad();
+                        SaveLoad(true);
                     };
                 }
             }
@@ -600,14 +600,14 @@ namespace IKpresetsMod
             }
             string Text()
             {
-                return $"PitchYaw:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPitchYawShoulders"))}_HipPin:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipPinned"))}_" +
-                    $"StrNeck:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKStraightenNeck"))}_HipShift:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipShifting"))}_StrSpine:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPreStraightenSpine"))}_" +
-                    $"RelxIter:{MetaPort.Instance.settings.GetSettingInt("IKSpineRelaxIterations")} SpineFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleFwd")}Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleBack")}_" +
+                return $"PchYaw:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPitchYawShoulders"))}_HipPin:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipPinned"))}_" +
+                    $"StrNeck:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKStraightenNeck"))}_HipShft:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipShifting"))}_StrSpine:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPreStraightenSpine"))}_" +
+                    $"RelxIter:{MetaPort.Instance.settings.GetSettingInt("IKSpineRelaxIterations")}_SpineFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleFwd")} Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleBack")}_" +
                     $"NeckFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxNeckAngleFwd")}Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxNeckAngleBack")}_NeckPri:{MetaPort.Instance.settings.GetSettingInt("IKNeckPriority")}_" +
-                    $"StrSpine:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpineAngle")}Pow:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpinePower")}Height{MetaPort.Instance.settings.GetSettingInt("GeneralPlayerHeight")}";// +
+                    $"StrSpine:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpineAngle")}Pow:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpinePower")}_Hgt:{MetaPort.Instance.settings.GetSettingInt("GeneralPlayerHeight")}";// +
                     //$"Smooth:{MetaPort.Instance.settings.GetSettingsFloat("IKTrackingSmoothing")}";
             }
-            page.OpenPage(); 
+            if (open) page.OpenPage(); 
         }
 
 
@@ -618,13 +618,6 @@ namespace IKpresetsMod
             page.MenuTitle = "Edit Slot Names";
             page.MenuSubtitle = "Used for changing the names of the slots";
 
-            pageEditSlotName_Text = page.AddCategory($"Current string: {Main.tempString}", true, false);
-            pageEditSlotName_Text.AddButton("Edit String", "ikPre-Edit", "Edit String").OnPress += () =>
-            {
-                QuickMenuAPI.OpenKeyboard(Main.tempString, (action) => { Main.tempString = action; EditSlotNames();});
-                
-            };
-
             try
             {
                 foreach (var slot in Main.config_Slots.Settings)
@@ -632,16 +625,9 @@ namespace IKpresetsMod
                     string label = $"Slot: {slot.Key}\n{slot.Value.SlotName}";
                     var cat = page.AddCategory(label, true, false);
 
-                    cat.AddButton("Load String", "ikPre-Load", "Load String from slot into current string").OnPress += () =>
+                    cat.AddButton("Edit String", "ikPre-Edit", "Edit String").OnPress += () =>
                     {
-                        Main.tempString = slot.Value.SlotName;
-                        EditSlotNames();
-                    };
-                    cat.AddButton("Set String", "ikPre-Save", "Set String into this slot name").OnPress += () =>
-                    {
-                        slot.Value.SlotName = Main.tempString;
-                        SaveSlots.SaveConfigSlots();
-                        EditSlotNames();
+                        QuickMenuAPI.OpenKeyboard(slot.Value.SlotName, (action) => { slot.Value.SlotName = action; SaveSlots.SaveConfigSlots(); EditSlotNames(); SaveLoad(false); CVR_MenuManager.Instance.ToggleQuickMenu(true); });
                     };
                 }
             }
@@ -673,11 +659,24 @@ namespace IKpresetsMod
             {
                 Main.autoLoadAvatarPresets.Value = action;
             };
+
+            catMain.AddButton("Save Default config", "ikPre-Save", "Save current IK settings into a Default profile").OnPress += () =>
+            {
+                QuickMenuAPI.ShowConfirm("Save Default config", "Save current IK settings into a Default profile?", () =>
+                {
+                    SaveSlots.StoreAvatars("Default", "Default IK Settings");
+                    AvatarSaveLoad();
+                }, () => { }, "Yes", "No");  
+            };
+            catMain.AddToggle("Auto load Default", "Auto load default IK settings if avatar doesn't have saved profile<p>This and 'Auto load' need to be enabled and you must save a default profile", Main.autoLoadAvatarDefault.Value).OnValueUpdated += action =>
+            {
+                Main.autoLoadAvatarDefault.Value = action;
+            };
+
             //catMain.AddButton("Refresh", "ikPre-Reset", "Refresh").OnPress += () =>
             //{
             //    AvatarSaveLoad();
             //};
-
 
             try
             {
@@ -686,10 +685,14 @@ namespace IKpresetsMod
                 {
                     SlotLine(true, new System.Collections.Generic.KeyValuePair<string, Main.AvatarConfig.AvatarSettings>(currentID, Main.config_Avatars.Settings[currentID]));
                 }
+                else if (Main.config_Avatars.Settings.ContainsKey("Default"))
+                {
+                    SlotLine(true, new System.Collections.Generic.KeyValuePair<string, Main.AvatarConfig.AvatarSettings>("Default", Main.config_Avatars.Settings["Default"]));
+                }       
 
                 foreach (var slot in Main.config_Avatars.Settings.Reverse())
                 {
-                    if (slot.Key == currentID)
+                    if (slot.Key == currentID || slot.Key == "Default")
                         continue; //Don't repeat the current one if it matches
                     SlotLine(false, slot);
                 }
@@ -699,11 +702,11 @@ namespace IKpresetsMod
                     string label = $"{(current ? "*Current avatar* " : "")}{slot.Value.AvatarName} - {slot.Key}";
                     var cat = page.AddCategory(label, true, false);
 
-                    var desc = $"PitchYaw:{Utils.CompactTF(slot.Value.IKPitchYawShoulders)}_HipPin:{Utils.CompactTF(slot.Value.IKHipPinned)}_" +
-                       $"StrNeck:{Utils.CompactTF(slot.Value.IKStraightenNeck)}_HipShift:{Utils.CompactTF(slot.Value.IKHipShifting)}_StrSpine:{Utils.CompactTF(slot.Value.IKPreStraightenSpine)}_" +
-                       $"RelxIter:{slot.Value.IKSpineRelaxIterations} SpineFwd:{slot.Value.IKMaxSpineAngleFwd}Bck:{slot.Value.IKMaxSpineAngleBack}_" +
+                    var desc = $"PchYaw:{Utils.CompactTF(slot.Value.IKPitchYawShoulders)}_HipPin:{Utils.CompactTF(slot.Value.IKHipPinned)}_" +
+                       $"StrNeck:{Utils.CompactTF(slot.Value.IKStraightenNeck)}_HipShft:{Utils.CompactTF(slot.Value.IKHipShifting)}_StrSpine:{Utils.CompactTF(slot.Value.IKPreStraightenSpine)}_" +
+                       $"RelxIter:{slot.Value.IKSpineRelaxIterations}_SpFwd:{slot.Value.IKMaxSpineAngleFwd} Bck:{slot.Value.IKMaxSpineAngleBack}_" +
                        $"NeckFwd:{slot.Value.IKMaxNeckAngleFwd}Bck:{slot.Value.IKMaxNeckAngleBack}_NeckPri:{slot.Value.IKNeckPriority}_" +
-                       $"StrSpine:{slot.Value.IKStraightSpineAngle}Pow:{slot.Value.IKStraightSpinePower}Height:{slot.Value.GeneralPlayerHeight}";
+                       $"StrSpine:{slot.Value.IKStraightSpineAngle}Pow:{slot.Value.IKStraightSpinePower}_Hgt:{slot.Value.GeneralPlayerHeight}";
                     cat.AddButton("Load", "ikPre-Load", desc).OnPress += () =>
                     {
                         SaveSlots.LoadAvatars(slot.Key);
@@ -728,11 +731,11 @@ namespace IKpresetsMod
             }
             string Text()
             {
-                return $"PitchYaw:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPitchYawShoulders"))}_HipPin:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipPinned"))}_" +
-                    $"StrNeck:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKStraightenNeck"))}_HipShift:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipShifting"))}_StrSpine:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPreStraightenSpine"))}_" +
-                    $"RelxIter:{MetaPort.Instance.settings.GetSettingInt("IKSpineRelaxIterations")} SpineFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleFwd")}Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleBack")}_" +
+                return $"PchYaw:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPitchYawShoulders"))}_HipPin:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipPinned"))}_" +
+                    $"StrNeck:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKStraightenNeck"))}_HipShft:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipShifting"))}_StrSpine:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPreStraightenSpine"))}_" +
+                    $"RelxIter:{MetaPort.Instance.settings.GetSettingInt("IKSpineRelaxIterations")}_SpineFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleFwd")} Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleBack")}_" +
                     $"NeckFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxNeckAngleFwd")}Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxNeckAngleBack")}_NeckPri:{MetaPort.Instance.settings.GetSettingInt("IKNeckPriority")}_" +
-                    $"StrSpine:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpineAngle")}Pow:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpinePower")}Height{MetaPort.Instance.settings.GetSettingInt("GeneralPlayerHeight")}";// +
+                    $"StrSpine:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpineAngle")}Pow:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpinePower")}_Hgt:{MetaPort.Instance.settings.GetSettingInt("GeneralPlayerHeight")}";// +
                                                                                                                                                                          //$"Smooth:{MetaPort.Instance.settings.GetSettingsFloat("IKTrackingSmoothing")}";
             }
             page.OpenPage();
