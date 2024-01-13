@@ -1,7 +1,6 @@
 ﻿using System;
 using MelonLoader;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
 using System.Drawing.Text;
 using UnityEngine;
@@ -13,7 +12,7 @@ namespace LocalLightMod
         /// https://stackoverflow.com/a/57223744
         public static Image DrawText(string text)
         {
-            System.Drawing.Font font = Control.DefaultFont;
+            System.Drawing.Font font = SystemFonts.DefaultFont;
             try { font = new System.Drawing.Font("Arial", 60, System.Drawing.FontStyle.Bold); }
             catch { Main.Logger.Msg("You dont have Arial!"); }
             System.Drawing.Color textColor = System.Drawing.Color.White;

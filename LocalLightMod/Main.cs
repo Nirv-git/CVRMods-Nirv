@@ -20,7 +20,7 @@ namespace LocalLightMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.1";
+        public const string versionStr = "0.7.2";
 
         public static class Config
         {
