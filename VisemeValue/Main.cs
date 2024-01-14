@@ -20,7 +20,7 @@ namespace VisemeValue
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.0.1";
+        public const string versionStr = "0.0.2";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "VisemeValue";
@@ -30,6 +30,8 @@ namespace VisemeValue
         public static MelonPreferences_Entry<bool> driveVisemePref;
         public static MelonPreferences_Entry<bool> driveIntensityPref;
         public static MelonPreferences_Entry<bool> driveIndivPref;
+        public static MelonPreferences_Entry<bool> spacer;
+        public static MelonPreferences_Entry<bool> info;
 
         public static bool init = false;
         public static object updateRoutine; 
@@ -45,9 +47,13 @@ namespace VisemeValue
             driveVisemePref = MelonPreferences.CreateEntry(catagory, nameof(driveVisemePref), false, "Use 'Viseme' (int) for current Viseme");
             driveIntensityPref = MelonPreferences.CreateEntry(catagory, nameof(driveIntensityPref), true, "Use 'VisemeMod_Level' (float) for current Intensity");
             driveIndivPref = MelonPreferences.CreateEntry(catagory, nameof(driveIndivPref), false, "Individual Parameters 'VisemeMod_xx' (float) for all possible visems 0-14 (sil must exist)");
+            spacer = MelonPreferences.CreateEntry(catagory, nameof(spacer), false, "--Info--");
+            info = MelonPreferences.CreateEntry(catagory, nameof(info), false, "Info: Avatar needs a Face Mesh defined and Use Lip Sync checked. It doesn't need any visemes selected");
+
 
             modEnabled.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) =>{ AvatarReady(); });
             driveValuePref.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { AvatarReady(); });
+            driveVisemePref.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { AvatarReady(); });
             driveIntensityPref.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { AvatarReady(); });
             driveIndivPref.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { AvatarReady(); });
         }
@@ -89,6 +95,7 @@ namespace VisemeValue
             { 13, "o" },
             { 14, "u" }
         };
+
         public static IEnumerator SetValues()
         {
             var driveValue = false;
@@ -120,7 +127,7 @@ namespace VisemeValue
             if (PlayerSetup.Instance.animatorManager.animatorParameterNameHashes.ContainsKey("VisemeMod_sil") && driveIndivPref.Value) //.Any(item => item.Key.StartsWith("VisemeMod"));
                 driveIndiv = true;
 
-            if (!driveValue && !driveLevel && !driveIndiv)
+            if (!driveValue && !driveViseme && !driveLevel && !driveIndiv)
                 yield break;
 
             var visCon = PlayerSetup.Instance.PlayerAvatarParent.GetComponentInChildren<CVRVisemeController>();
@@ -160,9 +167,9 @@ namespace VisemeValue
 
         internal static void AvatarReady()
         {
-            Logger.Msg($"AvatarReady");
-            var avatarGuid = MetaPort.Instance.currentAvatarGuid;
-            Logger.Msg($"{avatarGuid}");
+            //Logger.Msg($"AvatarReady");
+            //var avatarGuid = MetaPort.Instance.currentAvatarGuid;
+            //Logger.Msg($"{avatarGuid}");
             if (updateRoutine != null) MelonCoroutines.Stop(updateRoutine);
             if (modEnabled.Value) updateRoutine = MelonCoroutines.Start(SetValues());
         }
