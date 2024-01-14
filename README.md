@@ -9,7 +9,7 @@
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/PlayerLocator.dll)            
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()    
-[VisemeValue](VisemeValue) [Download]()            
+[VisemeValue](VisemeValue) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/ViseValue0.0.2_LocalLight0.7.2_ViewPointTweaks0.7.2_IKpreset0.7.2_PortMirror2.1.16_WorldProp0.7.2/VisemeValue.dll)            
 
 # PortableMirror
 This mod allows the user to locally spawn mirrors for themselves in any world.   
@@ -205,4 +205,46 @@ Stops the Camera from over rendering your local player. Now you can see your han
 *Yes I know there is the experimental option to have your player overrender the UI, but that is the ENTIRE UI.*       
 
 This toggle can be accessed from UIX/Melonprefs         
-![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/e40b99a5-a038-42a6-999b-c370e5ad08dd)         
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/e40b99a5-a038-42a6-999b-c370e5ad08dd)  
+
+# VisemeValue
+This mod exposes your current viseme states for use in avatars. (Much like the Parameter Stream for Viseme Loudness)        
+
+Settings:       
+- `Attempt to Drive Viseme Parameters if they exists`  default value `true`
+	- Enables the mod
+- `Update Rate (ms)` default value `10`
+	- Update rate, however your animator only syncs over the network at a rate of 20hz (every 50ms)
+- `Use 'VisemeMod_Value' (int) for current Viseme`  default value `true`
+	- Drives this parameter name to the current loudest viseme, see below for the reference chart.
+- `Use 'Viseme' (int) for current Viseme`  default value `false`
+	- Drives this parameter name to the current loudest viseme, see below for the reference chart. (Same as above, just uses the generic 'Viseme' parameter.
+	- Off by default to prevent isses for avatars that don't expect this parameter to be driven.
+- `Use 'Use 'VisemeMod_Level' (float) for current Intensity`  default value `true`
+- This should be the same as the native Parameter Stream for Viseme Loudness.
+- `Individual Parameters 'VisemeMod_xx' (float) for all possible visems 0-14 (sil must exist)`  default value `true`
+	- This will drive all 15 visemes as individual parameters. If you use this option, please optimize your animator, [Direct Blend Trees](https://notes.sleightly.dev/dbt-combining/) are a good option.
+ 
+ You will need a `Face Mesh` defined and `Use Lip Sync` checked. You do not need any visemes selected        
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/4b4c8c0e-2e8d-4f43-9e3d-3092a1246b21)
+
+
+For reference this uses the [Oculus Lipsync Visemes](https://developer.oculus.com/documentation/unity/audio-ovrlipsync-viseme-reference)      
+|Viseme Parameter | Viseme|
+|--|--|
+|0	|sil|
+|1	|pp|
+|2	|ff|
+|3	|th|
+|4	|dd|
+|5	|kk|
+|6	|ch|
+|7	|ss|
+|8	|nn|
+|9	|rr|
+|10	|aa|
+|11	|e|
+|12	|i|
+|13	|o|
+|14	|u|
+       
