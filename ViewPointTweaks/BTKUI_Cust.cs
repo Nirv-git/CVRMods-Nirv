@@ -123,7 +123,7 @@ namespace ViewPointTweaks
                 page.AddCategory("!! Mod only functions in VR !!", true, false);
             }
 
-            var titleCat = moveAdjPage.AddCategory("");
+            var titleCat = moveAdjPage.AddCategory("temp");
             setText(); //can we just use this?
             var dist = movePrec ? 0.001f : 0.01f;
             var rotValue = movePrec ? 0.2f : 2f;
@@ -231,7 +231,7 @@ namespace ViewPointTweaks
                 page.AddCategory("!! Mod only functions in VR !!", true, false);
             }
 
-            var titleCat = scaleAdjPage.AddCategory("");
+            var titleCat = scaleAdjPage.AddCategory("temp");
             setText();
             void setText()
             {

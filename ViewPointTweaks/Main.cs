@@ -22,7 +22,7 @@ namespace ViewPointTweaks
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.1";
+        public const string versionStr = "0.7.2";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "ViewPointTweaks";
@@ -81,14 +81,14 @@ namespace ViewPointTweaks
             }
             if (position != Vector3.zero)
             {
-                if (currentScaleAdjustment != 0)
-                    ChangeOffsets(-currentScaleAdjustment, Vector2.zero);
+                var curOff = currentScaleAdjustment;
+                if (curOff != 0)
+                    ChangeOffsets(-curOff, Vector2.zero);
                 //Undo scaling before moving position, kinda hacky
                 currentPosAdjustment += position;
                 VRheadPoint.localPosition += position;
-
-                if (currentScaleAdjustment != 0)
-                    ChangeOffsets(currentScaleAdjustment, Vector2.zero);
+                if (curOff != 0)
+                    ChangeOffsets(curOff, Vector2.zero);
             }
 
             if (rot != 0)

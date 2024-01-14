@@ -65,7 +65,6 @@ namespace ViewPointTweaks
                     Main.ResetOffsets();
                     HarmonyPatches.wasReset = false;
                 }
-
                 var Dict = AvatarGetSaved();
                 Main.ChangeOffsets(Dict[location].Item1, new Vector3(Dict[location].Item2, Dict[location].Item3, Dict[location].Item4), Dict[location].Item5);
             }
