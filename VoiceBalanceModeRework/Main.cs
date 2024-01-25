@@ -23,9 +23,6 @@
 //
 //For more information, please refer to <https://unlicense.org>
 
-
-
-
 using MelonLoader;
 using UnityEngine;
 using System;
@@ -33,6 +30,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using System.Reflection;
+using System.Diagnostics;
 using ABI_RC.Core.Player;
 using HarmonyLib;
 using ABI_RC.Systems.Audio;
@@ -60,6 +58,9 @@ namespace VoiceBalanceModeRework
         public static MelonPreferences_Entry<int> minVol;
         public static MelonPreferences_Entry<bool> debug;
         public static MelonPreferences_Entry<bool> debugStats;
+        public static MelonPreferences_Entry<bool> debugTime;
+
+        public static Stopwatch sw = new Stopwatch();
 
         public override void OnApplicationStart()
         {
@@ -74,12 +75,15 @@ namespace VoiceBalanceModeRework
             minVol = MelonPreferences.CreateEntry(catagory, nameof(minVol), 30, "Min Volume");
             debug = MelonPreferences.CreateEntry(catagory, nameof(debug), false, "Debug log spam");
             debugStats = MelonPreferences.CreateEntry(catagory, nameof(debugStats), false, "Debug profiling");
+            debugTime = MelonPreferences.CreateEntry(catagory, nameof(debugTime), false, "Debug Procesing Time");
         }
     }
 
     [HarmonyPatch]
     internal class HarmonyPatches
     {
+        private static int count = 0;
+
         [HarmonyPrefix]
         [HarmonyPatch(typeof(CVRFocusAttenuation), nameof(CVRFocusAttenuation.Apply))]
         internal static bool OnApply(ref float __result,
@@ -88,6 +92,8 @@ namespace VoiceBalanceModeRework
         { 
             if (!Main.modEnabled.Value)
                 return true;
+
+            Main.sw.Start();
 
             if (Main.debug.Value) Main.Logger.Msg($"mode: {mode} multiplierMin: {multiplierMin} multiplierMax: {multiplierMax} volume: {volume} Left:{leftEarFocus} Right:{rightEarFocus}");
 
@@ -119,20 +125,22 @@ namespace VoiceBalanceModeRework
             switch (mode)
             {
                 case CVRFocusAttenuation.eFocusMode.Balanced:
-                    //quadratic fit {45,1},{90,.75},{180,.5}
-                    //0.0000205761 x^2 - 0.00833333 x + 1.33333
-                    if (listenerAngle <= 45f)
+                    //quadratic fit {40,1},{90,.75},{180,.5}
+                    //0.000015873 x^2 - 0.00706349 x + 1.25714
+                    if (listenerAngle <= 40f)
                         listenerVolume = 1f;
                     else
-                        listenerVolume = (0.0000205761f * Mathf.Pow(listenerAngle, 2)) - (0.00833333f * listenerAngle) + 1.33333f;
+                        listenerVolume = (0.000015873f * Mathf.Pow(listenerAngle, 2)) - (0.00706349f * listenerAngle) + 1.25714f;
                     break;
                 case CVRFocusAttenuation.eFocusMode.Forward:
-                    //quadratic fit {45,1},{90,.66},{135,.33},{180,.2}
-                    //0.0000259259 x^2 - 0.0119 x + 1.4925
-                    if (listenerAngle <= 45f)
+                    //quadratic fit {35,1},{90,.4},{140,.25},{180,.2}
+                    //0.0000527502 x^2 - 0.0166711 x + 1.50843
+                    if (listenerAngle <= 35f)
                         listenerVolume = 1f;
+                    else if (listenerAngle >= 160f)
+                        listenerVolume = .19f;
                     else
-                        listenerVolume = (0.0000259259f * Mathf.Pow(listenerAngle, 2f)) - (0.0119f * listenerAngle) + 1.4925f;
+                        listenerVolume = (0.0000527502f * Mathf.Pow(listenerAngle, 2f)) - (0.0166711f * listenerAngle) + 1.50843f;
                     break;
                 case CVRFocusAttenuation.eFocusMode.Backward:
                     //quadratic fit {0,.25},{45,.33},{90,.66},{135,1}
@@ -202,8 +210,21 @@ namespace VoiceBalanceModeRework
             __result = volume * endVolumeAdj;
 
             if (Main.debugStats.Value) Main.Logger.Msg($"listenerAngle: {listenerAngle:F0} Volume: {__result:F2}");
-            if (Main.debugStats.Value) Main.Logger.Msg($"speakerAngle: {speakerAngle:F0} Volume: {speakerVolume:F2}");
+            //if (Main.debugStats.Value) Main.Logger.Msg($"speakerAngle: {speakerAngle:F0} Volume: {speakerVolume:F2}");
 
+            Main.sw.Stop();
+            if(Main.debugTime.Value)
+            {
+                count++;
+                if (count >= 10000)
+                {
+                    var timeMS = Main.sw.ElapsedMilliseconds;
+                    Main.Logger.Msg($"Count: {count} timeMS: {timeMS} Avg: {timeMS/count}");
+                    count = 0;
+                    Main.sw.Reset();
+                }
+            }
+            
             return false;
         }
 

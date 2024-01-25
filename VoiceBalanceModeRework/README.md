@@ -1,4 +1,3 @@
-
 # VoiceBalanceModeRework    
 
 ### Mod details   
@@ -20,6 +19,7 @@ Additional options are available in the UIX Mod Settings:
 | Min Volume| Lowest volume the mod will attenuate voices to|
 | Debug log spam| Debug that will spam your console with angles and volumes|
 | Debug profiling| Debug that will spam your console with angles and volumes|
+| debugTime| Logs the time of execution of this patch, per 10,000 runs. I was concerned the extra math may add to frametimes, but in testing it appears to be negligible |
 
 ![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/da5ea087-10be-48ae-b3ac-88f1a992efaf)
 
@@ -45,14 +45,19 @@ In this re-implementation of `CVRFocusAttenuation.Apply` I started with applying
  
 The logic behind this is that [someone's voice will be louder if they are facing you](https://www.dpamicrophones.com/mic-university/facts-about-speech-intelligibility), however if you are turned away from them you may not want to hear them as at full volume. These two values are multiplied together to get our raw attenuation value. 
 
-The curves used for each of these modes are somewhat arbitrary, however were selected to try and provide a gradual audio change across the range. For Balanced and Forward there is a 90° cone where no attenuation is applied as generally those in your FOV you should expect to hear normally. The Ear Focus modes use a 60° cone by default to overlap with the forward section.
+The curves used for each of these modes are somewhat arbitrary, however were selected to try and provide a gradual audio change across the range. For Balanced and Forward there is a 80/70° cone where no attenuation is applied as generally those in your FOV you should expect to hear normally. The Ear Focus modes use a 60° cone by default to overlap with the forward section.
 
-![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/b2e1159e-5ba1-4b08-9931-34272b23fe98)*0 is directly in front of the player and 180 is behind them*
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/ff3fd7ac-4f9d-4d7b-84e0-a1371dcc8cd8)*0 is directly in front of the player and 180 is behind them*     
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/af7d96ae-4e4c-4b75-a5f6-8ef8158a558f)
 
 
 In addition to this I added in a 'Nearby Focus' mode, what this does is boost the volume of nearby players, based on your avatar height. Logic behind this is that you should always hear other players that are right up next to you. This curve caps out when the other player is 30% of your height from your head. 
 
 ![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/a6b59874-3d0a-42aa-b520-417e7549f2bd)
-I would honestly drop Ear Focus mode and just keep Nearby Boost as it likely fills the same use case for many. 
+I would honestly **drop** Ear Focus mode and just keep Nearby Boost as it likely fills the same use case for many. 
+
+
+
+
 
 **If you have any questions, or feedback please feel free to reach out to me.** 
