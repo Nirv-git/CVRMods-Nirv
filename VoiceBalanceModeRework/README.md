@@ -53,7 +53,8 @@ The curves used for each of these modes are somewhat arbitrary, however were sel
 
 In addition to this I added in a 'Nearby Focus' mode, what this does is boost the volume of nearby players, based on your avatar height. Logic behind this is that you should always hear other players that are right up next to you. This curve caps out when the other player is 30% of your height from your head. 
 
-![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/a6b59874-3d0a-42aa-b520-417e7549f2bd)
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/a6b59874-3d0a-42aa-b520-417e7549f2bd)   
+           
 I would honestly **drop** Ear Focus mode and just keep Nearby Boost as it likely fills the same use case for many. 
 
 
