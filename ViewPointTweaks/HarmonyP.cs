@@ -8,8 +8,6 @@ using System.Reflection;
 using ABI_RC.Core;
 using ABI_RC.Core.Player;
 using HarmonyLib;
-using ABI_RC.Systems.MovementSystem;
-
 
 
 
@@ -109,14 +107,12 @@ namespace ViewPointTweaks
             return true;
         }
 
-        //https://github.com/kafeijao/Kafe_CVR_Mods/blob/6e2b44b2ed3db22d21096ca53177be3a298a4f46/OSC/HarmonyPatches.cs#L24
-        // Avatar
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(MovementSystem), nameof(MovementSystem.UpdateAnimatorManager))]
-        internal static void AfterUpdateAnimatorManager(CVRAnimatorManager manager)
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
+        internal static void AfterSetupAvatarGeneral()
         {
             //Main.Logger.Msg($"9-1");
-            Main.OnAnimatorManagerUpdate(manager);
+            Main.OnSetupAvatarGeneral();
         }
 
     }

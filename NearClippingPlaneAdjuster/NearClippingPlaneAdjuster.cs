@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
+using ABI.CCK.Components;
+using HarmonyLib;
+
 
 [assembly: MelonInfo(typeof(NearClipPlaneAdj.Main), "NearClipPlaneAdj", NearClipPlaneAdj.Main.versionStr, "Nirvash")]
 [assembly: MelonGame(null, "ChilloutVR")]
@@ -17,7 +20,7 @@ namespace NearClipPlaneAdj
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.7.1";
+        public const string versionStr = "0.7.5";
         public static MelonLogger.Instance Logger;
 
         public static MelonPreferences_Entry<bool> useNirvMiscPage;
@@ -89,24 +92,24 @@ namespace NearClipPlaneAdj
             catch (Exception ex) { Logger.Error($"GetBlackList error\n" + ex.ToString()); }
         }
 
-        public override void OnSceneWasLoaded(int buildIndex, string sceneName)
-        {
-            //Logger.Msg($"name: {sceneName}, index: {buildIndex}");
-            switch (buildIndex)
-            {
-                case 0: //Prep
-                    break;
-                case 1: //Login
-                    break;
-                case 2: //Init
-                    break;
-                case 3: //HQ
-                    break;
-                default:
-                    if (changeClipOnLoad.Value) MelonCoroutines.Start(SetNearClipPlane(0.01f));
-                    break;
-            }
-        }
+        //public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+        //{
+        //    //Logger.Msg($"name: {sceneName}, index: {buildIndex}");
+        //    switch (buildIndex)
+        //    {
+        //        case 0: //Prep
+        //            break;
+        //        case 1: //Login
+        //            break;
+        //        case 2: //Init
+        //            break;
+        //        case 3: //HQ
+        //            break;
+        //        default:
+        //            if (changeClipOnLoad.Value) MelonCoroutines.Start(SetNearClipPlane(0.01f));
+        //            break;
+        //    }
+        //}
 
         private static Camera GetScreenCam()
         {
@@ -153,11 +156,11 @@ namespace NearClipPlaneAdj
             if (printMsg) Logger.Msg(ConsoleColor.DarkYellow, $"Farclip changed - New: {valValue}, Old: {oldvalue}");
         }
 
-        System.Collections.IEnumerator SetNearClipPlane(float znear)
+        public static System.Collections.IEnumerator SetNearClipPlane(float znear)
         {
             //printPlane(); //debug
 
-            yield return new WaitForSecondsRealtime(15); //Wait 15 seconds after world load before setting the clipping value. Waiting for the next/first frame does not work
+            yield return new WaitForSecondsRealtime(2); 
             if (defaultChangeBlackList.Value && MetaPort.Instance.CurrentWorldId != null && blackList != null)
             { //Check if world is blacklisted from auto change
                 var worldID = MetaPort.Instance.CurrentWorldId;
@@ -231,5 +234,18 @@ namespace NearClipPlaneAdj
         //    float value = screenCamera.nearClipPlane;
         //    Logger.Msg($"Near plane cur: {value}");
         //}
+    }
+
+    [HarmonyPatch]
+    internal class HarmonyPatches
+    {
+        // Avatar
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ABI.CCK.Components.CVRWorld), nameof(CVRWorld.CopyRefCamValues))]
+        internal static void AfterSetupAvatarGeneral()
+        {
+            //Main.Logger.Msg($"9-1");
+            MelonCoroutines.Start(Main.SetNearClipPlane(0.01f));
+        }
     }
 }

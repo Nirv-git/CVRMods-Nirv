@@ -29,17 +29,27 @@ namespace WorldPropListMod
 
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(CohtmlHud), nameof(CohtmlHud.ViewDropTextImmediate))]
-        internal static bool OnViewDropTextImmediate(string cat, string headline, string small)
+        [HarmonyPatch(typeof(CohtmlHud), nameof(CohtmlHud.ViewDropText), new Type[] { typeof(string), typeof(string), typeof(string) })]
+        internal static bool OnViewDropText(string cat, string headline, string small)
         {
-            if (cat == "(Local) Client" && headline == "Cannot spawn prop" && small == "." && lastBlock + 2.5f >= Time.time)
+            var addmsg = "(Likely Props Blocked for User)";
+            //Main.Logger.Msg($"|{cat}|{headline}|{small}|");
+            if (cat == "(Local) Client" && headline == "Cannot spawn prop" && small.Contains("PhysicsCollisionEnabled") && lastBlock + 1f >= Time.time)
             {
-                Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropTextImmediate due to blocked prop");
+                Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropText due to blocked PROP");
                 return false;
-            } else if (cat == "(Local) Client" && headline == "Cannot spawn prop" && small == ".")
+            } else if (cat == "(Local) Client" && headline == "Cannot spawn prop" && small.Contains("PhysicsCollisionEnabled") && !small.Contains(addmsg))
             {
-                Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropTextImmediate due to blocked user");
-                return false;
+                if (Main.hideHUDNotificationBlocked.Value)
+                {
+                    Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropText due to blocked USER's Props");
+                    return false;
+                }
+                else
+                {
+                    CohtmlHud.Instance.ViewDropText(cat, headline, small + " " + addmsg);
+                    return false;
+                }
             }
             return true;
         }
@@ -176,7 +186,7 @@ namespace WorldPropListMod
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnProp))]
-        internal static bool OnSpawnProp(string propGuid, float PosX, float PosY, float PosZ)
+        internal static bool OnSpawnProp(string propGuid, float posX, float posY, float posZ, bool useTargetLocationGravity)
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"9-2 SpawnProp");
             //Main.Logger.Msg($"propGuid {propGuid}");

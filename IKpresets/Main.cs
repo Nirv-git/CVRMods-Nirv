@@ -10,7 +10,6 @@ using ABI_RC.Core.Networking.IO.UserGeneratedContent;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
 using ABI_RC.Core.Util;
-using ABI_RC.Systems.MovementSystem;
 using ABI.CCK.Components;
 using HarmonyLib;
 using ABI_RC.Core.Networking.API;
@@ -29,7 +28,7 @@ namespace IKpresetsMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.2";
+        public const string versionStr = "0.7.5";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "IKpresets";
@@ -141,7 +140,7 @@ namespace IKpresetsMod
             }
         }
 
-        internal static async void OnAnimatorManagerUpdate(CVRAnimatorManager animatorManager)
+        internal static async void OnSetupAvatarGeneral()
         {
             //Logger.Msg($"OnAnimatorManagerUpdate");
             var avatarGuid = MetaPort.Instance.currentAvatarGuid;
@@ -183,17 +182,17 @@ namespace IKpresetsMod
             return response.Data.Name;
         } 
     }
-    //https://github.com/kafeijao/Kafe_CVR_Mods/blob/6e2b44b2ed3db22d21096ca53177be3a298a4f46/OSC/HarmonyPatches.cs#L24
+
     [HarmonyPatch]
     internal class HarmonyPatches
     {
         // Avatar
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(MovementSystem), nameof(MovementSystem.UpdateAnimatorManager))]
-        internal static void AfterUpdateAnimatorManager(CVRAnimatorManager manager)
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
+        internal static void AfterSetupAvatarGeneral()
         {
             //Main.Logger.Msg($"9-1");
-            Main.OnAnimatorManagerUpdate(manager);
+            Main.OnSetupAvatarGeneral();
         }
     }
 }

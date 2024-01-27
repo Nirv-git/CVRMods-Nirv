@@ -31,7 +31,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.2";
+        public const string versionStr = "0.7.5";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
@@ -41,6 +41,7 @@ namespace WorldPropListMod
         public static MelonPreferences_Entry<int> onPropDetailSelect;
         public static MelonPreferences_Entry<bool> usePropBlockList;
         public static MelonPreferences_Entry<bool> showHUDNotification;
+        public static MelonPreferences_Entry<bool> hideHUDNotificationBlocked;
         public static MelonPreferences_Entry<bool> printAPIrequestsToConsole;
 
         public static Main Instance;
@@ -76,6 +77,7 @@ namespace WorldPropListMod
             onPropDetailSelect = MelonPreferences.CreateEntry(catagory, nameof(onPropDetailSelect), 3, "0-None, 1-Highlight, 2-Line, 3-Both");
             usePropBlockList = MelonPreferences.CreateEntry(catagory, nameof(usePropBlockList), true, "Use prop block list to prevent prop loading");
             showHUDNotification = MelonPreferences.CreateEntry(catagory, nameof(showHUDNotification), true, "Show notification on HUD when a prop is blocked");
+            hideHUDNotificationBlocked = MelonPreferences.CreateEntry(catagory, nameof(hideHUDNotificationBlocked), true, "Suppress game notification of props by blocked on user level");
             printAPIrequestsToConsole = MelonPreferences.CreateEntry(catagory, nameof(printAPIrequestsToConsole), false, "Prints logging of API requests to console");
 
             SaveLoad.InitFileListOrLoad();
@@ -117,7 +119,7 @@ namespace WorldPropListMod
                     {
                         init = true;
                         //Logger.Msg($"MetaPort.Instance.ownerId {MetaPort.Instance.ownerId} - MetaPort.Instance.username {MetaPort.Instance.username}");
-                        PlayerNamesCache[MetaPort.Instance.ownerId] = (AuthManager.username, DateTime.Now);
+                        PlayerNamesCache[MetaPort.Instance.ownerId] = (AuthManager.Username, DateTime.Now);
                         PlayerNamesCache["SYSTEM"] = ("SYSTEM", DateTime.Now); PlayerNamesCache["LocalServer"] = ("LocalServer", DateTime.Now);
                         PropNamesCache["incompatible-content"] = ("Error prop", "CVR", "", false, "", "", "Internal Error Prop for CVR\nID:incompatible-content", DateTime.Now);
                     }

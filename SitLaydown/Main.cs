@@ -23,7 +23,7 @@ namespace SitLaydown
 
     public class Main : MelonMod
     {
-        public const string versionStr = "1.7.1";
+        public const string versionStr = "1.7.5";
         public static MelonLogger.Instance Logger;
 
         public static Main Instance;

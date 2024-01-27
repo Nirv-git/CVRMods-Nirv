@@ -22,7 +22,7 @@ namespace ViewPointTweaks
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.2";
+        public const string versionStr = "0.7.5";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "ViewPointTweaks";
@@ -157,7 +157,7 @@ namespace ViewPointTweaks
             }
         }
 
-        internal static async void OnAnimatorManagerUpdate(CVRAnimatorManager animatorManager)
+        internal static async void OnSetupAvatarGeneral()
         {
             //Logger.Msg($"OnAnimatorManagerUpdate");
             var avatarGuid = MetaPort.Instance.currentAvatarGuid;

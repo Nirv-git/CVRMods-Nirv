@@ -64,7 +64,7 @@ namespace SitLaydown
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(RootLogic), nameof(RootLogic.Respawn))]
+        [HarmonyPatch(typeof(RootLogic), nameof(RootLogic.Respawn), new Type[] { })]
         internal static void OnRespawn()
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"2-1 OnRespawn");
@@ -79,6 +79,25 @@ namespace SitLaydown
             catch (Exception ex)
             {
                 Main.Logger.Error("Error in OnRespawn patch. \n" + ex.ToString());
+            }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(RootLogic), nameof(RootLogic.Respawn), new Type[] { typeof(bool)})]
+        internal static void OnRespawnForced()
+        {
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"2-1 OnRespawn");
+            try
+            {
+                if (Main.inChair)
+                {
+                    Main.ToggleChair(false);
+                    //Main.Logger.Msg(ConsoleColor.Magenta, "Left chair due to Respawn");
+                }
+            }
+            catch (Exception ex)
+            {
+                Main.Logger.Error("Error in OnRespawnForced patch. \n" + ex.ToString());
             }
         }
 

@@ -8,7 +8,6 @@ using System.Reflection;
 using ABI_RC.Core;
 using ABI_RC.Core.Player;
 using HarmonyLib;
-using ABI_RC.Systems.MovementSystem;
 using ABI_RC.Core.Util;
 
 [assembly: MelonGame(null, "ChilloutVR")]
@@ -23,7 +22,7 @@ namespace NoHeadShrinkMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.1";
+        public const string versionStr = "0.7.5";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "NoHeadShrinkMod";
@@ -143,8 +142,8 @@ namespace NoHeadShrinkMod
     {
         // Avatar
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(MovementSystem), nameof(MovementSystem.UpdateAnimatorManager))]
-        internal static void AfterUpdateAnimatorManager(CVRAnimatorManager manager)
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
+        internal static void AfterSetupAvatarGeneral()
         {
             Main.alertFlag = false;
             Main.FindScale();
