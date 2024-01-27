@@ -59,8 +59,8 @@ namespace ViewPointTweaks
         {
             if (MetaPort.Instance.isUsingVr)
             {
-                VRcam = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Camera/").transform;
-                VRheadPoint = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Camera/VRTargetHead").transform;
+                VRcam = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/[Offset] User PlaySpace/[Offset] Seated Play/Camera/").transform;
+                VRheadPoint = GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/[Offset] User PlaySpace/[Offset] Seated Play/Camera/VRTargetHead").transform;
             }
         }
 

@@ -8,6 +8,7 @@ using System.Reflection;
 using ABI_RC.Core.Savior;
 using System.Security.Cryptography;
 using System.Text;
+using ABI_RC.Core.Player;
 
 [assembly: MelonGame(null, "ChilloutVR")]
 [assembly: MelonInfo(typeof(PlayerLocator.Main), "PlayerLocator", PlayerLocator.Main.versionStr, "Nirvash")]
@@ -21,7 +22,7 @@ namespace PlayerLocator
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.0.1";
+        public const string versionStr = "0.7.5";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "PlayerLocator";
@@ -78,7 +79,7 @@ namespace PlayerLocator
         private static GameObject SetupLineRender(string id)
         {
 
-            GameObject start = MetaPort.Instance.isUsingVr ? GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight") : Camera.main.gameObject;
+            GameObject start = MetaPort.Instance.isUsingVr ? PlayerSetup.Instance.vrRayRight.gameObject : Camera.main.gameObject;
             GameObject myLine = new GameObject();
             myLine.name = $"PlayerLocator-Line-{id}";
             myLine.transform.SetParent(start.transform);

@@ -187,7 +187,7 @@ namespace WorldPropListMod
         {
             if (LineRen?.Equals(null) ?? true) //usePickupLine
             {
-                GameObject start = MetaPort.Instance.isUsingVr ? GameObject.Find("_PLAYERLOCAL/[CameraRigVR]/Controller (right)/RayCasterRight") : Camera.main.gameObject;
+                GameObject start = MetaPort.Instance.isUsingVr ? PlayerSetup.Instance.vrRayRight.gameObject : Camera.main.gameObject;
                 GameObject myLine = new GameObject();
                 myLine.name = "WolrdPropListMod-Line";
                 myLine.transform.SetParent(start.transform);
