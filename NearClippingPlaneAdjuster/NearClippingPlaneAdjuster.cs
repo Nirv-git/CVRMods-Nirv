@@ -197,7 +197,7 @@ namespace NearClipPlaneAdj
 
         public override void OnUpdate()
         {
-            if (!keybindsEnabled.Value) return;
+            if (!keybindsEnabled?.Value ?? true) return;
 
             if (Input.GetKeyDown(KeyCode.LeftBracket))
             {
