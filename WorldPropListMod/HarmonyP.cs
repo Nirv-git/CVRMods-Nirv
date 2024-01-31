@@ -32,20 +32,20 @@ namespace WorldPropListMod
         [HarmonyPatch(typeof(CohtmlHud), nameof(CohtmlHud.ViewDropText), new Type[] { typeof(string), typeof(string), typeof(string) })]
         internal static bool OnViewDropText(string cat, string headline, string small)
         {
-            var addmsg = "(Likely Props Blocked for User)";
+            var addmsg = "(Likely Props Blocked for User - Description added by WorldPropListMod)";
             //Main.Logger.Msg($"|{cat}|{headline}|{small}|");
-            if (cat == "(Local) Client" && headline == "Cannot spawn prop" && small.Contains("PhysicsCollisionEnabled") && lastBlock + 1f >= Time.time)
+            if (cat == "(Local) Client" && headline == "Cannot spawn prop"  && lastBlock + 1f >= Time.time) //&& small.Contains("PhysicsCollisionEnabled")
             {
-                Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropText due to blocked PROP");
+                Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropText due to blocked PROP by Mod");
                 return false;
-            } else if (cat == "(Local) Client" && headline == "Cannot spawn prop" && small.Contains("PhysicsCollisionEnabled") && !small.Contains(addmsg))
+            } else if (cat == "(Local) Client" && headline == "Cannot spawn prop"  && !small.Contains(addmsg)) //&& small.Contains("PhysicsCollisionEnabled")
             {
                 if (Main.hideHUDNotificationBlocked.Value)
                 {
-                    Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropText due to blocked USER's Props");
+                    Main.Logger.Msg(ConsoleColor.Yellow, $"Skipping ViewDropText for blocked Props by Game");
                     return false;
                 }
-                else
+                else if (small.Contains("PhysicsCollisionEnabled") || !small.Contains("Prop Blocked"))
                 {
                     CohtmlHud.Instance.ViewDropText(cat, headline, small + " " + addmsg);
                     return false;

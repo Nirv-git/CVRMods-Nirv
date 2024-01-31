@@ -77,7 +77,7 @@ namespace WorldPropListMod
             onPropDetailSelect = MelonPreferences.CreateEntry(catagory, nameof(onPropDetailSelect), 3, "0-None, 1-Highlight, 2-Line, 3-Both");
             usePropBlockList = MelonPreferences.CreateEntry(catagory, nameof(usePropBlockList), true, "Use prop block list to prevent prop loading");
             showHUDNotification = MelonPreferences.CreateEntry(catagory, nameof(showHUDNotification), true, "Show notification on HUD when a prop is blocked");
-            hideHUDNotificationBlocked = MelonPreferences.CreateEntry(catagory, nameof(hideHUDNotificationBlocked), true, "Suppress game notification of props by blocked on user level");
+            hideHUDNotificationBlocked = MelonPreferences.CreateEntry(catagory, nameof(hideHUDNotificationBlocked), false, "Suppress notification of props blocked natively by the game");
             printAPIrequestsToConsole = MelonPreferences.CreateEntry(catagory, nameof(printAPIrequestsToConsole), false, "Prints logging of API requests to console");
 
             SaveLoad.InitFileListOrLoad();
