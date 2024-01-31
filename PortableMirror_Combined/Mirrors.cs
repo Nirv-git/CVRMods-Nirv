@@ -161,11 +161,12 @@ namespace PortableMirror
                 //    Main._base_MirrorState.Value == "MirrorCutoutSolo" || Main._base_MirrorState.Value == "MirrorTransparentSolo" ||
                 //    Main._base_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 GameObject player = Utils.GetPlayer().gameObject;
-                var cam = Camera.main.gameObject;
-                Vector3 pos = player.transform.position;
 
-                pos.y += .5f;
-                pos.y += (Main._base_MirrorScaleY.Value - 1) / 2;
+                var cam = Camera.main.gameObject;
+                Vector3 pos = PlayerSetup.Instance.GetPlayerPosition();// player.transform.position;
+
+                pos += player.transform.up * .5f;
+                pos += player.transform.up * (Main._base_MirrorScaleY.Value - 1) / 2;
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
                 mirror.layer = CVRLayers.CVRReserved3;
@@ -179,8 +180,12 @@ namespace PortableMirror
                 }
                 else
                 {
-                    mirror.transform.position = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z); //Set to player height instead of centered on camera
-                    mirror.transform.rotation = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f); //Make vertical
+                    mirror.transform.position = pos;
+
+                    Vector3 lookDirection = cam.transform.forward;
+                    Vector3 projectedLookDirection = Vector3.ProjectOnPlane(lookDirection, player.transform.up);
+                    Quaternion rotation = Quaternion.LookRotation(projectedLookDirection, player.transform.up);
+                    mirror.transform.rotation = rotation;
                     mirror.transform.position = mirror.transform.position + mirror.transform.forward + (mirror.transform.forward * Main._base_MirrorDistance.Value); //Move on distance
                 }
 
@@ -238,8 +243,8 @@ namespace PortableMirror
                 var player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
                 Vector3 pos = player.transform.position;
-                pos.y += .5f;
-                pos.y += (Main._45_MirrorScaleY.Value - 1) / 2;
+                pos += player.transform.up * .5f;
+                pos += player.transform.up * (Main._45_MirrorScaleY.Value - 1) / 2;
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
                 mirror.layer = CVRLayers.CVRReserved3;
@@ -247,7 +252,12 @@ namespace PortableMirror
                 mirror.name = "PortableMirror45";
 
                 mirror.transform.position = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z); //Set to player height instead of centered on camera
-                mirror.transform.rotation = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, cam.transform.rotation.eulerAngles.z); //Make vertical
+                //mirror.transform.rotation = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, cam.transform.rotation.eulerAngles.z); //Make vertical
+                //mirror.transform.rotation = player.transform.rotation;
+                Vector3 lookDirection = cam.transform.forward;
+                Vector3 projectedLookDirection = Vector3.ProjectOnPlane(lookDirection, player.transform.up);
+                Quaternion rotation = Quaternion.LookRotation(projectedLookDirection, player.transform.up);
+                mirror.transform.rotation = rotation;
                 mirror.transform.position = mirror.transform.position + mirror.transform.forward + (mirror.transform.forward * Main._45_MirrorDistance.Value); //Move on distance
                 mirror.transform.rotation = mirror.transform.rotation * Quaternion.AngleAxis(45, Vector3.left);  // Sets the transform's current rotation to a new rotation that rotates 30 degrees around the y-axis(Vector3.up)
 
@@ -310,12 +320,16 @@ namespace PortableMirror
 
                 Vector3 pos = cam.transform.position + (player.transform.up); // Bases mirror position off of hip, to allow for play space moving 
                 //Main.Logger.Msg($"x:{GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/HipTarget").transform.position.x}, y:{GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/HipTarget").transform.position.y}, z:{GameObject.Find(player.gameObject.name + "/AnimationController/HeadAndHandIK/HipTarget").transform.position.z}");
-                pos.y += Main._ceil_MirrorDistance.Value;
+                pos += player.transform.up * Main._ceil_MirrorDistance.Value;
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
                 mirror.layer = CVRLayers.CVRReserved3;
                 mirror.transform.position = pos;
-                mirror.transform.rotation = Quaternion.Euler(-90f, cam.transform.rotation.eulerAngles.y, cam.transform.rotation.eulerAngles.z);
-                //mirror.transform.rotation = Quaternion.AngleAxis(90, Vector3.left);  // Sets the transform's current rotation to a new rotation that rotates 90 degrees around the y-axis(Vector3.up)
+
+                Vector3 lookDirection = player.transform.up;
+                Vector3 projectedLookDirection = Vector3.ProjectOnPlane(lookDirection, player.transform.right);
+                Quaternion rotation = Quaternion.LookRotation(projectedLookDirection, player.transform.right);
+                mirror.transform.rotation = rotation;
+
                 mirror.transform.localScale = new Vector3(Main._ceil_MirrorScaleX.Value, Main._ceil_MirrorScaleZ.Value, 0.05f);
                 mirror.name = "PortableMirrorCeiling";
 
@@ -371,7 +385,7 @@ namespace PortableMirror
                 //    Main._micro_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer().gameObject;
                 var cam = Camera.main.gameObject;
-                Vector3 pos = cam.transform.position;
+                Vector3 pos = PlayerSetup.Instance.GetPlayerPosition();// player.transform.position;
                 //pos.y += Main._micro_MirrorScaleY.Value / 4;///This will need turning
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
@@ -387,10 +401,15 @@ namespace PortableMirror
                 }
                 else
                 {
-                    mirror.transform.position = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z); //Set to player height instead of centered on camera
-                    mirror.transform.rotation = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f); //Make vertical
+                    mirror.transform.position = cam.transform.position;
+                    Vector3 lookDirection = cam.transform.forward;
+                    Vector3 projectedLookDirection = Vector3.ProjectOnPlane(lookDirection, player.transform.up);
+                    Quaternion rotation = Quaternion.LookRotation(projectedLookDirection, player.transform.up);
+                    mirror.transform.rotation = rotation;
                     mirror.transform.position = mirror.transform.position + (mirror.transform.forward * Main._micro_MirrorScaleY.Value)
                         + (mirror.transform.forward * Main._micro_MirrorDistance.Value); //Move on distance
+                    mirror.transform.position -= player.transform.up * Main._micro_MirrorScaleY.Value / 4;
+                    //mirror.transform.position = mirror.transform.position - (mirror.transform.up * Main._micro_MirrorScaleY.Value/PlayerSetup.Instance.GetAvatarHeight() * .75f);//Move mirror down based on avatar height
                 }
 
                 var childMirror = mirror.transform.Find(Main._micro_MirrorState.Value);
@@ -443,9 +462,9 @@ namespace PortableMirror
                 //    Main._trans_MirrorState.Value == "MirrorTransCutCombo") SetAllMirrorsToIgnoreShader();
                 var player = Utils.GetPlayer();
                 var cam = Camera.main.gameObject;
-                Vector3 pos = player.transform.position;
-                pos.y += .5f;
-                pos.y += (Main._trans_MirrorScaleY.Value - 1) / 2;
+                Vector3 pos = PlayerSetup.Instance.GetPlayerPosition();// player.transform.position;
+                pos += player.transform.up * .5f;
+                pos += player.transform.up * (Main._trans_MirrorScaleY.Value - 1) / 2;
 
                 GameObject mirror = GameObject.Instantiate(mirrorPrefab);
                 mirror.layer = CVRLayers.CVRReserved3;
@@ -459,8 +478,11 @@ namespace PortableMirror
                 }
                 else
                 {
-                    mirror.transform.position = new Vector3(cam.transform.position.x, pos.y, cam.transform.position.z); //Set to player height instead of centered on camera
-                    mirror.transform.rotation = Quaternion.Euler(0f, cam.transform.rotation.eulerAngles.y, 0f); //Make vertical
+                    mirror.transform.position = pos;
+                    Vector3 lookDirection = cam.transform.forward;
+                    Vector3 projectedLookDirection = Vector3.ProjectOnPlane(lookDirection, player.transform.up);
+                    Quaternion rotation = Quaternion.LookRotation(projectedLookDirection, player.transform.up);
+                    mirror.transform.rotation = rotation;
                     mirror.transform.position = mirror.transform.position + mirror.transform.forward + (mirror.transform.forward * Main._trans_MirrorDistance.Value); //Move on distance
                 }
 
