@@ -594,7 +594,6 @@ namespace PortableMirror
                         RaycastHit hit = new RaycastHit();
                         Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward);
                         (string, GameObject, float) nearest = ("", null, 1000f);
-
                         foreach (var mirror in customGrabs)
                         { //Find the nearest mirror to the raycast
 
@@ -605,7 +604,6 @@ namespace PortableMirror
                                 //Main.Logger.Msg($"Removed");
                                 break;
                             }
-
                             var col = mirror.Value.GetComponent<BoxCollider>(); col.enabled = true;
                             if (col.Raycast(ray, out hit, 1000f))
                             {
@@ -617,12 +615,10 @@ namespace PortableMirror
                             }
                             col.enabled = false;
                         }
-
                         if (hitFound || held)
                         {
                             var dist = nearest.Item3;
-
-                            if (held || (CVRInputManager.Instance.gripRightValue > Main.customGrab_gripRightValue.Value && CVRInputManager.Instance.interactRightValue > .5f && !(nearest.Item2?.Equals(null) ?? true)))
+                            if ((held || (CVRInputManager.Instance.gripRightValue > Main.customGrab_gripRightValue.Value && CVRInputManager.Instance.interactRightValue > .5f)) && !(nearest.Item2?.Equals(null) ?? true))
                             {//Grab or continue grabbing
                                 if (!held)
                                 {
@@ -633,7 +629,6 @@ namespace PortableMirror
                                 }
                                 else
                                 {//Joystick Forward/Back
-
                                     Vector3 direction = rightCon.transform.forward;
                                     var tempPos = nearest.Item2.transform.position + direction * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
                                     var moveDistance = Vector3.Distance(tempPos, nearest.Item2.transform.position);
@@ -651,6 +646,7 @@ namespace PortableMirror
                                     if (!(dist - moveDistance <= 0f && inputY < 0F))
                                         lastHeld.Item2.transform.position += direction * Mathf.Clamp(hit.distance / 2, 0, 2f) * (InputSVR.GetVRLookVector().y * Time.deltaTime) * Mathf.Clamp(Main.customGrabSpeed.Value, 0f, 10f);
                                 }
+
                             }
 
                             pickupLine.SetActive(Main.customGrabLine.Value);
