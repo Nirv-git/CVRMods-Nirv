@@ -14,12 +14,37 @@ using HarmonyLib;
 using ABI_RC.Core.UI;
 using System.Threading;
 using ABI_RC.Core.InteractionSystem;
+using ABI_RC.Systems.Movement;
 
 namespace SitLaydown
 {
     [HarmonyPatch]
     internal class HarmonyPatches
     {
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(BetterBetterCharacterController), nameof(BetterBetterCharacterController.Animate))]
+        internal static void OnAnimate()
+        {
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"1-1 OnExitSeat");
+            try
+            {
+                if (Main.inChair)
+                {
+                    BetterBetterCharacterController.Instance.CurrentAnimatorManager.SetAnimatorParameterBool("Grounded", true);
+                    BetterBetterCharacterController.Instance.CurrentAnimatorManager.SetAnimatorParameterBool("Crouching", false);
+                    BetterBetterCharacterController.Instance.CurrentAnimatorManager.SetAnimatorParameterBool("Prone", false);
+                    BetterBetterCharacterController.Instance.CurrentAnimatorManager.SetAnimatorParameterBool("Flying", false);
+                    BetterBetterCharacterController.Instance.CurrentAnimatorManager.SetAnimatorParameterBool("Swimming", false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Main.Logger.Error("Error in OnAnimate patch. \n" + ex.ToString());
+            }
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"1-10 End and return True");
+        }
+
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(CVR_MenuManager), nameof(CVR_MenuManager.ToggleQuickMenu))]

@@ -231,7 +231,11 @@ namespace SitLaydown
             {
                 GameObject baseObj = GameObject.Instantiate(chairPrefab);
                 var playerPos = PlayerSetup.Instance.GetPlayerPosition();
-                var rotTo = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
+                //var rotTo = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
+                
+                Vector3 lookDirection = Camera.main.transform.forward;
+                Vector3 projectedLookDirection = Vector3.ProjectOnPlane(lookDirection, PlayerSetup.Instance.transform.up);
+                Quaternion rotTo = Quaternion.LookRotation(projectedLookDirection, PlayerSetup.Instance.transform.up);
 
                 //Logger.Msg($"playerPos x:{playerPos.x} y:{playerPos.y} z:{playerPos.z}");
                 //Logger.Msg($"Original Player Rot {PlayerSetup.Instance.transform.rotation.y}");
