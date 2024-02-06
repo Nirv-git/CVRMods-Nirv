@@ -118,7 +118,7 @@ namespace VisemeValue
             //}
 
             //if (Utils.ContainsParam(LocalPlayerAnimatorManager.animator, "VisemeMod_Value"))
-            if(PlayerSetup.Instance.animatorManager.animatorParameterNameHashes.ContainsKey("VisemeMod_Value") && driveValuePref.Value)
+            if (PlayerSetup.Instance.animatorManager.animatorParameterNameHashes.ContainsKey("VisemeMod_Value") && driveValuePref.Value)
                 driveValue = true;
             if (PlayerSetup.Instance.animatorManager.animatorParameterNameHashes.ContainsKey("Viseme") && driveVisemePref.Value)
                 driveViseme = true;
@@ -126,20 +126,21 @@ namespace VisemeValue
                 driveLevel = true;
             if (PlayerSetup.Instance.animatorManager.animatorParameterNameHashes.ContainsKey("VisemeMod_sil") && driveIndivPref.Value) //.Any(item => item.Key.StartsWith("VisemeMod"));
                 driveIndiv = true;
-
             if (!driveValue && !driveViseme && !driveLevel && !driveIndiv)
                 yield break;
-
-            var visCon = PlayerSetup.Instance.PlayerAvatarParent.GetComponentInChildren<CVRVisemeController>();
-
-            while (!visCon.Equals(null))
+         
+            var visCon = PlayerSetup.Instance.GetComponentInChildren<ABI_RC.Systems.LipSync.CVRLipSyncManager>();
+            var context = PlayerSetup.Instance.transform.Find("CVRLipSyncVisemes").GetComponentInChildren<CVROculusLipSyncContext>();
+         
+            while (!visCon.Equals(null) && !context.Equals(null))
             {
                 //Main.Logger.Msg(ConsoleColor.Blue, $"---- {visCon.visemeLoudness:F2}");
-                var frame = visCon._context.GetCurrentPhonemeFrame();
+                var frame = context.Frame;
                 int loudestViseme = 0;
                 float loudestValue = 0f;
                 for (int i = 0; i < frame.Visemes.Length; ++i)
                 {
+
                     float level = frame.Visemes[i];
                     if (level > 0.05 && level > loudestValue)
                     {
@@ -152,14 +153,14 @@ namespace VisemeValue
                         PlayerSetup.Instance.animatorManager.SetAnimatorParameterFloat($"VisemeMod_{visemes[i]}", level);
                     }
                 }
-                //Main.Logger.Msg(ConsoleColor.Blue, $"Index: {loudestViseme} Name: {visemes[loudestViseme]} Loudness: {loudestValue:F2} CVRLoud: {visCon.visemeLoudness:F2}");
+                //Main.Logger.Msg(ConsoleColor.Blue, $"Index: {loudestViseme} Name: {visemes[loudestViseme]} Loudness: {loudestValue:F2} CVRLoud: {visCon._visemeLoudness:F2}");
 
                 if (driveValue)
                     PlayerSetup.Instance.animatorManager.SetAnimatorParameterInt("VisemeMod_Value", loudestViseme);
                 if (driveViseme)
                     PlayerSetup.Instance.animatorManager.SetAnimatorParameterInt("Viseme", loudestViseme);
                 if (driveLevel)
-                    PlayerSetup.Instance.animatorManager.SetAnimatorParameterFloat("VisemeMod_Level", visCon.visemeLoudness);
+                    PlayerSetup.Instance.animatorManager.SetAnimatorParameterFloat("VisemeMod_Level", visCon._visemeLoudness);
 
                 yield return new WaitForSeconds(updateRate.Value/1000);
             }
