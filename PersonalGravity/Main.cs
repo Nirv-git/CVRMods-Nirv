@@ -13,6 +13,7 @@ using ABI_RC.Core.Savior;
 using ABI_RC.Core.Player;
 using ABI_RC.Systems.InputManagement;
 using ABI_RC.Systems.GameEventSystem;
+using ABI_RC.Systems.Gravity;
 using ABI_RC.Core;
 using BTKUILib;
 
@@ -24,7 +25,7 @@ namespace PersonalGravity
 
     public class Main : MelonMod
     {
-        public const string versionStr = "0.7.5";
+        public const string versionStr = "0.7.8";
         public static MelonLogger.Instance Logger;
 
         public static Main Instance;
@@ -204,7 +205,7 @@ namespace PersonalGravity
                 var zone = _baseObj.GetComponent<GravityZone>();
                 zone.priority = gravPriority.Value;
                 zone.strength = -gravStr;
-                zone.alignPlayerWithGravity = alignPlayer.Value;
+                zone.playerGravityAlignmentMode = alignPlayer.Value ? GravitySystem.PlayerAlignmentMode.Auto : GravitySystem.PlayerAlignmentMode.Disabled;
                 zone.gravityEffect = GetEffect();
                 zone.gravityMix = mixOverride.Value ? GravityZone.GravityMix.Override : GravityZone.GravityMix.Additive;
                 SetRotation();
@@ -239,7 +240,7 @@ namespace PersonalGravity
         {
             if (_baseObj != null)
             {
-                _baseObj.GetComponent<GravityZone>().alignPlayerWithGravity = alignPlayer.Value;
+                _baseObj.GetComponent<GravityZone>().playerGravityAlignmentMode = alignPlayer.Value ? GravitySystem.PlayerAlignmentMode.Auto : GravitySystem.PlayerAlignmentMode.Disabled;
             }
         }
 
