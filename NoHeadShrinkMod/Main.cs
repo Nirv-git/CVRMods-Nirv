@@ -49,7 +49,7 @@ namespace NoHeadShrinkMod
             Logger = new MelonLogger.Instance("NoHeadShrinkMod", ConsoleColor.DarkYellow);
             cat = MelonPreferences.CreateCategory(catagory, "NoHeadShrinkMod");
             disableHeadShrink = MelonPreferences.CreateEntry(catagory, nameof(disableHeadShrink), false, "Disable head shrink always");
-            unshrinkAtDistance = MelonPreferences.CreateEntry(catagory, nameof(unshrinkAtDistance), false, "Unshrink if camera is x distance from head");
+            unshrinkAtDistance = MelonPreferences.CreateEntry(catagory, "unshrinkAtDistance2", false, "Unshrink if camera is x distance from head");
             unshrinkDistance = MelonPreferences.CreateEntry(catagory, nameof(unshrinkDistance), .5f, "Distance");
             scaleDistance = MelonPreferences.CreateEntry(catagory, nameof(scaleDistance), true, "Scale distance based on avatar height (Height*Distance)");
 

@@ -7,11 +7,13 @@
 [HideDragonWingsMod](HideDragonWingsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/HideDragonWings.dll)     
 [QMShutdownOptionsMod](QMShutdownOptionsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/QMShutdownOptionsMod.dll)    
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
-[PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/PlayerLocator.dll)            
-[ShrinkOtherHeads](ShrinkOtherHeads) [Download]()    
-[VisemeValue](VisemeValue) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/ViseValue0.0.2_LocalLight0.7.2_ViewPointTweaks0.7.2_IKpreset0.7.2_PortMirror2.1.16_WorldProp0.7.2/VisemeValue.dll)      
+[PlayerLocator](PlayerLocator) [Download]()            
+[ShrinkOtherHeads](ShrinkOtherHeads) [Download]()         
 [PersonalGravity](PersonalGravity) [Download]()    
-[FlightBinding](FlightBinding) [Download]()           
+[FlightBinding](FlightBinding) [Download]()    
+[FadeBlockedAvatar](FadeBlockedAvatar) [Download]()  
+[Fix_RotationBlockedAvatar](Fix_RotationBlockedAvatar) [Download]()  
+[FlightBinding](FlightBinding) [Download]()         
 
 # PortableMirror
 This mod allows the user to locally spawn mirrors for themselves in any world.   
@@ -250,3 +252,53 @@ For reference this uses the [Oculus Lipsync Visemes](https://developer.oculus.co
 |13	|o|
 |14	|u|
        
+	   
+# PersonalGravity
+   
+This mod provides options for controlling your own gravity locally!    
+   
+ - Gravity control options,   
+	 - Towards a world space coordinate   
+		 - Y+, Y- (Normally down), X+, X-, Z+, Z-   
+	 - Surface normal of a raycast hit onto a collider, setting the gravity direction to match the angle of the collider.   
+		 - Desktop: Raycast out from your camera    
+		 - VR: Raycast out from your right hand in VR   
+			 - Click your trigger to select and press both grips to cancel   
+	 - Towards the direction you are currently looking      
+	 -  The down vector from your current look direction   
+      
+ - Settings    
+	 - Gravity Strength (0-20)   
+	 - Aligned with gravity: If your player will rotate to match the direction   
+	 - Only Effect Players: If the gravity zone will just effect you, or also props/objects   
+	 - Mix Type: Sets the Gravity zone to Override (replace world gravity) or Additive (add to existing gravity)   
+	 - Gravity Priority: Priority of the zone, higher numbers take priority over lower ones   
+	 - Auto Toggle with Raycast: If the gravity zone should automatically toggle on when you use the raycast option   
+	 - Snap to Angle: For the 'Current Gaze' options, will snap to .2 angle values   
+
+> Before anyone asks, no this is not intended to bypass any world   
+> restrictions. The mod only functions in worlds that allow Flight or   
+> Props, and gravity effecting objects is only allowed in worlds that   
+> allow Props. Nothing this mod does is more than what a prop can do.   
+
+You access this mod using BTKUI, either it's own custom page, or with the NirvMisc page. (Toggle in MelonPrefs)           
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/d10d3924-88e6-48a4-ad47-11c1059edf24)
+
+
+# FadeBlockedAvatar
+   
+This mod allows you to set the Blocked Avatar Robot to be transparent along with tinting the color per user.         
+   ![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/844eaf4d-c299-45da-b757-6ffcff1bb94f)
+
+Options are available in the UIX Mod Settings:     
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/8a7ef395-b138-4bc2-905c-a7fc3aaf4dd7)
+
+
+# Fix_RotationBlockedAvatar
+
+Fixes the rotation of blocked avatars, mainly when they are not standing upright.    
+   
+A toggle to enable/disable the mod is available in the UIX Mod Settings      
+
+![image](https://github.com/Nirv-git/CVRMods-Nirv/assets/81605232/2785f441-f3b3-440b-8bf6-1bacf38fff3c)
+
