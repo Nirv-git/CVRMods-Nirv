@@ -9,7 +9,8 @@
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.5.15_NoHeadShrink0.5.6_WorldDetails0.0.1_PlayerLoc0.0.1_RemChairs0.0.1/PlayerLocator.dll)            
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()    
-[VisemeValue](VisemeValue) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/ViseValue0.0.2_LocalLight0.7.2_ViewPointTweaks0.7.2_IKpreset0.7.2_PortMirror2.1.16_WorldProp0.7.2/VisemeValue.dll)[PersonalGravity](PersonalGravity) [Download]()    
+[VisemeValue](VisemeValue) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/ViseValue0.0.2_LocalLight0.7.2_ViewPointTweaks0.7.2_IKpreset0.7.2_PortMirror2.1.16_WorldProp0.7.2/VisemeValue.dll)      
+[PersonalGravity](PersonalGravity) [Download]()    
 [FlightBinding](FlightBinding) [Download]()           
 
 # PortableMirror

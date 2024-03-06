@@ -14,6 +14,7 @@ using HarmonyLib;
 using ABI_RC.Systems.InputManagement;
 using ABI_RC.Core.Player;
 using ABI_RC.Systems.GameEventSystem;
+using ABI_RC.Systems.Movement;
 
 [assembly: MelonInfo(typeof(SitLaydown.Main), "SitLaydown", SitLaydown.Main.versionStr, "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
@@ -23,7 +24,7 @@ namespace SitLaydown
 
     public class Main : MelonMod
     {
-        public const string versionStr = "1.7.5";
+        public const string versionStr = "1.7.8";
         public static MelonLogger.Instance Logger;
 
         public static Main Instance;
@@ -279,6 +280,9 @@ namespace SitLaydown
 
             inChair = true;
             yield return new WaitForSeconds(.15f);
+
+            BetterBetterCharacterController.Instance.prone = false;
+            BetterBetterCharacterController.Instance.crouching = false;
 
             PosOffset = _baseObj.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0); //ChairPrefab(Clone)/SittingPosition/VR Sitting Position/VR Sitting Rotation Offset/VR Sitting Position Offset
             RotOffset = _baseObj.transform.GetChild(0).GetChild(0).GetChild(0); //ChairPrefab(Clone)/SittingPosition/VR Sitting Position/VR Sitting Rotation Offset/

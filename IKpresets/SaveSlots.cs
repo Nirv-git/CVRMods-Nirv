@@ -73,7 +73,8 @@ namespace IKpresetsMod
                     GeneralPlayerHeight = MetaPort.Instance.settings.GetSettingInt("GeneralPlayerHeight"),
                     IKCalibrationMode = MetaPort.Instance.settings.GetSettingInt("IKCalibrationMode"),
                 };
-
+                if (Main.config_Slots.Settings.ContainsKey(location))
+                    Main.Logger.Msg($"Storing Slot - Previous data: {Main.config_Slots.Settings[location]}");
                 Main.config_Slots.Settings[location] = updated;
                 SaveConfigSlots();
             }
@@ -170,7 +171,8 @@ namespace IKpresetsMod
                     IKCalibrationMode = MetaPort.Instance.settings.GetSettingInt("IKCalibrationMode"),
                     AvatarName = name
                 };
-
+                if (Main.config_Avatars.Settings.ContainsKey(guid))
+                    Main.Logger.Msg($"Storing Avatar Slot - Previous data: {Main.config_Avatars.Settings[guid]}");
                 Main.config_Avatars.Settings[guid] = updated;
                 SaveConfigAvatars();
             }
@@ -216,6 +218,7 @@ namespace IKpresetsMod
             {
                 if (!Main.config_Avatars.Settings.ContainsKey(guid))
                     return;
+                Main.Logger.Msg($"Deleting Avatar Slot: {Main.config_Avatars.Settings[guid]}");
                 Main.config_Avatars.Settings.Remove(guid);
                 SaveConfigAvatars();
             }

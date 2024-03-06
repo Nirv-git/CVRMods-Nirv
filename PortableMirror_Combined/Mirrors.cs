@@ -42,6 +42,8 @@ namespace PortableMirror
         //public static bool _GrabActive, _baseGrabActive, _microGrabActive, _transGrabActive;
         //public static bool _globalHeld = false;
 
+        public static bool hitFound = false;
+        public static bool held = false;
 
         public static void loadAssets()
         {//https://github.com/ddakebono/BTKSASelfPortrait/blob/master/BTKSASelfPortrait.cs
@@ -580,17 +582,17 @@ namespace PortableMirror
             pickupObjsRunning = true;
             var rightCon = PlayerSetup.Instance.vrRayRight.gameObject;
 
-            var held = false;
             (string, GameObject) lastHeld = ("", null);
 
             while (customGrabs.Count > 0)
             {
                 try
                 {
+                    hitFound = false;
                     if (!held ? CVRInputManager.Instance.interactRightValue > .5f : CVRInputManager.Instance.gripRightValue > Main.customGrab_gripRightValue.Value && CVRInputManager.Instance.interactRightValue > .5f)
                     {//Allow laser to object while holding trigger without grabbing it
 
-                        var hitFound = false;
+                        
                         RaycastHit hit = new RaycastHit();
                         Ray ray = new Ray(rightCon.transform.position, rightCon.transform.forward);
                         (string, GameObject, float) nearest = ("", null, 1000f);

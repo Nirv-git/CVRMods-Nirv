@@ -9,6 +9,7 @@ using ABI_RC.Core;
 using ABI_RC.Core.Player;
 using HarmonyLib;
 using ABI_RC.Core.Util;
+using ABI_RC.Core.Player.TransformHider;
 
 [assembly: MelonGame(null, "ChilloutVR")]
 [assembly: MelonInfo(typeof(NoHeadShrinkMod.Main), "NoHeadShrinkMod", NoHeadShrinkMod.Main.versionStr, "Nirvash")]
@@ -22,7 +23,7 @@ namespace NoHeadShrinkMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.5";
+        public const string versionStr = "0.7.8";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "NoHeadShrinkMod";
@@ -151,8 +152,8 @@ namespace NoHeadShrinkMod
 
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(TransformHiderForMainCamera), nameof(TransformHiderForMainCamera.IsMainCamera))]
-        public static bool OnIsMainCamera(ref bool __result)
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.TransformHider.SkinnedTransformHider), nameof(SkinnedTransformHider.HideTransform))]
+        public static bool OnHideTransformSkinned()
         {
             if (Main.disableHeadShrink.Value)
             {
@@ -161,7 +162,7 @@ namespace NoHeadShrinkMod
                     Main.Logger.Msg(ConsoleColor.Yellow, "Head unscaled for this avatar due to toggle");
                     Main.alertFlag = true;
                 }
-                __result = false;
+                //__result = false;
                 return false;
             }
             if (Main.unshrinkAtDistance.Value && Main.Head != null && Vector3.Distance(PlayerSetup.Instance.GetActiveCamera().transform.position, Main.Head.position) > Main.unshrinkDistance.Value * Main.scaleAdj)
@@ -171,7 +172,34 @@ namespace NoHeadShrinkMod
                     Main.Logger.Msg(ConsoleColor.Yellow, "Head unscaled for this avatar due to distance");
                     Main.alertFlag = true;
                 }
-                __result = false;
+                //__result = false;
+                return false;
+            }
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.TransformHider.MeshTransformHider), nameof(SkinnedTransformHider.HideTransform))]
+        public static bool OnHideTransformMesh()
+        {
+            if (Main.disableHeadShrink.Value)
+            {
+                if (!Main.alertFlag)
+                {
+                    Main.Logger.Msg(ConsoleColor.Yellow, "Head unscaled for this avatar due to toggle");
+                    Main.alertFlag = true;
+                }
+                //__result = false;
+                return false;
+            }
+            if (Main.unshrinkAtDistance.Value && Main.Head != null && Vector3.Distance(PlayerSetup.Instance.GetActiveCamera().transform.position, Main.Head.position) > Main.unshrinkDistance.Value * Main.scaleAdj)
+            {
+                if (!Main.alertFlag) //To reduce support requests of 'I can see my head' Yell at the user that a mod is causing it
+                {
+                    Main.Logger.Msg(ConsoleColor.Yellow, "Head unscaled for this avatar due to distance");
+                    Main.alertFlag = true;
+                }
+                //__result = false;
                 return false;
             }
             return true;
