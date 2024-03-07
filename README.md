@@ -7,13 +7,12 @@
 [HideDragonWingsMod](HideDragonWingsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/HideDragonWings.dll)     
 [QMShutdownOptionsMod](QMShutdownOptionsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/QMShutdownOptionsMod.dll)    
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
-[PlayerLocator](PlayerLocator) [Download]()            
+[PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/PlayerLocator.dll)            
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()         
-[PersonalGravity](PersonalGravity) [Download]()    
-[FlightBinding](FlightBinding) [Download]()    
-[FadeBlockedAvatar](FadeBlockedAvatar) [Download]()  
-[Fix_RotationBlockedAvatar](Fix_RotationBlockedAvatar) [Download]()  
-[FlightBinding](FlightBinding) [Download]()         
+[PersonalGravity](PersonalGravity) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/PersonalGravity.dll)    
+[FlightBinding](FlightBinding) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/FlightBinding.dll    
+[FadeBlockedAvatar](FadeBlockedAvatar) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/FadeBlockedAvatar.dll)  
+[Fix_RotationBlockedAvatar](Fix_RotationBlockedAvatar) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/Fix_RotationBlockedAvatar.dll)           
 
 # PortableMirror
 This mod allows the user to locally spawn mirrors for themselves in any world.   

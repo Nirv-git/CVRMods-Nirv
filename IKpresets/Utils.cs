@@ -72,5 +72,15 @@ namespace IKpresetsMod
             return sb.ToString();
         }
 
+
+        public static string PrintSlotDetails(string location, Main.AvatarConfig.AvatarSettings slot)
+        {
+            return $"Location:{location} Avatar:{slot.AvatarName} PchYaw:{Utils.CompactTF(slot.IKPitchYawShoulders)}_HipPin:{Utils.CompactTF(slot.IKHipPinned)}_" +
+                    $"StrNeck:{Utils.CompactTF(slot.IKStraightenNeck)}_HipShft:{Utils.CompactTF(slot.IKHipShifting)}_StrSpine:{Utils.CompactTF(slot.IKPreStraightenSpine)}_" +
+                    $"RelxIter:{slot.IKSpineRelaxIterations}_SpineFwd:{slot.IKMaxSpineAngleFwd}_Bck:{slot.IKMaxSpineAngleBack}_" +
+                    $"NeckFwd:{slot.IKMaxNeckAngleFwd}Bck:{slot.IKMaxNeckAngleBack}_NeckPri:{slot.IKNeckPriority}_" +
+                    $"StrSpine:{slot.IKStraightSpineAngle}Pow:{slot.IKStraightSpinePower}_Hgt:{slot.GeneralPlayerHeight}";
+        }
+
     }
 }
