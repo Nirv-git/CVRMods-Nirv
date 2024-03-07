@@ -1,5 +1,9 @@
 # VoiceBalanceModeRework    
 
+# Suggestions from this post have been merged with 2024r174ex2 and 2023r173hotfix on 2024/02/20
+
+### This mod is outdated now and should not be used 
+
 ### Mod details   
 This mod changes the `Player Voice Attenuation` > `Focus Modes` with the goal of providing a more natural and comfortable sound profile.      
 
