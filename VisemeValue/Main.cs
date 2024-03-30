@@ -20,7 +20,7 @@ namespace VisemeValue
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.0.2";
+        public const string versionStr = "1.1";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "VisemeValue";
