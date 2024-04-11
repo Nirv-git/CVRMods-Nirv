@@ -14,6 +14,7 @@ using HarmonyLib;
 using ABI_RC.Core.UI;
 using System.Threading;
 using ABI_RC.Core.InteractionSystem;
+using ABI_RC.Core.InteractionSystem.Base;
 
 namespace PortableMirror
 {
@@ -21,10 +22,10 @@ namespace PortableMirror
     internal class HarmonyPatches
     {
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(ABI.CCK.Components.CVRPickupObject), nameof(CVRPickupObject.Grab))]
-        internal static bool OnGrab(Transform handTransform, ControllerRay controllerRay, Vector3 hitPoint)
+        [HarmonyPatch(typeof(ABI_RC.Core.InteractionSystem.Base.Pickupable), nameof(Pickupable.Grab))]
+        internal static bool OnGrab(ControllerRay controller, Vector3 grabPoint)
         {
-            if (controllerRay == PlayerSetup.Instance.vrRayRight && (Mirrors.hitFound || Mirrors.held))
+            if (controller == PlayerSetup.Instance.vrRayRight && (Mirrors.hitFound || Mirrors.held))
                 return false;
             return true;
         }

@@ -12,10 +12,7 @@
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/PlayerLocator.dll)            
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()         
-[PersonalGravity](PersonalGravity) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/PersonalGravity.dll)    
-[FlightBinding](FlightBinding) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/FlightBinding.dll)    
-[FadeBlockedAvatar](FadeBlockedAvatar) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/FadeBlockedAvatar.dll)  
-[Fix_RotationBlockedAvatar](Fix_RotationBlockedAvatar) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/Fix_RotationBlockedAvatar.dll)           
+[QuickMenu-TriggerPositionAdjust](QuickMenu-TriggerPositionAdjust) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/QuickMenuTriggerPositionAdjust_0.0.1/QuickMenuTriggerPositionAdjust.dll)             
 
 # ReadMe
 Detailed ReadMe's for each mod can be found in their respective folders on this repository. If you have any questions please open an Issue or ask in the `help-and-support` channel on the [CVRMG Discord](https://discord.gg/dndGPM3bxu)
