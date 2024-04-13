@@ -25,4 +25,5 @@ The following mods have been retired
 | VoiceFalloffAdjMod | Outdated 2022/09/17 - Added to game |
 | VoiceBalanceModeRework | Suggestions from this post have been merged with 2024r174ex2 and 2023r173hotfix on 2024/02/20 |
 |NoMenuTouch  | Menu Touch should be removed in 2024r174 |
+|Fix_RotationBlockedAvatar  | Fixed in CVR 2024r175 |
 
