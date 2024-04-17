@@ -12,7 +12,8 @@
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/PlayerLocator.dll)            
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()         
-[QuickMenu-TriggerPositionAdjust](QuickMenu-TriggerPositionAdjust) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/QuickMenuTriggerPositionAdjust_0.0.1/QuickMenuTriggerPositionAdjust.dll)             
+[QuickMenu-TriggerPositionAdjust](QuickMenu-TriggerPositionAdjust) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/QuickMenuTriggerPositionAdjust_0.0.1/QuickMenuTriggerPositionAdjust.dll)   
+[VoiceConnectionStatus](VoiceConnectionStatus) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/VoiceConnectionStatus0.1.1/VoiceConnectionStatus.dll)           
 
 # ReadMe
 Detailed ReadMe's for each mod can be found in their respective folders on this repository. If you have any questions please open an Issue or ask in the `help-and-support` channel on the [CVRMG Discord](https://discord.gg/dndGPM3bxu)

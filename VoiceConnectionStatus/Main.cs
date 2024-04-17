@@ -11,9 +11,6 @@ using ABI.CCK.Components;
 using ABI_RC.Core;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
-using ABI_RC.Core.Util;
-using HighlightPlus;
-using UnityEngine.Networking;
 using ABI_RC.Core.Networking;
 using System.Text;
 using ABI_RC.Systems.GameEventSystem;
@@ -24,12 +21,10 @@ using DarkRift;
 
 namespace VoiceConnectionStatus
 {
-
     public class Main : MelonMod
     {
-        public const string versionStr = "0.1";
+        public const string versionStr = "0.1.1";
         public static MelonLogger.Instance Logger;
-
         public static Main Instance;
 
         public static MelonPreferences_Entry<bool> setAvatarParam;
@@ -45,9 +40,6 @@ namespace VoiceConnectionStatus
         public static object waitReconnect_Rout = null;
         public static bool currentVoiceState = false;
 
-
-        //Add sound effect? 
-
         public override void OnApplicationStart()
         {
             Instance = this;
@@ -58,7 +50,7 @@ namespace VoiceConnectionStatus
             playSound = cat.CreateEntry(nameof(playSound), true, "Play sound locally");
             sendChatBoxDisconnect = cat.CreateEntry(nameof(sendChatBoxDisconnect), true, "Send Chatbox Disconnect Message");
             sendChatBoxConnect = cat.CreateEntry(nameof(sendChatBoxConnect), true, "Send Chatbox Connect Message");
-            logToFile = cat.CreateEntry(nameof(logToFile), false, "Log to File");
+            logToFile = cat.CreateEntry(nameof(logToFile), false, "Log events to File", "", true);
 
             logToFile.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { InitDebugLog(); });
 
@@ -73,6 +65,8 @@ namespace VoiceConnectionStatus
             InitDebugLog();
             SetupEvents();
         }
+
+        //Set param after avatar change -- TODO
 
         public override void OnPreferencesSaved()
         {
@@ -94,7 +88,7 @@ namespace VoiceConnectionStatus
 
         public static System.Collections.IEnumerator VerifyReconnect()
         {
-            yield return new WaitForSeconds(2.5f);
+            yield return new WaitForSeconds(.5f);
             HandleConnection(true);
         }
 
@@ -117,17 +111,18 @@ namespace VoiceConnectionStatus
             {
                 if (Main.sendChatBoxDisconnect.Value && !state)
                 {
-                    Main.Logger.Msg(textColor, $"Setting Chatbox - ConnectionLost");
+                    Main.Logger.Msg(textColor, $"Sending Chatbox - Connection Lost");
                     ChatBox_Integration.SendConnectionLost();
                 }
                 else if (Main.sendChatBoxConnect.Value && state)
                 {
-                    Main.Logger.Msg(textColor, $"Setting Chatbox - ConnectionRegained");
+                    Main.Logger.Msg(textColor, $"Sending Chatbox - Connection Regained");
                     ChatBox_Integration.SendConnectionRegained();
                 }
             }
         }
 
+        //Toooooo much logging!
         public static void SetupEvents()
         {
 

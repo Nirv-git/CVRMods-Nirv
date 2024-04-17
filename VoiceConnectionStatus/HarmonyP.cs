@@ -33,6 +33,7 @@ namespace VoiceConnectionStatus
             }
         }
 
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ABI_RC.Core.CommonTools), nameof(CommonTools.Log))]
         internal static void AfterLog(CommonTools.LogLevelType_t t, string message, string code)

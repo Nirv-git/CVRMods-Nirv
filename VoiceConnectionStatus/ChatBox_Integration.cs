@@ -7,7 +7,6 @@ namespace VoiceConnectionStatus
 {
     public class ChatBox_Integration
     {
-
         public static void SendConnectionLost()
         {
             Kafe.ChatBox.API.SendMessage("Voice Disconnected", false, true, false);
@@ -16,6 +15,5 @@ namespace VoiceConnectionStatus
         {
             Kafe.ChatBox.API.SendMessage("Voice Connected", false, true, false);
         }
-
     }
 }
