@@ -23,7 +23,7 @@ namespace VoiceConnectionStatus
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.1.1";
+        public const string versionStr = "0.1.2";
         public static MelonLogger.Instance Logger;
         public static Main Instance;
 
