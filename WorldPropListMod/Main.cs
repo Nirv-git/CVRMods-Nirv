@@ -31,7 +31,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.8";
+        public const string versionStr = "0.7.9";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
@@ -228,7 +228,7 @@ namespace WorldPropListMod
             (string, string, string, string, bool, string, string, string) propName = (null, null, null, null, false, null, null, null);
             while (APIwaitingCount > 3) { await System.Threading.Tasks.Task.Delay(2000); }
             APIwaitingCount++;
-            propName = await ApiRequests.RequestPropDetailsPageTask(guid);
+            propName = await ApiRequests.RequestPropDetailsPageTask(guid, true);
             APIwaitingCount--;
             //Logger.Msg(APIwaitingCount);
             if (propName.Item1 == null) { PropNamesCache.Remove(guid);  return; }

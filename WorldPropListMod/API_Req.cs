@@ -14,7 +14,7 @@ namespace WorldPropListMod
     internal static class ApiRequests
     {
         //Much of the credit goes to https://github.com/kafeijao/Kafe_CVR_Mods/blob/6e2b44b2ed3db22d21096ca53177be3a298a4f46/OSC/Utils/ApiRequests.cs#L7
-        internal static async System.Threading.Tasks.Task<(string, string, string, string, bool, string, string, string)> RequestPropDetailsPageTask(string guid)
+        internal static async System.Threading.Tasks.Task<(string, string, string, string, bool, string, string, string)> RequestPropDetailsPageTask(string guid, bool firstAttempt)
         {//Name, URL, Author,tags, isPub, FileSize, UpdatedAt, Description
             if (Main.printAPIrequestsToConsole.Value) Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching prop {guid} name...");
             BaseResponse<SpawnableDetailsResponse> response;
@@ -31,8 +31,21 @@ namespace WorldPropListMod
             }
             if (response == null)
             {
-                Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching prop {guid} name has Failed! Response came back empty.");
+                Main.Logger.Msg(ConsoleColor.DarkYellow, $"[API] Fetching prop {guid} name has Failed! Response came back empty.");
                 return (null, null, null, null, false, null, null, null);
+            } 
+            else if (response.Data.Name == null)
+            {
+                if (firstAttempt)
+                {
+                    if (Main.printAPIrequestsToConsole.Value) Main.Logger.Msg(ConsoleColor.DarkYellow, $"[API] Fetched prop {guid} returned null Data values, retrying!");
+                    return await ApiRequests.RequestPropDetailsPageTask(guid, false);
+                }
+                else
+                {
+                    Main.Logger.Msg(ConsoleColor.DarkYellow, $"[API] Fetching prop {guid} name has Failed! Response returned null Data values twice!.");
+                    return (null, null, null, null, false, null, null, null);
+                }
             }
             if (Main.printAPIrequestsToConsole.Value) Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetched prop {guid} name successfully! Name: {response.Data.Name}");
             string tags = "";
