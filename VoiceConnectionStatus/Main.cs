@@ -39,6 +39,7 @@ namespace VoiceConnectionStatus
         public static float joinTime = 0f;
         public static object waitReconnect_Rout = null;
         public static bool currentVoiceState = false;
+        public static object waitAvatarChange_Rout = null;
 
         public override void OnApplicationStart()
         {
@@ -96,6 +97,7 @@ namespace VoiceConnectionStatus
         {
             currentVoiceState = state;
             ConsoleColor textColor = state ? ConsoleColor.Green : ConsoleColor.Red;
+            if (Main.waitAvatarChange_Rout != null) MelonCoroutines.Stop(Main.waitAvatarChange_Rout);
 
             if (Main.playSound.Value)
             {
@@ -130,8 +132,17 @@ namespace VoiceConnectionStatus
                 ConsoleColor textColor = state ? ConsoleColor.Green : ConsoleColor.Red;
                 Main.Logger.Msg(textColor, $"Avatar changed, setting Parameter 'VoiceConnectionStatus' to: {state}");
                 PlayerSetup.Instance.animatorManager.SetParameter("VoiceConnectionStatus", state);
+                waitAvatarChange_Rout = MelonCoroutines.Start(Main.WaitAvatarChange());
             }
         }
+        public static System.Collections.IEnumerator WaitAvatarChange()
+        {
+            yield return new WaitForSeconds(1f);
+            PlayerSetup.Instance.animatorManager.SetParameter("VoiceConnectionStatus", currentVoiceState);
+            yield return new WaitForSeconds(2f);
+            PlayerSetup.Instance.animatorManager.SetParameter("VoiceConnectionStatus", currentVoiceState);
+        }
+
 
         //Toooooo much logging!
         public static void SetupEvents()
