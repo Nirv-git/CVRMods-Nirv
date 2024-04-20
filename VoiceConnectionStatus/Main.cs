@@ -122,6 +122,17 @@ namespace VoiceConnectionStatus
             }
         }
 
+        public static void OnSetupAvatarGeneral()
+        {
+            if (Main.setAvatarParam.Value)
+            {
+                var state = currentVoiceState;
+                ConsoleColor textColor = state ? ConsoleColor.Green : ConsoleColor.Red;
+                Main.Logger.Msg(textColor, $"Avatar changed, setting Parameter 'VoiceConnectionStatus' to: {state}");
+                PlayerSetup.Instance.animatorManager.SetParameter("VoiceConnectionStatus", state);
+            }
+        }
+
         //Toooooo much logging!
         public static void SetupEvents()
         {

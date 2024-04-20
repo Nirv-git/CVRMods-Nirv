@@ -8,6 +8,7 @@ using System.Reflection;
 using HarmonyLib;
 using ABI_RC.Core.UI;
 using ABI_RC.Core;
+using ABI_RC.Core.Player;
 
 namespace VoiceConnectionStatus
 {
@@ -33,6 +34,15 @@ namespace VoiceConnectionStatus
             }
         }
 
+        // Avatar
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
+        internal static void AfterSetupAvatarGeneral()
+        {
+            //Main.Logger.Msg($"9-1");
+            Main.OnSetupAvatarGeneral();
+        }
+
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ABI_RC.Core.CommonTools), nameof(CommonTools.Log))]
@@ -42,4 +52,5 @@ namespace VoiceConnectionStatus
             Main.LogLine($"GAMELOG: Code:{code} | Type:{t} | Msg:{message}");
         }
     }
+
 }
