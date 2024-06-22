@@ -24,7 +24,7 @@ namespace SitLaydown
 
     public class Main : MelonMod
     {
-        public const string versionStr = "1.7.8";
+        public const string versionStr = "1.7.9";
         public static MelonLogger.Instance Logger;
 
         public static Main Instance;
@@ -231,6 +231,7 @@ namespace SitLaydown
             if (enableChair)
             {
                 GameObject baseObj = GameObject.Instantiate(chairPrefab);
+                baseObj.name = "ChairPrefab(Mod)-" + MetaPort.Instance.ownerId;
                 var playerPos = PlayerSetup.Instance.GetPlayerPosition();
                 //var rotTo = Quaternion.Euler(0, Camera.main.transform.eulerAngles.y, 0);
                 
