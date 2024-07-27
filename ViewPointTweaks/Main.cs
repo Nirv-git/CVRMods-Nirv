@@ -22,7 +22,7 @@ namespace ViewPointTweaks
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.8";
+        public const string versionStr = "0.7.9";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "ViewPointTweaks";
@@ -71,6 +71,10 @@ namespace ViewPointTweaks
             if (scale != 0)
             {
                 var vrHeadPos = VRheadPoint.position;
+                if (Math.Round(Mathf.Abs(VRcam.localScale.x), 1) <= .1f && scale < 0f)
+                {
+                    scale = scale / 10;
+                }
                 var newScale = VRcam.localScale + new Vector3(scale, scale, scale);
                 if (newScale.z > 0f)
                 {
