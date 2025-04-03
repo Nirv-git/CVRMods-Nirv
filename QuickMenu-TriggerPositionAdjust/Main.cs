@@ -21,7 +21,7 @@ namespace QuickMenuTriggerPositionAdjust
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.0.1";
+        public const string versionStr = "0.0.3";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "QuickMenuTriggerPositionAdjust";
@@ -39,7 +39,7 @@ namespace QuickMenuTriggerPositionAdjust
                 { CohtmlHud.Instance.ViewDropText("Mod: QuickMenu-TriggerPositionAdjust", "QuickMenu needs to be open", "To enter Reposition Mode the QuickMenu must be open"); } 
             });
             settings.AddSimpleButton("ExitRepositionMode", () => {
-                if (CVR_MenuManager.Instance.coreData.menuParameters.quickMenuInGrabMode)
+                if (CVR_MenuManager.Instance._isQuickMenuInGrabMode)
                 { CVR_MenuManager.Instance.ExitRepositionMode(); }
                 else
                 { CohtmlHud.Instance.ViewDropText("Mod: QuickMenu-TriggerPositionAdjust", "QuickMenu not in Reposition Mode", "Can not exit Reposition Mode as the QuickMenu isn't in it"); }
