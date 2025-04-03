@@ -1,4 +1,3 @@
-
 **Mods are NOT against CVR's TOS. However be smart when using them, and if you want to submit a bug report to CVR, test with --no-mods first**
 
 **This was made in my free time, and is provided AS IS without warranty of any kind, express or implied. Any use is at your own risk and you accept all responsibility**
@@ -12,8 +11,8 @@
 [WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/PlayerLocator.dll)            
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()         
-[QuickMenu-TriggerPositionAdjust](QuickMenu-TriggerPositionAdjust) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/QuickMenuTriggerPositionAdjust_0.0.1/QuickMenuTriggerPositionAdjust.dll)   
-[VoiceConnectionStatus](VoiceConnectionStatus) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/VoiceConnectionStatus0.1.1/VoiceConnectionStatus.dll)           
+[QuickMenu-TriggerPositionAdjust](QuickMenu-TriggerPositionAdjust) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.7.10PortMirror2.1.21QMTrigPosAdj0.0.3VoiceAttenRework0.0.8/QuickMenuTriggerPositionAdjust.dll)             
+[VoiceAttenuationReworkBBC](VoiceAttenuationReworkBBC) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.7.10PortMirror2.1.21QMTrigPosAdj0.0.3VoiceAttenRework0.0.8/VoiceAttenuationReworkBBC.dll)    
 
 # ReadMe
 Detailed ReadMe's for each mod can be found in their respective folders on this repository. If you have any questions please open an Issue or ask in the `help-and-support` channel on the [CVRMG Discord](https://discord.gg/dndGPM3bxu)
