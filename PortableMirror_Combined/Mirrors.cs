@@ -124,12 +124,12 @@ namespace PortableMirror
 
             yield return new WaitForSeconds(.1f);
             if (child)
-            {
+            {//MirrorTransCutCombo
                 mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = (1 << CVRLayers.PlayerNetwork);
-                mirrorBase.GetChild(0).GetComponent<CVRMirror>().m_ReflectLayers = (1 << CVRLayers.PlayerLocal) | (1 << CVRLayers.PlayerClone); 
+                mirrorBase.GetChild(0).GetComponent<CVRMirror>().m_ReflectLayers = (1 << CVRLayers.PlayerLocal);// | (1 << CVRLayers.PlayerClone);
             }
-            else
-                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = (1 << CVRLayers.PlayerLocal) | (1 << CVRLayers.PlayerClone);
+            else //Solo
+                mirrorBase.GetComponent<CVRMirror>().m_ReflectLayers = (1 << CVRLayers.PlayerLocal);// | (1 << CVRLayers.PlayerClone);
         }
 
 
@@ -619,6 +619,7 @@ namespace PortableMirror
                         }
                         if (hitFound || held)
                         {
+                            //Main.Logger.Msg($"gripRightValue:{CVRInputManager.Instance.gripRightValue}, interactRightValue:{CVRInputManager.Instance.interactRightValue} gripRightDown:{CVRInputManager.Instance.gripRightDown} gripRightUp:{CVRInputManager.Instance.gripRightUp}");
                             var dist = nearest.Item3;
                             if ((held || (CVRInputManager.Instance.gripRightValue > Main.customGrab_gripRightValue.Value && CVRInputManager.Instance.interactRightValue > .5f)) && !(nearest.Item2?.Equals(null) ?? true))
                             {//Grab or continue grabbing
