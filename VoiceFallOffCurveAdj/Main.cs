@@ -20,12 +20,12 @@ using UIExpansionKit.API;
 
 
 [assembly: MelonGame(null, "ChilloutVR")]
-[assembly: MelonInfo(typeof(VoiceAttenuationReworkBBC.Main), "VoiceAttenuationReworkBBC", VoiceAttenuationReworkBBC.Main.versionStr, "Nirvash")]
-[assembly: AssemblyVersion(VoiceAttenuationReworkBBC.Main.versionStr)]
-[assembly: AssemblyFileVersion(VoiceAttenuationReworkBBC.Main.versionStr)]
+[assembly: MelonInfo(typeof(VoiceFallOffCurveAdj.Main), "VoiceFallOffCurveAdj", VoiceFallOffCurveAdj.Main.versionStr, "Nirvash")]
+[assembly: AssemblyVersion(VoiceFallOffCurveAdj.Main.versionStr)]
+[assembly: AssemblyFileVersion(VoiceFallOffCurveAdj.Main.versionStr)]
 [assembly: MelonColor(ConsoleColor.DarkCyan)]
 
-namespace VoiceAttenuationReworkBBC
+namespace VoiceFallOffCurveAdj
 {
     public class Main : MelonMod
     {
@@ -33,7 +33,7 @@ namespace VoiceAttenuationReworkBBC
         public const string versionStr = "0.0.8";
 
         public static MelonPreferences_Category cat;
-        private const string catagory = "VoiceAttenuationReworkBBC";
+        private const string catagory = "VoiceFallOffCurveAdj";
 
 
         //public static MelonPreferences_Entry<bool> reworkFocus;
@@ -46,7 +46,7 @@ namespace VoiceAttenuationReworkBBC
         public static MelonPreferences_Entry<float> volumeCurveMid3Value;
         public static MelonPreferences_Entry<bool> info;
 
-        public static MelonPreferences_Entry<bool> debugParticipantPipeline;
+        //public static MelonPreferences_Entry<bool> debugParticipantPipeline;
 
 
 
@@ -60,9 +60,9 @@ namespace VoiceAttenuationReworkBBC
 
         public override void OnApplicationStart()
         {
-            Logger = new MelonLogger.Instance("VoiceAttenuationReworkBBC", ConsoleColor.DarkCyan);
+            Logger = new MelonLogger.Instance("VoiceFallOffCurveAdj", ConsoleColor.DarkCyan);
 
-            cat = MelonPreferences.CreateCategory(catagory, "VoiceAttenuationReworkBBC");
+            cat = MelonPreferences.CreateCategory(catagory, "VoiceFallOffCurveAdj");
 
             changeVolumeCurve = MelonPreferences.CreateEntry(catagory, nameof(changeVolumeCurve), true, "Change Volume Curve");
             volumeCurveMidPos = MelonPreferences.CreateEntry(catagory, nameof(volumeCurveMidPos), .15f, "Curve Point 1 Position (0.15-0.95");
@@ -73,7 +73,7 @@ namespace VoiceAttenuationReworkBBC
             volumeCurveMid3Value = MelonPreferences.CreateEntry(catagory, nameof(volumeCurveMid3Value), .025f, "Curve Point 3 Value (0-1)");
             info = MelonPreferences.CreateEntry(catagory, nameof(info), false, "Position/Value for later points are clamped to be later/lower then the previous");
 
-            debugParticipantPipeline = MelonPreferences.CreateEntry(catagory, nameof(debugParticipantPipeline), false, "Debug log spam - ParticipantPipeline");
+            //debugParticipantPipeline = MelonPreferences.CreateEntry(catagory, nameof(debugParticipantPipeline), false, "Debug log spam - ParticipantPipeline";
 
             changeVolumeCurve.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { UpdateCurve(true); });
             volumeCurveMidPos.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { UpdateCurve(false); CompareCurves(); });
@@ -83,7 +83,7 @@ namespace VoiceAttenuationReworkBBC
             volumeCurveMid3Pos.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { UpdateCurve(false); CompareCurves(); });
             volumeCurveMid3Value.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { UpdateCurve(false); CompareCurves(); });
 
-            var settings = ExpansionKitApi.GetSettingsCategory("VoiceAttenuationReworkBBC");
+            var settings = ExpansionKitApi.GetSettingsCategory("VoiceFallOffCurveAdj");
             settings.AddSimpleButton("Print Current Curve to Console", () => DrawCurveInConsole(GetCurrentCurve(), ConsoleColor.White));
             settings.AddSimpleButton("Dump Curve Values (Logspam)", () => PrintCurveValues(GetCurrentCurve(), 0.01f));
         }
@@ -426,31 +426,31 @@ namespace VoiceAttenuationReworkBBC
     {
 
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(Comms_ParticipantPipeline), nameof(Comms_ParticipantPipeline.LateUpdate))]
-        internal static void LateUpdate(Comms_ParticipantPipeline __instance)
-        {
-            if (!Main.debugParticipantPipeline.Value)
-                return;
+        //[HarmonyPostfix]
+        //[HarmonyPatch(typeof(Comms_ParticipantPipeline), nameof(Comms_ParticipantPipeline.LateUpdate))]
+        //internal static void LateUpdate(Comms_ParticipantPipeline __instance)
+        //{
+        //    if (!Main.debugParticipantPipeline.Value)
+        //        return;
 
-            Vector3 remotePosition = __instance._puppetMaster.GetVoiceWorldPosition();
-            Quaternion remoteRotation =  __instance._puppetMaster.GetVoiceWorldRotation();
-            Transform transform = PlayerSetup.Instance.GetActiveCamera().transform;
-            Vector3 camPosition = transform.position;
-            Quaternion camRotation = transform.rotation;
-            var distance = Vector3.Distance(camPosition, remotePosition);
+        //    Vector3 remotePosition = __instance._puppetMaster.GetVoiceWorldPosition();
+        //    Quaternion remoteRotation =  __instance._puppetMaster.GetVoiceWorldRotation();
+        //    Transform transform = PlayerSetup.Instance.GetActiveCamera().transform;
+        //    Vector3 camPosition = transform.position;
+        //    Quaternion camRotation = transform.rotation;
+        //    var distance = Vector3.Distance(camPosition, remotePosition);
 
-            Vector3 speakerPosition = remotePosition;
-            Vector3 speakerForward = remoteRotation * Vector3.forward;
-            Vector3 listenerPosition = camPosition;
-            Vector3 listenerForward = camRotation * Vector3.forward;
-            Vector3 listenerRight = camRotation * Vector3.right;
+        //    Vector3 speakerPosition = remotePosition;
+        //    Vector3 speakerForward = remoteRotation * Vector3.forward;
+        //    Vector3 listenerPosition = camPosition;
+        //    Vector3 listenerForward = camRotation * Vector3.forward;
+        //    Vector3 listenerRight = camRotation * Vector3.right;
 
-            var speakerAngle = Vector3.Angle(speakerForward, listenerPosition - speakerPosition);
-            var listenerAngle = Vector3.Angle(listenerForward, speakerPosition - listenerPosition);
+        //    var speakerAngle = Vector3.Angle(speakerForward, listenerPosition - speakerPosition);
+        //    var listenerAngle = Vector3.Angle(listenerForward, speakerPosition - listenerPosition);
 
-            Main.Logger.Msg($"dist: {distance:F2} distAttn: {__instance._distanceAttenuation:F2} focusVol: {__instance._focusVolume:F2} _mastVol: {__instance._masterVolume:F2} playerVol: {__instance._playerVolume:F2} selfModVol: {__instance._selfModerationVolume:F2} voiceBoost: {__instance._voiceBoost:F2} listenerAngle: {listenerAngle:F2} speakerAngle: {speakerAngle:F2}");
-        }
+        //    Main.Logger.Msg($"dist: {distance:F2} distAttn: {__instance._distanceAttenuation:F2} focusVol: {__instance._focusVolume:F2} _mastVol: {__instance._masterVolume:F2} playerVol: {__instance._playerVolume:F2} selfModVol: {__instance._selfModerationVolume:F2} voiceBoost: {__instance._voiceBoost:F2} listenerAngle: {listenerAngle:F2} speakerAngle: {speakerAngle:F2}");
+        //}
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Comms_ParticipantPipeline), nameof(Comms_ParticipantPipeline.CreateVolumeCurve))]

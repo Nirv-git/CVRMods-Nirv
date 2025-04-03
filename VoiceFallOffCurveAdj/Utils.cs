@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 
-namespace VoiceAttenuationReworkBBC
+namespace VoiceFallOffCurveAdj
 {
     public static class Utils
     {

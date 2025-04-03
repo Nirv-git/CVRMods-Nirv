@@ -1,4 +1,4 @@
-# VoiceAttenuationReworkBBC
+# VoiceFallOffCurveAdj
    
 This mod allows you to edit the Audio Falloff Curve for other users voice communication. This can allow you to adjust the falloff so further players are still audible, but much quieter. 
 

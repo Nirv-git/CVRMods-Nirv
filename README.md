@@ -12,7 +12,7 @@
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/PlayerLocator.dll)            
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()         
 [QuickMenu-TriggerPositionAdjust](QuickMenu-TriggerPositionAdjust) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.7.10PortMirror2.1.21QMTrigPosAdj0.0.3VoiceAttenRework0.0.8/QuickMenuTriggerPositionAdjust.dll)             
-[VoiceAttenuationReworkBBC](VoiceAttenuationReworkBBC) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.7.10PortMirror2.1.21QMTrigPosAdj0.0.3VoiceAttenRework0.0.8/VoiceAttenuationReworkBBC.dll)    
+[VoiceFallOffCurveAdj](VoiceFallOffCurveAdj) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.7.10PortMirror2.1.21QMTrigPosAdj0.0.3VoiceAttenRework0.0.8/VoiceFallOffCurveAdj.dll)    
 
 # ReadMe
 Detailed ReadMe's for each mod can be found in their respective folders on this repository. If you have any questions please open an Issue or ask in the `help-and-support` channel on the [CVRMG Discord](https://discord.gg/dndGPM3bxu)
