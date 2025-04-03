@@ -17,8 +17,8 @@ Settings are available in the UIX Mod Settings and the **UI IS BAD**
 
 A curve will then be generated to fit your points.    
 
-![Image](https://github.com/user-attachments/assets/c0b3244f-b33d-4837-aa3f-f5ff2ffdc3d2)
+![Image](https://github.com/user-attachments/assets/682a4004-39ca-49ff-acc1-67b28dcf4024)
 
 After making changes, or togging to use the Custom Curve a visualization will print in your Melon loader console window. This shows an example of a custom curve and the points used to make it.     
 
-![Image](https://github.com/user-attachments/assets/f029a3a3-281a-4ebf-b035-90eb6051c237)
+![Image](https://github.com/user-attachments/assets/2ec014ee-af38-486d-86a1-d7897cd45126)
