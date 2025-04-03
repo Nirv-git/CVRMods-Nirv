@@ -186,7 +186,7 @@ namespace WorldPropListMod
 
         [HarmonyPrefix]
         [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnProp))]
-        internal static bool OnSpawnProp(string propGuid, float posX, float posY, float posZ, bool useTargetLocationGravity)
+        internal static bool OnSpawnProp(string propGuid, Vector3 position, Quaternion rotation)
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"9-2 SpawnProp");
             //Main.Logger.Msg($"propGuid {propGuid}");
