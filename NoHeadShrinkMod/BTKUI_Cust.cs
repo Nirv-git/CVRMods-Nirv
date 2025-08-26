@@ -84,34 +84,34 @@ namespace NoHeadShrinkMod
                 dontUpdate = false;
             };
 
-            ((Category)mainCat).AddToggle("Unshrink at distance", "Unshrink when your camera is x distance from head", Main.unshrinkAtDistance.Value).OnValueUpdated += action =>
-            {
-                dontUpdate = true;
-                Main.unshrinkAtDistance.Value = action;
-                dontUpdate = false;
-            };
+            //((Category)mainCat).AddToggle("Unshrink at distance", "Unshrink when your camera is x distance from head", Main.unshrinkAtDistance.Value).OnValueUpdated += action =>
+            //{
+            //    dontUpdate = true;
+            //    Main.unshrinkAtDistance.Value = action;
+            //    dontUpdate = false;
+            //};
 
-            ((Category)mainCat).AddToggle("Scale distance with height", "Scale distance based on avatar height (Height*Distance)", Main.scaleDistance.Value).OnValueUpdated += action =>
-            {
-                dontUpdate = true;
-                Main.scaleDistance.Value = action;
-                dontUpdate = false;
-            };
+            //((Category)mainCat).AddToggle("Scale distance with height", "Scale distance based on avatar height (Height*Distance)", Main.scaleDistance.Value).OnValueUpdated += action =>
+            //{
+            //    dontUpdate = true;
+            //    Main.scaleDistance.Value = action;
+            //    dontUpdate = false;
+            //};
 
-            if (pageSub != null)
-                ((Page)pageSub).Delete();
-            pageSub = ((Category)mainCat).AddPage("Distance & Remeasure", "Noshrink-Head", "Change unshrink distance and Remeasure Avatar Height", ModName);
-            var subCat = ((Page)pageSub).AddCategory("");
-            subCat.AddButton($"Remeasure Avatar Height", "Noshrink-Reset", "Remeasures current avatar height").OnPress += () =>
-            {
-                Main.FindScale();
-            };
-            ((Page)pageSub).AddSlider("Unshink distance", "Unshrink distance value", Main.unshrinkDistance.Value, 0f, 2f).OnValueUpdated += action =>
-            {
-                dontUpdate = true;
-                Main.unshrinkDistance.Value = action;
-                dontUpdate = false;
-            };
+            //if (pageSub != null)
+            //    ((Page)pageSub).Delete();
+            //pageSub = ((Category)mainCat).AddPage("Distance & Remeasure", "Noshrink-Head", "Change unshrink distance and Remeasure Avatar Height", ModName);
+            //var subCat = ((Page)pageSub).AddCategory("");
+            //subCat.AddButton($"Remeasure Avatar Height", "Noshrink-Reset", "Remeasures current avatar height").OnPress += () =>
+            //{
+            //    Main.FindScale();
+            //};
+            //((Page)pageSub).AddSlider("Unshink distance", "Unshrink distance value", Main.unshrinkDistance.Value, 0f, 2f).OnValueUpdated += action =>
+            //{
+            //    dontUpdate = true;
+            //    Main.unshrinkDistance.Value = action;
+            //    dontUpdate = false;
+            //};
         }  
     }
 }
