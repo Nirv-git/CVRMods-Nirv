@@ -21,7 +21,7 @@ namespace FadeBlockedAvatar
     {
 
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(PuppetMaster), nameof(PuppetMaster.AvatarInstantiated))]
+        [HarmonyPatch(typeof(PuppetMaster), nameof(PuppetMaster.OnSetupAvatar))]
         internal static void OnAvatarInstantiated(PuppetMaster __instance)
         {
             Main.SetupAvatar(__instance);

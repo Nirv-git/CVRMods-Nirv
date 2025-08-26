@@ -1,19 +1,20 @@
-﻿using MelonLoader;
-using UnityEngine;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections;
-using System.Reflection;
+﻿using ABI.CCK.Components;
 using ABI_RC.Core;
+using ABI_RC.Core.Networking.API;
+using ABI_RC.Core.Networking.API.Responses;
 using ABI_RC.Core.Networking.IO.UserGeneratedContent;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
 using ABI_RC.Core.Util;
-using ABI.CCK.Components;
+using ABI_RC.Systems.GameEventSystem;
 using HarmonyLib;
-using ABI_RC.Core.Networking.API;
-using ABI_RC.Core.Networking.API.Responses;
+using MelonLoader;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
 
 
 
@@ -28,7 +29,7 @@ namespace IKpresetsMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.8";
+        public const string versionStr = "0.7.10";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "IKpresets";
@@ -112,7 +113,10 @@ namespace IKpresetsMod
 
             BTKUI_Cust.SetupUI();
 
-
+            CVRGameEventSystem.Avatar.OnLocalAvatarLoad.AddListener((message) =>
+            {
+                Main.OnSetupAvatarGeneral();
+            });
 
         }
 
@@ -183,17 +187,17 @@ namespace IKpresetsMod
         } 
     }
 
-    [HarmonyPatch]
-    internal class HarmonyPatches
-    {
-        // Avatar
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
-        internal static void AfterSetupAvatarGeneral()
-        {
-            //Main.Logger.Msg($"9-1");
-            Main.OnSetupAvatarGeneral();
-        }
-    }
+    //[HarmonyPatch]
+    //internal class HarmonyPatches
+    //{
+    //    // Avatar
+    //    [HarmonyPostfix]
+    //    [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
+    //    internal static void AfterSetupAvatarGeneral()
+    //    {
+    //        //Main.Logger.Msg($"9-1");
+    //        Main.OnSetupAvatarGeneral();
+    //    }
+    //}
 }
 

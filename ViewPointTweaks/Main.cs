@@ -1,15 +1,16 @@
-﻿using MelonLoader;
-using UnityEngine;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections;
-using System.Reflection;
-using ABI_RC.Core;
-using ABI_RC.Core.Player;
-using ABI_RC.Core.Savior;
+﻿using ABI_RC.Core;
 using ABI_RC.Core.Networking.API;
 using ABI_RC.Core.Networking.API.Responses;
+using ABI_RC.Core.Player;
+using ABI_RC.Core.Savior;
+using ABI_RC.Systems.GameEventSystem;
+using MelonLoader;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
 
 [assembly: MelonGame(null, "ChilloutVR")]
 [assembly: MelonInfo(typeof(ViewPointTweaks.Main), "ViewPointTweaks", ViewPointTweaks.Main.versionStr, "Nirvash")]
@@ -22,7 +23,7 @@ namespace ViewPointTweaks
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.9";
+        public const string versionStr = "0.7.10";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "ViewPointTweaks";
@@ -52,7 +53,13 @@ namespace ViewPointTweaks
             useNirvMiscPage = MelonPreferences.CreateEntry(catagory, nameof(useNirvMiscPage), true, "BTKUI - Use 'NirvMisc' page instead of default 'Misc' page.");
             autoLoadAvatarPresets = MelonPreferences.CreateEntry(catagory, nameof(autoLoadAvatarPresets), false, "Auto load specific avatar presets");
             savedAvatarPrefs = MelonPreferences.CreateEntry(catagory, nameof(savedAvatarPrefs), "", "savedPrefs", "", true);
-            CustomBTKUI.InitUi();    
+            CustomBTKUI.InitUi();
+
+
+            CVRGameEventSystem.Avatar.OnLocalAvatarLoad.AddListener((message) =>
+            {
+                Main.OnSetupAvatarGeneral();
+            });
         }
 
         public static void SetupPoints()

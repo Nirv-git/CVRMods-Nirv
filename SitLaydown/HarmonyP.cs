@@ -46,7 +46,7 @@ namespace SitLaydown
             {
                 if (Main.inChair && Main.preventLeavingSeat.Value)
                 {
-                    ViewManager.Instance.UiStateToggle(!ViewManager.Instance.gameMenuView.Enabled);
+                    ViewManager.Instance.UiStateToggle(!ViewManager.Instance.cohtmlView.Enabled);
                     //Main.Logger.Msg(ConsoleColor.Yellow, $"1-5 Not leaving chair, skipping method");
                     if (Main.lastHUDnotif + 300 < Time.time)
                     {
@@ -103,7 +103,7 @@ namespace SitLaydown
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatar))]
         internal static void OnSetupAvatarGeneral()
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"2-1 OnSetupAvatarGeneral");

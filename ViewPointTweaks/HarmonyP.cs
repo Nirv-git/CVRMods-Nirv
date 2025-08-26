@@ -107,13 +107,13 @@ namespace ViewPointTweaks
             return true;
         }
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
-        internal static void AfterSetupAvatarGeneral()
-        {
-            //Main.Logger.Msg($"9-1");
-            Main.OnSetupAvatarGeneral();
-        }
+        //[HarmonyPostfix]
+        //[HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]
+        //internal static void AfterSetupAvatarGeneral()
+        //{
+        //    //Main.Logger.Msg($"9-1");
+        //    Main.OnSetupAvatarGeneral();
+        //}
 
     }
 }

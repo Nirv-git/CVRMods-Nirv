@@ -25,7 +25,7 @@ namespace FadeBlockedAvatar
 
     public class Main : MelonMod
     {
-        public const string versionStr = "0.1";
+        public const string versionStr = "0.2";
         public static MelonLogger.Instance Logger;
 
         public static Main Instance;
@@ -113,7 +113,7 @@ namespace FadeBlockedAvatar
                     return;
                 //Main.Logger.Msg($"puppet.name:{puppet.transform.name}");
                 //Main.Logger.Msg($"puppet._isBlocked:{puppet._isBlocked}");
-                if (puppet._isBlocked)
+                if (puppet.IsAvatarBlocked)
                 {//do things
                     //Main.Logger.Msg($"was blocked");
 

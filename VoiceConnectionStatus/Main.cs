@@ -23,7 +23,7 @@ namespace VoiceConnectionStatus
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.1.4";
+        public const string versionStr = "0.1.5";
         public static MelonLogger.Instance Logger;
         public static Main Instance;
 
@@ -65,6 +65,11 @@ namespace VoiceConnectionStatus
             AudioModuleManager.SetupDefaultAudioClips();
             InitDebugLog();
             SetupEvents();
+
+            CVRGameEventSystem.Avatar.OnLocalAvatarLoad.AddListener((message) =>
+            {
+                Main.OnSetupAvatarGeneral();
+            });
         }
 
         //Set param after avatar change -- TODO
@@ -106,7 +111,7 @@ namespace VoiceConnectionStatus
             if (Main.setAvatarParam.Value)
             {
                 Main.Logger.Msg(textColor, $"Setting Parameter 'VoiceConnectionStatus' to: {state}");
-                PlayerSetup.Instance.animatorManager.SetParameter("VoiceConnectionStatus", state);
+                PlayerSetup.Instance.AnimatorManager.SetParameter("VoiceConnectionStatus", state);
             }
             if (Main.chatbox_En && (Time.time > Main.joinTime + 5f) && 
                 (NetworkManager.Instance != null && NetworkManager.Instance.GameNetwork.ConnectionState == ConnectionState.Connected))
@@ -131,16 +136,16 @@ namespace VoiceConnectionStatus
                 var state = currentVoiceState;
                 ConsoleColor textColor = state ? ConsoleColor.Green : ConsoleColor.Red;
                 Main.Logger.Msg(textColor, $"Avatar changed, setting Parameter 'VoiceConnectionStatus' to: {state}");
-                PlayerSetup.Instance.animatorManager.SetParameter("VoiceConnectionStatus", state);
+                PlayerSetup.Instance.AnimatorManager.SetParameter("VoiceConnectionStatus", state);
                 waitAvatarChange_Rout = MelonCoroutines.Start(Main.WaitAvatarChange());
             }
         }
         public static System.Collections.IEnumerator WaitAvatarChange()
         {
             yield return new WaitForSeconds(1f);
-            PlayerSetup.Instance.animatorManager.SetParameter("VoiceConnectionStatus", currentVoiceState);
+            PlayerSetup.Instance.AnimatorManager.SetParameter("VoiceConnectionStatus", currentVoiceState);
             yield return new WaitForSeconds(2f);
-            PlayerSetup.Instance.animatorManager.SetParameter("VoiceConnectionStatus", currentVoiceState);
+            PlayerSetup.Instance.AnimatorManager.SetParameter("VoiceConnectionStatus", currentVoiceState);
         }
 
 
@@ -174,12 +179,11 @@ namespace VoiceConnectionStatus
                 }
             });
 
-            CVRGameEventSystem.Player.OnJoin.AddListener((message) =>
+            CVRGameEventSystem.Player.OnJoinEntity.AddListener((message) =>
             {
                 try
                 {
-                    LogLine($"Player OnJoin: {message.userName} - avtrId:{message.avtrId}, accountVerified: {message.accountVerified} avatarBlocked: {message.avatarBlocked} " +
-                        $"ownerId:{message.ownerId} profileImageUrl:{message.profileImageUrl} userClanTag:{message.userClanTag} userRank:{message.userRank} userStaffTag:{message.userStaffTag}");
+                    LogLine($"Player OnJoin: {message.Username}");
                 }
                 catch (Exception e)
                 {
@@ -188,12 +192,11 @@ namespace VoiceConnectionStatus
                 }
             });
 
-            CVRGameEventSystem.Player.OnLeave.AddListener((message) =>
+            CVRGameEventSystem.Player.OnLeaveEntity.AddListener((message) =>
             {
                 try
                 {
-                    LogLine($"Player OnLeave: {message.userName} - avtrId:{message.avtrId}, accountVerified: {message.accountVerified} avatarBlocked: {message.avatarBlocked} " +
-                        $"ownerId:{message.ownerId} profileImageUrl:{message.profileImageUrl} userClanTag:{message.userClanTag} userRank:{message.userRank} userStaffTag:{message.userStaffTag}");
+                    LogLine($"Player OnLeave: {message.Username}");
                 }
                 catch (Exception e)
                 {
@@ -202,7 +205,7 @@ namespace VoiceConnectionStatus
                 }
             });
 
-            CVRGameEventSystem.Spawnable.OnLoad.AddListener((message, message2) =>
+            CVRGameEventSystem.Spawnable.OnPropSpawned.AddListener((message, message2) =>
             {
                 try
                 {

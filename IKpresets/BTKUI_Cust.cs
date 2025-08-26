@@ -47,7 +47,7 @@ namespace IKpresetsMod
         public static void SaveChanges()
         {
             MetaPort.Instance.SaveGameConfig();
-            ViewManager.Instance.gameMenuView.View.TriggerEvent("CVRAppActionLoadSettings");
+            ViewManager.Instance.RequestCurrentSettings();
         }
 
 
@@ -188,7 +188,7 @@ namespace IKpresetsMod
 
                 {
                     var calMode = toggles.AddButton("Calibration Mode", "ikPre-Calibration", "Select what calibration mode should be used"); ////0 InPlace, 1 FollowHead, 2FullyFollowHead
-                    var multiSel_calMode = new MultiSelection("Calibration Mode", new string[] { "In Place", "Follow Head", "Fully FollowHead" }, MetaPort.Instance.settings.GetSettingInt("IKCalibrationMode"));
+                    var multiSel_calMode = new MultiSelection("Calibration Mode", new string[] { "In Place", "Follow Head", "Fully FollowHead" }, MetaPort.Instance.settings.GetSettingsInt("IKCalibrationMode"));
                     multiSel_calMode.OnOptionUpdated += value => MetaPort.Instance.settings.SetSettingsInt("IKCalibrationMode", value);
                     SaveChanges();
                     calMode.OnPress += () => BTKUILib.QuickMenuAPI.OpenMultiSelect(multiSel_calMode);
@@ -203,13 +203,13 @@ namespace IKpresetsMod
                 {
                     string setting = "IKSpineRelaxIterations";
                     string desc = "Spine Relax Iterations - How much work will be done on bending the spine. Below 5 is not recommended, 10 will provide about 1mm precision for hip positioning, 25 is the maximum sensible value.";
-                    int value = MetaPort.Instance.settings.GetSettingInt(setting);
+                    int value = MetaPort.Instance.settings.GetSettingsInt(setting);
 
                     var cat = page.AddCategory(catText());
                     string catText() { return $"Spine Relax Iterations: {value}"; }
                     void UpdateSet()
                     {
-                        value = MetaPort.Instance.settings.GetSettingInt(setting);
+                        value = MetaPort.Instance.settings.GetSettingsInt(setting);
                         cat.CategoryName = catText();
                     }
 
@@ -238,13 +238,13 @@ namespace IKpresetsMod
                 {
                     string setting = "IKMaxSpineAngleFwd";
                     string desc = "Max bend angles - how much spine/neck can be bent forward/back. If your spine bends too much to your taste or looks cursed on your specific avatar, reduce these angles (min recommended value is 1 though)";
-                    int value = MetaPort.Instance.settings.GetSettingInt(setting);
+                    int value = MetaPort.Instance.settings.GetSettingsInt(setting);
 
                     var cat = page.AddCategory(catText());
                     string catText() { return $"Max Spine Angle Fwd: {value}"; }
                     void UpdateSet()
                     {
-                        value = MetaPort.Instance.settings.GetSettingInt(setting);
+                        value = MetaPort.Instance.settings.GetSettingsInt(setting);
                         cat.CategoryName = catText();
                     }
 
@@ -271,13 +271,13 @@ namespace IKpresetsMod
                 {
                     string setting = "IKMaxSpineAngleBack";
                     string desc = "Max bend angles - how much spine/neck can be bent forward/back. If your spine bends too much to your taste or looks cursed on your specific avatar, reduce these angles (min recommended value is 1 though)";
-                    int value = MetaPort.Instance.settings.GetSettingInt(setting);
+                    int value = MetaPort.Instance.settings.GetSettingsInt(setting);
 
                     var cat = page.AddCategory(catText());
                     string catText() { return $"Max Spine Angle Back: {value}"; }
                     void UpdateSet()
                     {
-                        value = MetaPort.Instance.settings.GetSettingInt(setting);
+                        value = MetaPort.Instance.settings.GetSettingsInt(setting);
                         cat.CategoryName = catText();
                     }
 
@@ -303,13 +303,13 @@ namespace IKpresetsMod
                 {
                     string setting = "IKMaxNeckAngleFwd";
                     string desc = "Max bend angles - how much spine/neck can be bent forward/back. If your spine bends too much to your taste or looks cursed on your specific avatar, reduce these angles (min recommended value is 1 though)";
-                    int value = MetaPort.Instance.settings.GetSettingInt(setting);
+                    int value = MetaPort.Instance.settings.GetSettingsInt(setting);
 
                     var cat = page.AddCategory(catText());
                     string catText() { return $"Max Neck Angle Fwd: {value}"; }
                     void UpdateSet()
                     {
-                        value = MetaPort.Instance.settings.GetSettingInt(setting);
+                        value = MetaPort.Instance.settings.GetSettingsInt(setting);
                         cat.CategoryName = catText();
                     }
 
@@ -336,13 +336,13 @@ namespace IKpresetsMod
                 {
                     string setting = "IKMaxNeckAngleBack";
                     string desc = "Max bend angles - how much spine/neck can be bent forward/back. If your spine bends too much to your taste or looks cursed on your specific avatar, reduce these angles (min recommended value is 1 though)";
-                    int value = MetaPort.Instance.settings.GetSettingInt(setting);
+                    int value = MetaPort.Instance.settings.GetSettingsInt(setting);
 
                     var cat = page.AddCategory(catText());
                     string catText() { return $"Max Neck Angle Back: {value}"; }
                     void UpdateSet()
                     {
-                        value = MetaPort.Instance.settings.GetSettingInt(setting);
+                        value = MetaPort.Instance.settings.GetSettingsInt(setting);
                         cat.CategoryName = catText();
                     }
 
@@ -368,13 +368,13 @@ namespace IKpresetsMod
                 {
                     string setting = "IKNeckPriority";
                     string desc = "Neck bend priority - neck will bend this much faster than the spine. This is intended to handle the fact that people move their neck way more than their spine, so IK should start off by bending it, not spine.";
-                    int value = MetaPort.Instance.settings.GetSettingInt(setting);
+                    int value = MetaPort.Instance.settings.GetSettingsInt(setting);
 
                     var cat = page.AddCategory(catText());
                     string catText() { return $"Neck Priority: {value}"; }
                     void UpdateSet()
                     {
-                        value = MetaPort.Instance.settings.GetSettingInt(setting);
+                        value = MetaPort.Instance.settings.GetSettingsInt(setting);
                         cat.CategoryName = catText();
                     }
 
@@ -401,13 +401,13 @@ namespace IKpresetsMod
                 {
                     string setting = "IKStraightSpineAngle";
                     string desc = "Straight spine angle - withing this angle from perfectly straight, the spine will be considered almost straight and Max bend angles will be reduced.";
-                    int value = MetaPort.Instance.settings.GetSettingInt(setting);
+                    int value = MetaPort.Instance.settings.GetSettingsInt(setting);
 
                     var cat = page.AddCategory(catText());
                     string catText() { return $"Straight Spine Angle: {value}"; }
                     void UpdateSet()
                     {
-                        value = MetaPort.Instance.settings.GetSettingInt(setting);
+                        value = MetaPort.Instance.settings.GetSettingsInt(setting);
                         cat.CategoryName = catText();
                     }
 
@@ -433,13 +433,13 @@ namespace IKpresetsMod
                 {
                     string setting = "IKStraightSpinePower";
                     string desc = "Straight spine power - controls the curve with which the spine transitions from straight to bend within the straight angle.";
-                    int value = MetaPort.Instance.settings.GetSettingInt(setting);
+                    int value = MetaPort.Instance.settings.GetSettingsInt(setting);
 
                     var cat = page.AddCategory(catText());
                     string catText() { return $"Straight Spine Power: {value}"; }
                     void UpdateSet()
                     {
-                        value = MetaPort.Instance.settings.GetSettingInt(setting);
+                        value = MetaPort.Instance.settings.GetSettingsInt(setting);
                         cat.CategoryName = catText();
                     }
 
@@ -497,7 +497,7 @@ namespace IKpresetsMod
                 {
                     string setting = "GeneralPlayerHeight";
                     string desc = "Player Height as set in General Settings";
-                    int value = MetaPort.Instance.settings.GetSettingInt(setting);
+                    int value = MetaPort.Instance.settings.GetSettingsInt(setting);
 
                     var cat = page.AddCategory(catText());
                     string catText() {
@@ -508,7 +508,7 @@ namespace IKpresetsMod
                         return $"Player Height: {value}cm - {Feet}\' {inches}\""; }
                     void UpdateSet()
                     {
-                        value = MetaPort.Instance.settings.GetSettingInt(setting);
+                        value = MetaPort.Instance.settings.GetSettingsInt(setting);
                         cat.CategoryName = catText();
                     }
 
@@ -602,9 +602,9 @@ namespace IKpresetsMod
             {
                 return $"PchYaw:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPitchYawShoulders"))}_HipPin:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipPinned"))}_" +
                     $"StrNeck:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKStraightenNeck"))}_HipShft:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipShifting"))}_StrSpine:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPreStraightenSpine"))}_" +
-                    $"RelxIter:{MetaPort.Instance.settings.GetSettingInt("IKSpineRelaxIterations")}_SpineFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleFwd")} Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleBack")}_" +
-                    $"NeckFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxNeckAngleFwd")}Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxNeckAngleBack")}_NeckPri:{MetaPort.Instance.settings.GetSettingInt("IKNeckPriority")}_" +
-                    $"StrSpine:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpineAngle")}Pow:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpinePower")}_Hgt:{MetaPort.Instance.settings.GetSettingInt("GeneralPlayerHeight")}";// +
+                    $"RelxIter:{MetaPort.Instance.settings.GetSettingsInt("IKSpineRelaxIterations")}_SpineFwd:{MetaPort.Instance.settings.GetSettingsInt("IKMaxSpineAngleFwd")} Bck:{MetaPort.Instance.settings.GetSettingsInt("IKMaxSpineAngleBack")}_" +
+                    $"NeckFwd:{MetaPort.Instance.settings.GetSettingsInt("IKMaxNeckAngleFwd")}Bck:{MetaPort.Instance.settings.GetSettingsInt("IKMaxNeckAngleBack")}_NeckPri:{MetaPort.Instance.settings.GetSettingsInt("IKNeckPriority")}_" +
+                    $"StrSpine:{MetaPort.Instance.settings.GetSettingsInt("IKStraightSpineAngle")}Pow:{MetaPort.Instance.settings.GetSettingsInt("IKStraightSpinePower")}_Hgt:{MetaPort.Instance.settings.GetSettingsInt("GeneralPlayerHeight")}";// +
                     //$"Smooth:{MetaPort.Instance.settings.GetSettingsFloat("IKTrackingSmoothing")}";
             }
             if (open) page.OpenPage(); 
@@ -733,9 +733,9 @@ namespace IKpresetsMod
             {
                 return $"PchYaw:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPitchYawShoulders"))}_HipPin:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipPinned"))}_" +
                     $"StrNeck:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKStraightenNeck"))}_HipShft:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKHipShifting"))}_StrSpine:{Utils.CompactTF(MetaPort.Instance.settings.GetSettingsBool("IKPreStraightenSpine"))}_" +
-                    $"RelxIter:{MetaPort.Instance.settings.GetSettingInt("IKSpineRelaxIterations")}_SpineFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleFwd")} Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxSpineAngleBack")}_" +
-                    $"NeckFwd:{MetaPort.Instance.settings.GetSettingInt("IKMaxNeckAngleFwd")}Bck:{MetaPort.Instance.settings.GetSettingInt("IKMaxNeckAngleBack")}_NeckPri:{MetaPort.Instance.settings.GetSettingInt("IKNeckPriority")}_" +
-                    $"StrSpine:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpineAngle")}Pow:{MetaPort.Instance.settings.GetSettingInt("IKStraightSpinePower")}_Hgt:{MetaPort.Instance.settings.GetSettingInt("GeneralPlayerHeight")}";// +
+                    $"RelxIter:{MetaPort.Instance.settings.GetSettingsInt("IKSpineRelaxIterations")}_SpineFwd:{MetaPort.Instance.settings.GetSettingsInt("IKMaxSpineAngleFwd")} Bck:{MetaPort.Instance.settings.GetSettingsInt("IKMaxSpineAngleBack")}_" +
+                    $"NeckFwd:{MetaPort.Instance.settings.GetSettingsInt("IKMaxNeckAngleFwd")}Bck:{MetaPort.Instance.settings.GetSettingsInt("IKMaxNeckAngleBack")}_NeckPri:{MetaPort.Instance.settings.GetSettingsInt("IKNeckPriority")}_" +
+                    $"StrSpine:{MetaPort.Instance.settings.GetSettingsInt("IKStraightSpineAngle")}Pow:{MetaPort.Instance.settings.GetSettingsInt("IKStraightSpinePower")}_Hgt:{MetaPort.Instance.settings.GetSettingsInt("GeneralPlayerHeight")}";// +
                                                                                                                                                                          //$"Smooth:{MetaPort.Instance.settings.GetSettingsFloat("IKTrackingSmoothing")}";
             }
             page.OpenPage();
