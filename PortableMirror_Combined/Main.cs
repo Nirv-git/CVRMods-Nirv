@@ -391,8 +391,8 @@ namespace PortableMirror
                 else
                 {
 
-                    _mirrorCeiling.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
-                    _mirrorCeiling.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
+                    _mirror45.GetOrAddComponent<CVRPickupObject>().enabled = Main._45_CanPickupMirror.Value;
+                    _mirror45.GetOrAddComponent<BoxCollider>().enabled = Main._45_CanPickupMirror.Value;
                 }
 
             }
