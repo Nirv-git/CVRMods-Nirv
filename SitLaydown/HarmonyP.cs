@@ -103,7 +103,7 @@ namespace SitLaydown
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatar))]
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.OnSetupAvatar))]
         internal static void OnSetupAvatarGeneral()
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"2-1 OnSetupAvatarGeneral");
