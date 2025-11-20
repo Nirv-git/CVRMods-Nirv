@@ -24,7 +24,7 @@ namespace PortableMirror
 
     public class Main : MelonMod
     {
-        public const string versionStr = "2.1.21";
+        public const string versionStr = "2.11.19";
         public static MelonLogger.Instance Logger;
 
         public static bool firstload = true;
@@ -269,11 +269,11 @@ namespace PortableMirror
 
             if(MirrorsShowInCamera)
             {
-                PortableCamera.Instance.cameraComponent.cullingMask |= (1 << CVRLayers.CVRReserved3);
+                PortableCamera.Instance.CameraComponent.cullingMask |= (1 << CVRLayers.CVRReserved3);
             }
             else
             {
-                PortableCamera.Instance.cameraComponent.cullingMask &= ~(1 << CVRLayers.CVRReserved3);
+                PortableCamera.Instance.CameraComponent.cullingMask &= ~(1 << CVRLayers.CVRReserved3);
             }
 
             //if (Main.distanceDisable.Value)
