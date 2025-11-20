@@ -20,7 +20,7 @@ namespace NearClipPlaneAdj
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.7.8";
+        public const string versionStr = "1.11.19";
         public static MelonLogger.Instance Logger;
 
         public static MelonPreferences_Entry<bool> useNirvMiscPage;
@@ -32,7 +32,7 @@ namespace NearClipPlaneAdj
         public static MelonPreferences_Entry<bool> replace05withNumpad;
         public static MelonPreferences_Entry<bool> farClipControl;
 
-        public static Dictionary<string, System.Tuple<bool, string>> blackList; 
+        public static Dictionary<string, System.Tuple<bool, string>> blackList;
         public static float oldNearClip;
         public static float lastSetNearClip;
 
@@ -85,7 +85,7 @@ namespace NearClipPlaneAdj
                     while ((line = reader.ReadLine()) != null)
                     {
                         var sub = line.Split(',');
-                        if(sub.Length == 3) blackList.Add(sub[0], new System.Tuple<bool, string>(bool.Parse(sub[1]), sub[2]));
+                        if (sub.Length == 3) blackList.Add(sub[0], new System.Tuple<bool, string>(bool.Parse(sub[1]), sub[2]));
                     }
                 }
             }
@@ -160,11 +160,11 @@ namespace NearClipPlaneAdj
         {
             //printPlane(); //debug
 
-            yield return new WaitForSecondsRealtime(2); 
+            yield return new WaitForSecondsRealtime(2);
             if (defaultChangeBlackList.Value && MetaPort.Instance.CurrentWorldId != null && blackList != null)
             { //Check if world is blacklisted from auto change
                 var worldID = MetaPort.Instance.CurrentWorldId;
-                
+
                 //if (debug.Value)
                 //{
                 //    Logger.Msg($"ID IS {worldID}");
@@ -180,14 +180,14 @@ namespace NearClipPlaneAdj
                         Logger.Msg(ConsoleColor.Yellow, $"Not auto adjusting NearClipping plane, world blacklisted for 0.01 and lower values. \nDebug-{worldID}, {world.Item2}, {world.Item1}");
                         yield break;
                     }
-                    else if(smallerDefault.Value)
+                    else if (smallerDefault.Value)
                     {
                         Logger.Msg(ConsoleColor.Yellow, $"Not auto adjusting NearClipping plane, world blacklisted for 0.001 value. \nDebug-{worldID}, {world.Item2}, {world.Item1}");
                         yield break;
                     }
                 }
             }
-            
+
             if (smallerDefault.Value) znear = 0.001f;
             ChangeNearClipPlane(znear, true);
             oldNearClip = znear;
@@ -240,9 +240,10 @@ namespace NearClipPlaneAdj
     internal class HarmonyPatches
     {
         // Avatar
+        //PlayerSetup.Instance.CopyRefCamValues
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(ABI.CCK.Components.CVRWorld), nameof(CVRWorld.CopyRefCamValues))]
-        internal static void AfterSetupAvatarGeneral()
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.CopyRefCamValues))]
+        internal static void AfterCopyCamValues()
         {
             //Main.Logger.Msg($"9-1");
             MelonCoroutines.Start(Main.SetNearClipPlane(0.01f));
