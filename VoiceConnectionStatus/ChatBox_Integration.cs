@@ -2,6 +2,7 @@
 using MelonLoader;
 using UnityEngine;
 using ABI_RC.Core.Player;
+using ABI_RC.Systems.ChatBox;
 
 namespace VoiceConnectionStatus
 {
@@ -9,11 +10,11 @@ namespace VoiceConnectionStatus
     {
         public static void SendConnectionLost()
         {
-            Kafe.ChatBox.API.SendMessage("Voice Disconnected", false, true, false);
+            ChatBoxAPI.SendMessage("Voice Disconnected", false, true, false);
         }
         public static void SendConnectionRegained()
         {
-            Kafe.ChatBox.API.SendMessage("Voice Connected", false, true, false);
+            ChatBoxAPI.SendMessage("Voice Connected", false, true, false);
         }
     }
 }

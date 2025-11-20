@@ -23,7 +23,7 @@ namespace VoiceConnectionStatus
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.1.5";
+        public const string versionStr = "0.11.19";
         public static MelonLogger.Instance Logger;
         public static Main Instance;
 
@@ -55,12 +55,6 @@ namespace VoiceConnectionStatus
 
             logToFile.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { InitDebugLog(); });
 
-            // Check for ChatBox
-            if (RegisteredMelons.FirstOrDefault(m => m.Info.Name == "ChatBox") != null)
-            {
-                Logger.Msg("Chatbox found!");
-                chatbox_En = true;
-            }
 
             AudioModuleManager.SetupDefaultAudioClips();
             InitDebugLog();
@@ -113,7 +107,7 @@ namespace VoiceConnectionStatus
                 Main.Logger.Msg(textColor, $"Setting Parameter 'VoiceConnectionStatus' to: {state}");
                 PlayerSetup.Instance.AnimatorManager.SetParameter("VoiceConnectionStatus", state);
             }
-            if (Main.chatbox_En && (Time.time > Main.joinTime + 5f) && 
+            if ((Time.time > Main.joinTime + 5f) && 
                 (NetworkManager.Instance != null && NetworkManager.Instance.GameNetwork.ConnectionState == ConnectionState.Connected))
             {
                 if (Main.sendChatBoxDisconnect.Value && !state)
