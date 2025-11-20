@@ -25,7 +25,7 @@ namespace PersonalGravity
 
     public class Main : MelonMod
     {
-        public const string versionStr = "0.7.8";
+        public const string versionStr = "0.11.19";
         public static MelonLogger.Instance Logger;
 
         public static Main Instance;

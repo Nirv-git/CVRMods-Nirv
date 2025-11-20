@@ -106,11 +106,15 @@ namespace PersonalGravity
                 page.MenuTitle = "Personal Gravity";
                 page.MenuSubtitle = "Control your own gravity!";
 
-                var cat = page.AddCategory("temp", true, false);
-                setCatName();
+                var cat = page.AddCategory(makeCatName(), true, false);
+               
                 void setCatName()
                 {
-                    cat.CategoryName = $"(X:{Main.gravDirection.x:F2}, Y:{Main.gravDirection.y:F2}, Z:{Main.gravDirection.z:F2})";
+                    cat.CategoryName = makeCatName();
+                }
+                string makeCatName()
+                {
+                    return $"(X:{Main.gravDirection.x:F2}, Y:{Main.gravDirection.y:F2}, Z:{Main.gravDirection.z:F2})";
                 }
 
                 var toggleStr = Main._baseObj != null ? "personalGrav-Cords" : "personalGrav-Cords-Off";
