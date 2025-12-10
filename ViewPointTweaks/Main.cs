@@ -1,6 +1,7 @@
 ﻿using ABI_RC.Core;
 using ABI_RC.Core.Networking.API;
 using ABI_RC.Core.Networking.API.Responses;
+using ABI_RC.Core.Networking.API.Responses.DetailsV2;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
 using ABI_RC.Systems.GameEventSystem;
@@ -23,7 +24,7 @@ namespace ViewPointTweaks
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.10";
+        public const string versionStr = "0.7.20";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "ViewPointTweaks";
@@ -191,11 +192,11 @@ namespace ViewPointTweaks
         internal static async System.Threading.Tasks.Task<string> RequestAvatarDetailsPageTask(string guid)
         {
             Main.Logger.Msg($"[API] Fetching avatar {guid} name...");
-            BaseResponse<AvatarDetailsResponse> response;
+            BaseResponse<ContentAvatarResponse> response;
             try
             {
                 var payload = new { avatarID = guid };
-                response = await ApiConnection.MakeRequest<AvatarDetailsResponse>(ApiConnection.ApiOperation.AvatarDetail, payload);
+                response = await ApiConnection.MakeRequest<ContentAvatarResponse>(ApiConnection.ApiOperation.AvatarDetail, payload);
             }
             catch (Exception ex)
             {

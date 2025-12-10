@@ -1,12 +1,13 @@
-﻿using MelonLoader;
-using UnityEngine;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections;
-using System.Reflection;
-using ABI_RC.Core.Networking.API;
+﻿using ABI_RC.Core.Networking.API;
 using ABI_RC.Core.Networking.API.Responses;
+using ABI_RC.Core.Networking.API.Responses.DetailsV2;
+using MelonLoader;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
 
 
 namespace WorldPropListMod
@@ -17,11 +18,11 @@ namespace WorldPropListMod
         internal static async System.Threading.Tasks.Task<(string, string, string, string, bool, string, string, string)> RequestPropDetailsPageTask(string guid, bool firstAttempt)
         {//Name, URL, Author,tags, isPub, FileSize, UpdatedAt, Description
             if (Main.printAPIrequestsToConsole.Value) Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetching prop {guid} name...");
-            BaseResponse<SpawnableDetailsResponse> response;
+            BaseResponse<ContentSpawnableResponse> response;
             try
             {
                 var payload = new { id = guid };
-                response = await ApiConnection.MakeRequest<SpawnableDetailsResponse>(ApiConnection.ApiOperation.PropDetail, payload);
+                response = await ApiConnection.MakeRequest<ContentSpawnableResponse>(ApiConnection.ApiOperation.PropDetail, payload, "2");
             }
             catch (Exception ex)
             {
@@ -49,13 +50,16 @@ namespace WorldPropListMod
             }
             if (Main.printAPIrequestsToConsole.Value) Main.Logger.Msg(ConsoleColor.DarkCyan, $"[API] Fetched prop {guid} name successfully! Name: {response.Data.Name}");
             string tags = "";
-            foreach(var tag in response.Data.Tags)
+            if (response.Data.Platforms.TryGetValue(Platforms.Pc_Standalone, out var platformData))
             {
-                tags += tag + ", ";
+                foreach (var tag in platformData.Tags)
+                {
+                    tags += tag + ", ";
+                }
+                //Main.Logger.Msg($"tags:{tags},\nisPub:{(response.Data.IsPublished ? "Published" : "Not Published")},\nFileSizeMB:{Utils.NumFormat(response.Data.FileSize/1048576f, 2)},\nUpdatedAt:{response.Data.UpdatedAt.ToString("yyyy'-'MM'-'dd")},\nDescription:{Utils.ReturnCleanASCII(response.Data.Description)},");
             }
-            //Main.Logger.Msg($"tags:{tags},\nisPub:{(response.Data.IsPublished ? "Published" : "Not Published")},\nFileSizeMB:{Utils.NumFormat(response.Data.FileSize/1048576f, 2)},\nUpdatedAt:{response.Data.UpdatedAt.ToString("yyyy'-'MM'-'dd")},\nDescription:{Utils.ReturnCleanASCII(response.Data.Description)},");
-            return (Utils.ReturnCleanASCII(response.Data.Name), response.Data.ImageUrl, response.Data.Author.Name, tags, response.Data.IsPublished,
-                Utils.NumFormat(response.Data.FileSize / 1048576f, 2), response.Data.UpdatedAt.ToString("yyyy'-'MM'-'dd"), Utils.ReturnCleanASCII(response.Data.Description));
+            return (Utils.ReturnCleanASCII(response.Data.Name), response.Data.Image.ToString(), response.Data.Author.Name, tags, response.Data.Public,
+                Utils.NumFormat(platformData.FileSize / 1048576f, 2), platformData.UpdatedAt.ToString("yyyy'-'MM'-'dd"), Utils.ReturnCleanASCII(response.Data.Description));
         }
 
         internal static async System.Threading.Tasks.Task<string> RequestPlayerDetailsPageTask(string guid)
