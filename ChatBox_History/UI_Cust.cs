@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
 
 namespace ChatBox_History
@@ -24,10 +25,6 @@ namespace ChatBox_History
             QuickMenuAPI.PrepareIcon(ModName, "CBhist_history", Assembly.GetExecutingAssembly().GetManifestResourceStream("ChatBox_History.Icons.ChatBox_History.png"));
             QuickMenuAPI.PrepareIcon(ModName, "CBhist_Delete", Assembly.GetExecutingAssembly().GetManifestResourceStream("ChatBox_History.Icons.Delete.png"));
             QuickMenuAPI.PrepareIcon(ModName, "CBhist_Reset", Assembly.GetExecutingAssembly().GetManifestResourceStream("ChatBox_History.Icons.Reset.png"));
-
-
-
-
         }
 
         public static string ModName = "NirvBTKUI";
@@ -121,7 +118,7 @@ namespace ChatBox_History
                         //var msgCat = page.AddCategory($"{msg.Item2} | {msg.Item3} | {msg.Item4}m", true, false);
                         //msgCat.AddTextBlock(msg.Item1.Message);
                         msgCatTitle.AddTextBlock($"-- {msg.Item2} | {msg.Item3} | {msg.Item4}m");
-                        msgCatTitle.AddTextBlock(msg.Item1.Message);
+                        msgCatTitle.AddTextBlock(SplitNewLines(msg.Item1.Message));
                         msgCatTitle.AddTextBlock("--------");
                     }
                 }
@@ -130,6 +127,54 @@ namespace ChatBox_History
                     var msgCatTitle = page.AddCategory("--- No Messages ---", true, false);
                 }
             } 
+        }
+
+        private static string SplitNewLines(string text)
+        { //https://stackoverflow.com/a/5573207 - Starting
+            int lineLength = 40;
+
+            string[] words = text.Split(' ');
+            var sb = new StringBuilder();
+            int currLength = 0;
+
+            foreach (string raw in words)
+            {
+                if (string.IsNullOrEmpty(raw))
+                    continue;
+                string word = raw;
+
+                if (currLength > 0) //If at start of line
+                {
+                    int remaining = lineLength - currLength;
+
+                    if (1 + word.Length > remaining) // Does word fit in line, or make newline?
+                    {
+                        sb.Append(Environment.NewLine);
+                        currLength = 0;
+                    }
+                    else
+                    {
+                        sb.Append(' ');
+                        currLength += 1;
+                    }
+                }
+
+                // Split long words
+                while (word.Length > lineLength)
+                {
+                    int take = lineLength - 1;
+                    sb.Append(word, 0, take)
+                      .Append('-')
+                      .Append(Environment.NewLine);
+                    word = word.Substring(take);
+                    currLength = 0;
+                }
+
+                sb.Append(word);
+                currLength += word.Length;
+            }
+
+            return sb.ToString();
         }
 
     }
