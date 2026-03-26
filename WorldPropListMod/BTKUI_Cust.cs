@@ -38,6 +38,8 @@ namespace WorldPropListMod
             QuickMenuAPI.PrepareIcon(ModName, "worldProp-ResetList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.ResetList.png"));
             QuickMenuAPI.PrepareIcon(ModName, "worldProp-PropList", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.PropList.png"));
             QuickMenuAPI.PrepareIcon(ModName, "worldProp-DeleteLess", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.DeleteLess.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-TrashUser", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.DeleteUser.png"));
+            QuickMenuAPI.PrepareIcon(ModName, "worldProp-TrashMulti", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.DeleteMulti.png"));
             QuickMenuAPI.PrepareIcon(ModName, "worldProp-Cube", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons.Cube.png"));
             //QuickMenuAPI.PrepareIcon(ModName, "worldProp-", Assembly.GetExecutingAssembly().GetManifestResourceStream("WorldPropListMod.Icons..png"));
         }
@@ -329,6 +331,61 @@ namespace WorldPropListMod
                     page.AddCategory("Prop was deleted", true, false);
                 };
 
+
+                cat2.AddButton("Delete All of this Prop", "worldProp-TrashMulti", "Deletes all instances of this prop in the world").OnPress += () =>
+                {
+                    QuickMenuAPI.ShowConfirm("Confirm Delete", "Are you sure you want to delete all instances of this prop?", () => {
+                        if (propData.SpawnedBy != "SYSTEM" && propData.SpawnedBy != "LocalServer")
+                        {
+                            var toRemove = new List<CVRSyncHelper.PropData>();
+                            foreach (var propDataDel in CVRSyncHelper.Props.ToArray())
+                            {
+                                if (propDataDel?.Spawnable?.guid == guid && propDataDel.SpawnedBy != "SYSTEM" && propDataDel.SpawnedBy != "LocalServer")
+                                    toRemove.Add(propDataDel);
+                            }
+                            foreach (var item in toRemove)
+                            {
+                                if (item?.Spawnable == null)
+                                    item.Recycle();
+                                else
+                                    item.Spawnable.Delete();
+                            }
+                            PropMenu(false);
+                            page.ClearChildren();
+                            page.AddCategory("Prop was deleted", true, false);
+                        }
+                        else
+                            QuickMenuAPI.ShowAlertToast($"Can not delete, prop spawned by server: {name}", 3);
+                    }, () => { }, "Yes", "No");
+                };
+
+                cat2.AddButton("Delete All Props from User", "worldProp-TrashUser", $"Deletes all props spawned by {player}").OnPress += () =>
+                {
+                    QuickMenuAPI.ShowConfirm("Confirm Delete", $"Are you sure you want to delete all props spawned by {player}?", () => {
+                        if (propData.SpawnedBy != "SYSTEM" && propData.SpawnedBy != "LocalServer")
+                        {
+                            var toRemove = new List<CVRSyncHelper.PropData>();
+                            foreach (var propDataDel in CVRSyncHelper.Props.ToArray())
+                            {
+                                if (propDataDel.SpawnedBy == propData.SpawnedBy && propDataDel.SpawnedBy != "SYSTEM" && propDataDel.SpawnedBy != "LocalServer")
+                                    toRemove.Add(propDataDel);
+                            }
+                            foreach (var item in toRemove)
+                            {
+                                if (item?.Spawnable == null)
+                                    item.Recycle();
+                                else
+                                    item.Spawnable.Delete();
+                            }
+                            PropMenu(false);
+                            page.ClearChildren();
+                            page.AddCategory("Prop was deleted", true, false);
+                        }
+                        else
+                            QuickMenuAPI.ShowAlertToast($"Can not delete, prop spawned by server: {name}", 3);
+                    }, () => { }, "Yes", "No");
+                };
+
                 cat2.AddButton("Block Prop and Delete", "worldProp-BlockTrash", "Add this prop to the block list and Delete all instances of it in the world").OnPress += () =>
                 {
                     QuickMenuAPI.ShowConfirm("Confirm Block", "Are you sure you want to block and delete this prop?", () => {
@@ -364,6 +421,7 @@ namespace WorldPropListMod
                             QuickMenuAPI.ShowAlertToast($"Can not block and delete, prop spawned by server: {name}", 3);
                     }, () => { }, "Yes", "No");
                 };
+
                 var catText = "";
                 if (Main.blockedProps.ContainsKey(guid)) catText += "PROP IS IN BLOCK LIST<p>";
                 catText += $"Name: {name}<p>";
