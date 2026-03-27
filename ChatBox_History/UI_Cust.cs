@@ -131,7 +131,7 @@ namespace ChatBox_History
 
         private static string SplitNewLines(string text)
         { //https://stackoverflow.com/a/5573207 - Starting
-            int lineLength = 60;
+            int lineLength = 55;
 
             string[] words = text.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             var sb = new StringBuilder();

@@ -1,4 +1,5 @@
 ﻿using ABI_RC.Core;
+using ABI_RC.Core.Networking;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
 using ABI_RC.Systems.ChatBox;
@@ -23,7 +24,7 @@ namespace ChatBox_History
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.0.4";
+        public const string versionStr = "0.0.5";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "ChatBox_History";
@@ -32,7 +33,6 @@ namespace ChatBox_History
                                     //Message, Username, Time, Distance
         public static List<(ChatBoxAPI.ChatBoxMessage, string, string, string)> chatboxMessages = new List<(ChatBoxAPI.ChatBoxMessage, string, string, string)>() ;
 
-        public static Dictionary<string, string> UsernameCache = new Dictionary<string, string>();
 
         public override void OnApplicationStart()
         {
@@ -43,6 +43,7 @@ namespace ChatBox_History
             CustomUI.InitUi();
 
             ChatBoxAPI.OnMessageReceived += HandleMessage;
+            ChatBoxAPI.OnMessageSent += HandleMessage;
         }
 
         public static void HandleMessage(ChatBoxAPI.ChatBoxMessage msg)
@@ -81,10 +82,7 @@ namespace ChatBox_History
 
         public static string GetUsername(string senderGuid)
         {
-            if (UsernameCache.ContainsKey(senderGuid))
-                return UsernameCache[senderGuid];
-
-            string username = GameObject.Find($"{senderGuid}/[NamePlate]/Canvas/Content/TMP:Username")?.GetComponent<TMP_Text>()?.text;
+            string username = MetaPort.Instance.ownerId == senderGuid ? AuthManager.Username : GameObject.Find($"{senderGuid}/[Overhead]")?.GetComponentInParent<PlayerDescriptor>()?.userName;
             if (username == null)
                 return "N/A - Unknown";
             return username;
