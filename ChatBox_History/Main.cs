@@ -23,7 +23,7 @@ namespace ChatBox_History
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.0.1";
+        public const string versionStr = "0.0.4";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "ChatBox_History";
@@ -61,6 +61,12 @@ namespace ChatBox_History
 
                 if (msg.DisplayOnHistory)
                     chatboxMessages.Add((msg, GetUsername(msg.SenderGuid), DateTime.Now.ToString("HH:mm:ss"), GetDistance(msg.SenderGuid).ToString("F1"))); //"yyyy-MM-dd HH:mm:ss" |  AM/PM "yyyy-MM-dd hh:mm:ss tt"
+                var max = 50;
+                if (chatboxMessages.Count > max + 10)
+                {
+                    int extra = chatboxMessages.Count - max;
+                    chatboxMessages.RemoveRange(0, extra);
+                }
             }
             catch (Exception e) {Logger.Error("Error in HandleMessage - " + e.ToString());}
         }
