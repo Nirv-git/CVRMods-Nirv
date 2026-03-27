@@ -20,7 +20,7 @@ namespace VisemeValue
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "1.1";
+        public const string versionStr = "1.1.2";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "VisemeValue";
@@ -118,13 +118,13 @@ namespace VisemeValue
             //}
 
             //if (Utils.ContainsParam(LocalPlayerAnimatorManager.animator, "VisemeMod_Value"))
-            if (PlayerSetup.Instance.animatorManager.animatorParameterNameHashes.ContainsKey("VisemeMod_Value") && driveValuePref.Value)
+            if (PlayerSetup.Instance.AnimatorManager.Parameters.ContainsKey("VisemeMod_Value") && driveValuePref.Value)
                 driveValue = true;
-            if (PlayerSetup.Instance.animatorManager.animatorParameterNameHashes.ContainsKey("Viseme") && driveVisemePref.Value)
+            if (PlayerSetup.Instance.AnimatorManager.Parameters.ContainsKey("Viseme") && driveVisemePref.Value)
                 driveViseme = true;
-            if (PlayerSetup.Instance.animatorManager.animatorParameterNameHashes.ContainsKey("VisemeMod_Level") && driveIntensityPref.Value)
+            if (PlayerSetup.Instance.AnimatorManager.Parameters.ContainsKey("VisemeMod_Level") && driveIntensityPref.Value)
                 driveLevel = true;
-            if (PlayerSetup.Instance.animatorManager.animatorParameterNameHashes.ContainsKey("VisemeMod_sil") && driveIndivPref.Value) //.Any(item => item.Key.StartsWith("VisemeMod"));
+            if (PlayerSetup.Instance.AnimatorManager.Parameters.ContainsKey("VisemeMod_sil") && driveIndivPref.Value) //.Any(item => item.Key.StartsWith("VisemeMod"));
                 driveIndiv = true;
             if (!driveValue && !driveViseme && !driveLevel && !driveIndiv)
                 yield break;
@@ -150,17 +150,17 @@ namespace VisemeValue
 
                     if(driveIndiv)
                     {
-                        PlayerSetup.Instance.animatorManager.SetAnimatorParameterFloat($"VisemeMod_{visemes[i]}", level);
+                        PlayerSetup.Instance.AnimatorManager.SetParameter($"VisemeMod_{visemes[i]}", level);
                     }
                 }
                 //Main.Logger.Msg(ConsoleColor.Blue, $"Index: {loudestViseme} Name: {visemes[loudestViseme]} Loudness: {loudestValue:F2} CVRLoud: {visCon._visemeLoudness:F2}");
 
                 if (driveValue)
-                    PlayerSetup.Instance.animatorManager.SetAnimatorParameterInt("VisemeMod_Value", loudestViseme);
+                    PlayerSetup.Instance.AnimatorManager.SetParameter("VisemeMod_Value", loudestViseme);
                 if (driveViseme)
-                    PlayerSetup.Instance.animatorManager.SetAnimatorParameterInt("Viseme", loudestViseme);
+                    PlayerSetup.Instance.AnimatorManager.SetParameter("Viseme", loudestViseme);
                 if (driveLevel)
-                    PlayerSetup.Instance.animatorManager.SetAnimatorParameterFloat("VisemeMod_Level", visCon._visemeLoudness);
+                    PlayerSetup.Instance.AnimatorManager.SetParameter("VisemeMod_Level", visCon._visemeLoudness);
 
                 yield return new WaitForSeconds(updateRate.Value/1000);
             }
