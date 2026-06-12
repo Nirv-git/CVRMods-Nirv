@@ -23,7 +23,7 @@ namespace VoiceConnectionStatus
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.11.19";
+        public const string versionStr = "0.11.30";
         public static MelonLogger.Instance Logger;
         public static Main Instance;
 
@@ -81,7 +81,7 @@ namespace VoiceConnectionStatus
                 case 2: break;
                 default:
                     joinTime = Time.time;
-                    LogLine($"World Loaded at:{joinTime} Scene:{sceneName} ID:{CVRWorld.Instance.AssetInfo.objectId}");
+                    LogLine($"World Loaded at:{joinTime} Scene:{sceneName}"); // ID:{CVRWorld.Instance.AssetInfo.objectId}");
                     break;
             }
         }
