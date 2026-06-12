@@ -1,22 +1,23 @@
-﻿using MelonLoader;
-using UnityEngine;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections;
-using System.Reflection;
-using System.Reflection.Emit;
+﻿using ABI.CCK.Components;
 using ABI_RC.Core;
 using ABI_RC.Core.Player;
+using ABI_RC.Core.PropManagement;
 using ABI_RC.Core.Savior;
+using ABI_RC.Core.UI;
 using ABI_RC.Core.Util;
 using ABI_RC.Core.Util.AssetFiltering;
-using ABI.CCK.Components;
-using HarmonyLib;
-using DarkRift;
 using BTKUILib;
-using ABI_RC.Core.UI;
+using DarkRift;
+using HarmonyLib;
+using MelonLoader;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading;
+using UnityEngine;
 
 
 
@@ -55,13 +56,18 @@ namespace WorldPropListMod
         }
 
 
+
+
+        //[WorldPropListMod] HarmonyLib.HarmonyException: Ambiguous match for HarmonyMethod[(class=ABI_RC.Core.Savior.CVRSelfModerationManager, methodname=GetPropVisibility
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(CVRSelfModerationManager), nameof(CVRSelfModerationManager.GetPropVisibility))]
-        internal static bool OnGetPropVisibility(string userId, string propId, out bool wasForceHidden, out bool wasForceShown)//, ref bool __result)
+        [HarmonyPatch(typeof(Props), nameof(Props.CanInstantiate))]
+        internal static bool OnCanInstantiate(PropSoul prop, ref bool __result)
         {
-            //Main.Logger.Msg(ConsoleColor.Yellow, $"9-15 OnGetPropVisibility");
-            wasForceHidden = false;
-            wasForceShown = false;
+            //Main.Logger.Msg(ConsoleColor.Yellow, $"9-15 OnCanInstantiate {prop.InstanceId}");
+            var propId = prop.InstanceId;
+            var userId = prop.SpawnedBy;
+            //wasForceHidden = false;
+            //wasForceShown = false;
             try
             {
                 //Main.Logger.Msg(ConsoleColor.Cyan, $"propId: {propId}");
@@ -102,9 +108,9 @@ namespace WorldPropListMod
                     }
                     if (!props_Repeat)
                         Main.BlockedThisSession.Add((propGUID, userId, DateTime.Now.ToString("yyyy'-'MM'-'dd' 'HH':'mm':'ss")));
-                    wasForceHidden = true;
+                    //wasForceHidden = true;
                     lastBlock = Time.time;
-                    //__result = false;
+                    __result = false;
                     return false;
                 }
                 else
@@ -116,7 +122,7 @@ namespace WorldPropListMod
             }
             catch (Exception ex)
             {
-                Main.Logger.Error("Error in OnGetPropVisibility patch. Possible corruption in lists, clearing. \n" + ex.ToString());
+                Main.Logger.Error("Error in OnCanInstantiate patch. Possible corruption in lists, clearing. \n" + ex.ToString());
                 Main.BlockedThisSession.Clear();
                 Main.PropsThisSession.Clear();
             }
@@ -185,8 +191,8 @@ namespace WorldPropListMod
 
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(CVRSyncHelper), nameof(CVRSyncHelper.SpawnProp))]
-        internal static bool OnSpawnProp(string propGuid, Vector3 position, Quaternion rotation)
+        [HarmonyPatch(typeof(ABI_RC.Core.PropManagement.PropUserActions), nameof(ABI_RC.Core.PropManagement.PropUserActions.Spawn))]
+        internal static bool OnSpawn(string propGuid, Vector3 position, Quaternion rotation)
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"9-2 SpawnProp");
             //Main.Logger.Msg($"propGuid {propGuid}");

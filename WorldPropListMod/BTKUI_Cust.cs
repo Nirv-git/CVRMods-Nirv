@@ -9,6 +9,7 @@ using BTKUILib;
 using BTKUILib.UIObjects;
 using ABI_RC.Core.Savior;
 using ABI_RC.Core.InteractionSystem;
+using ABI_RC.Core.PropManagement;
 using cohtml;
 using ABI_RC.Core.Player;
 using ABI_RC.Core;
@@ -137,11 +138,11 @@ namespace WorldPropListMod
             //
             cat3.AddButton("Delete Your Props", "worldProp-DeleteLess", "Delete your props from the world").OnPress += () =>
             {
-                QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete all of YOUR props in the world", () => { CVRSyncHelper.DeleteMyProps(); }, () => { }, "Yes", "No");
+                QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete all of YOUR props in the world", () => { PropUserActions.RemoveMyProps(); }, () => { }, "Yes", "No");
             };
             cat3.AddButton("Delete All Props", "worldProp-Delete", "Delete all props in the world").OnPress += () =>
             {
-                QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete ALL props in the world", () => { CVRSyncHelper.DeleteAllProps(); }, () => { }, "Yes", "No");
+                QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete ALL props in the world", () => { PropUserActions.RemoveAllProps(); }, () => { }, "Yes", "No");
             };
         }
 
@@ -164,11 +165,11 @@ namespace WorldPropListMod
                 SetCustomSub();
 
                 var cat1 = page.AddCategory("");
-                var cat2 = page.AddCategory($"Props - {CVRSyncHelper.Props.ToArray().Count()}", true, false);
+                var cat2 = page.AddCategory($"Props - {ABI_RC.Core.PropManagement.Props._list.ToArray().Count()}", true, false);
 
                 cat1.AddButton("Delete All Props", "worldProp-Delete", "Delete all props in the world").OnPress += () =>
                 {
-                    QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete all props in the world", () => { CVRSyncHelper.DeleteAllProps(); PropMenu(true); }, () => { }, "Yes", "No");         
+                    QuickMenuAPI.ShowConfirm("Delete all props?", "This will delete all props in the world", () => { PropUserActions.RemoveAllProps(); PropMenu(true); }, () => { }, "Yes", "No");         
                 };
                 cat1.AddButton("Refresh", "worldProp-Reset", "Refresh this page").OnPress += () =>
                 {
@@ -198,15 +199,15 @@ namespace WorldPropListMod
                     selectButt.ButtonText = $"--OnSelect-- {SelectString()}";
                 };
 
-                var propList = new Dictionary<CVRSyncHelper.PropData, (string, string, float)>();
-                foreach (var propData in CVRSyncHelper.Props.ToArray())
+                var propList = new Dictionary<PropSoul, (string, string, float)>();
+                foreach (var propData in Props._list.ToArray())
                 {
                     if (propData?.Equals(null) ?? true) { continue; } // Main.Logger.Msg($"propData null"); continue; }
                     if (propData?.Spawnable?.Equals(null) ?? true) { continue; } // Main.Logger.Msg($"Spawnable null"); continue; }
                     if (propData.Spawnable.guid == null) { continue; } // Main.Logger.Msg($"Spawnable.guid null"); continue; }
                     if (propData.SpawnedBy == null ) { continue; } //Main.Logger.Msg($"SpawnedBy null"); continue; }
 
-                    var location = new Vector3(propData.PositionX, propData.PositionY, propData.PositionZ);
+                    var location = propData.Position;
                     var dist = Math.Abs(Vector3.Distance(location, Camera.main.transform.position));
                     string name = Main.PropNamesCache.TryGetValue(propData.Spawnable.guid, out var propNameObj) ? propNameObj.Item1 : "Error: PropNameNotFound";
                     string player = Main.PlayerNamesCache.TryGetValue(propData.SpawnedBy, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
@@ -250,7 +251,7 @@ namespace WorldPropListMod
             }
         }
         
-        public static void PropDetailMenu(CVRSyncHelper.PropData propData)
+        public static void PropDetailMenu(PropSoul propData)
         {
             try {
 
@@ -288,7 +289,7 @@ namespace WorldPropListMod
 
                 //tags, isPub, FileSize, UpdatedAt, Description
                 string player = Main.PlayerNamesCache.TryGetValue(propData.SpawnedBy, out var playerNameObj) ? playerNameObj.Item1 : "Error: PlayerNameNotFound";
-                var location = new Vector3(propData.PositionX, propData.PositionY, propData.PositionZ);
+                var location = propData.Position;
                 var dist = Utils.NumFormat(Math.Abs(Vector3.Distance(location, Camera.main.transform.position)));
 
                 //GetPropImageUrl(
@@ -319,10 +320,7 @@ namespace WorldPropListMod
                 {
                     if (propData.SpawnedBy != "SYSTEM" && propData.SpawnedBy != "LocalServer")
                     {
-                        if (propData.Spawnable == null)
-                            propData.Recycle();
-                        else
-                            propData.Spawnable.Delete();
+                        propData.Spawnable.Delete();
                     }
                     else
                         QuickMenuAPI.ShowAlertToast($"Can not delete, prop spawned by server: {name}", 3);
@@ -337,18 +335,15 @@ namespace WorldPropListMod
                     QuickMenuAPI.ShowConfirm("Confirm Delete", "Are you sure you want to delete all instances of this prop?", () => {
                         if (propData.SpawnedBy != "SYSTEM" && propData.SpawnedBy != "LocalServer")
                         {
-                            var toRemove = new List<CVRSyncHelper.PropData>();
-                            foreach (var propDataDel in CVRSyncHelper.Props.ToArray())
+                            var toRemove = new List<PropSoul>();
+                            foreach (var propDataDel in Props._list.ToArray())
                             {
                                 if (propDataDel?.Spawnable?.guid == guid && propDataDel.SpawnedBy != "SYSTEM" && propDataDel.SpawnedBy != "LocalServer")
                                     toRemove.Add(propDataDel);
                             }
                             foreach (var item in toRemove)
                             {
-                                if (item?.Spawnable == null)
-                                    item.Recycle();
-                                else
-                                    item.Spawnable.Delete();
+                                item.Spawnable.Delete();
                             }
                             PropMenu(false);
                             page.ClearChildren();
@@ -364,18 +359,15 @@ namespace WorldPropListMod
                     QuickMenuAPI.ShowConfirm("Confirm Delete", $"Are you sure you want to delete all props spawned by {player}?", () => {
                         if (propData.SpawnedBy != "SYSTEM" && propData.SpawnedBy != "LocalServer")
                         {
-                            var toRemove = new List<CVRSyncHelper.PropData>();
-                            foreach (var propDataDel in CVRSyncHelper.Props.ToArray())
+                            var toRemove = new List<PropSoul>();
+                            foreach (var propDataDel in Props._list.ToArray())
                             {
                                 if (propDataDel.SpawnedBy == propData.SpawnedBy && propDataDel.SpawnedBy != "SYSTEM" && propDataDel.SpawnedBy != "LocalServer")
                                     toRemove.Add(propDataDel);
                             }
                             foreach (var item in toRemove)
                             {
-                                if (item?.Spawnable == null)
-                                    item.Recycle();
-                                else
-                                    item.Spawnable.Delete();
+                                item.Spawnable.Delete();
                             }
                             PropMenu(false);
                             page.ClearChildren();
@@ -400,18 +392,15 @@ namespace WorldPropListMod
                             else
                                 QuickMenuAPI.ShowAlertToast($"Prop is already in blocklist: {name}", 3);
                             //Delete all matching GUID's if blocking prop
-                            var toRemove = new List<CVRSyncHelper.PropData>();
-                            foreach (var propDataDel in CVRSyncHelper.Props.ToArray())
+                            var toRemove = new List<PropSoul>();
+                            foreach (var propDataDel in Props._list.ToArray())
                             {
                                 if (propDataDel?.Spawnable?.guid == guid && propDataDel.SpawnedBy != "SYSTEM" && propDataDel.SpawnedBy != "LocalServer")
                                     toRemove.Add(propDataDel);
                             }
                             foreach (var item in toRemove)
                             {
-                                if (item?.Spawnable == null)
-                                    item.Recycle();
-                                else
-                                    item.Spawnable.Delete();
+                                item.Spawnable.Delete();
                             }
                             PropMenu(false);
                             page.ClearChildren();
@@ -428,7 +417,7 @@ namespace WorldPropListMod
                 catText += $"Prop author: {propAuthor}<p>";
                 catText += $"Spawned by: {player}<p>";
                 catText += $"Distance: {dist}m, " +
-                    $"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}<p>";
+                    $"X:{Utils.NumFormat(propData.Position.x)} Y:{Utils.NumFormat(propData.Position.y)} Z:{Utils.NumFormat(propData.Position.z)}<p>";
                 //var catPos = page.AddCategory($"X:{Utils.NumFormat(propData.PositionX)} Y:{Utils.NumFormat(propData.PositionY)} Z:{Utils.NumFormat(propData.PositionZ)}");
                 catText += $"{propFileSize}MB, {propUpdatedAt}, {(propisPub ? "Published Publicly" : "Not Published")}<p>";
                 catText += $"Tags: {propTags}<p>";

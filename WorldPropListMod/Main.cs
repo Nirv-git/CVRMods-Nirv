@@ -17,6 +17,7 @@ using BTKUILib;
 using System.IO;
 using System.Threading;
 using ABI_RC.Core.Networking;
+using ABI_RC.Core.PropManagement;
 
 
 
@@ -31,7 +32,7 @@ namespace WorldPropListMod
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.22";
+        public const string versionStr = "0.8.1";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "WorldPropListMod";
@@ -178,6 +179,7 @@ namespace WorldPropListMod
                 LineRen.GetComponent<LineRenderer>().SetPosition(1, obj.transform.position);
                 yield return null;
             }
+            HighlightObj(null, false);
             LineRen.SetActive(false);
             LineKillNow = false;
             LineWaitKill = false;
@@ -211,8 +213,8 @@ namespace WorldPropListMod
 
         public static void CheckPropNames()
         {
-            Logger.Msg($"CheckPropNames - Len {CVRSyncHelper.Props.ToArray().Length}");    
-            foreach (var propData in CVRSyncHelper.Props.ToArray())
+            Logger.Msg($"CheckPropNames - Len {Props._list.ToArray().Length}");    
+            foreach (var propData in Props._list.ToArray())
             {
                 Logger.Msg($"{propData.Spawnable.guid} - {propData.SpawnedBy}");
                 FindPropAPIname(propData.Spawnable.guid);
