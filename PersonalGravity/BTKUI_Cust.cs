@@ -5,9 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
-using BTKUILib;
-using BTKUILib.UIObjects;
-using BTKUILib.UIObjects.Objects;
+using ABI_RC.Systems.UI.UILib;
+using ABI_RC.Systems.UI.UILib.UIObjects;
+using ABI_RC.Systems.UI.UILib.UIObjects.Components;
 using ABI_RC.Core.Savior;
 using ABI.CCK.Components;
 
@@ -40,7 +40,7 @@ namespace PersonalGravity
         public static Page pageRoot;
         public static Page settingsPage;
         public static string modPageID, nirvMiscPageID;
-        public static BTKUILib.UIObjects.Components.Button NirvToggle;
+        public static Button NirvToggle;
 
         public static void SetupUI()
         {

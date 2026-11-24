@@ -15,7 +15,7 @@ using ABI_RC.Systems.InputManagement;
 using ABI_RC.Systems.GameEventSystem;
 using ABI_RC.Systems.Gravity;
 using ABI_RC.Core;
-using BTKUILib;
+using ABI_RC.Systems.UI.UILib;
 
 [assembly: MelonInfo(typeof(PersonalGravity.Main), "PersonalGravity", PersonalGravity.Main.versionStr, "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]

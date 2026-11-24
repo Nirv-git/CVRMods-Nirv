@@ -61,13 +61,13 @@ namespace NearClipPlaneAdj
             settings.AddSimpleButton("Set Nearplane to 0.0001", (() => ChangeNearClipPlane(.0001f, true)));
 
 
-            if (MelonHandler.Mods.Any(m => m.Info.Name == "BTKUILib") && BTKUILib_en.Value)
+            if (BTKUILib_en.Value)
             {
                 CustomBTKUI.InitUi();
                 replace05withNumpad.OnValueChanged += CustomBTKUI.ChangeButtons;
                 farClipControl.OnValueChanged += CustomBTKUI.ChangeButtons;
             }
-            else Logger.Msg("BTKUILib is missing, or setting is toggled off in Mod Settings - Not adding controls to BTKUILib");
+            else Logger.Msg("Setting is toggled off in Mod Settings - Not adding controls to BTKUILib");
 
             if (defaultChangeBlackList.Value) GetBlackList();
             //MelonCoroutines.Start(SampleNearClip()); //debug
