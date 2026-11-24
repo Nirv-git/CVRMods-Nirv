@@ -8,7 +8,6 @@
 
 [HideDragonWingsMod](HideDragonWingsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/HideDragonWings.dll)     
 [QMShutdownOptionsMod](QMShutdownOptionsMod) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/QMShutdownOptionsMod.dll)    
-[WorldDetailsPage](WorldDetailsPage) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/BTKUI_2-Updates/WorldDetailsPage.dll) (Mostly outdated after 2023r173, but still works)     
 [PlayerLocator](PlayerLocator) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/CVR2024r174/PlayerLocator.dll)            
 [ShrinkOtherHeads](ShrinkOtherHeads) [Download]()         
 [QuickMenu-TriggerPositionAdjust](QuickMenu-TriggerPositionAdjust) [Download](https://github.com/Nirv-git/CVRMods-Nirv/releases/download/WorldProp0.7.10PortMirror2.1.21QMTrigPosAdj0.0.3VoiceAttenRework0.0.8/QuickMenuTriggerPositionAdjust.dll)             
@@ -26,4 +25,4 @@ The following mods have been retired
 | VoiceBalanceModeRework | Suggestions from this post have been merged with 2024r174ex2 and 2023r173hotfix on 2024/02/20 |
 |NoMenuTouch  | Menu Touch should be removed in 2024r174 |
 |Fix_RotationBlockedAvatar  | Fixed in CVR 2024r175 |
-
+| WorldDetailsPage | Outdated after 2023r17 |
