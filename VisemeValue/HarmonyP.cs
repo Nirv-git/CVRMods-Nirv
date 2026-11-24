@@ -11,23 +11,23 @@ using HarmonyLib;
 
 namespace VisemeValue
 {
-    [HarmonyPatch]
-    internal class HarmonyPatches
-    {
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarVr))]
-        internal static void OnSetupAvatarVr()
-        {
-            //Main.Logger.Msg(ConsoleColor.Yellow, $"OnSetupAvatarVr");
-            Main.AvatarReady();
-        }
+    //[HarmonyPatch]
+    //internal class HarmonyPatches
+    //{
+    //    [HarmonyPostfix]
+    //    [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarVr))]
+    //    internal static void OnSetupAvatarVr()
+    //    {
+    //        //Main.Logger.Msg(ConsoleColor.Yellow, $"OnSetupAvatarVr");
+    //        Main.AvatarReady();
+    //    }
 
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarDesktop))]
-        internal static void OnSetupAvatarDesktop()
-        {
-            //Main.Logger.Msg(ConsoleColor.Yellow, $"OnSetupAvatarDesktop");
-            Main.AvatarReady();
-        }
-    }
+    //    [HarmonyPostfix]
+    //    [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarDesktop))]
+    //    internal static void OnSetupAvatarDesktop()
+    //    {
+    //        //Main.Logger.Msg(ConsoleColor.Yellow, $"OnSetupAvatarDesktop");
+    //        Main.AvatarReady();
+    //    }
+    //}
 }

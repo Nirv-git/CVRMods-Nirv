@@ -24,7 +24,7 @@ namespace ViewPointTweaks
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "0.7.20";
+        public const string versionStr = "0.7.21";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "ViewPointTweaks";

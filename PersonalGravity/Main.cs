@@ -25,7 +25,7 @@ namespace PersonalGravity
 
     public class Main : MelonMod
     {
-        public const string versionStr = "0.11.19";
+        public const string versionStr = "0.11.20";
         public static MelonLogger.Instance Logger;
 
         public static Main Instance;
@@ -79,7 +79,7 @@ namespace PersonalGravity
                 case 1: break;
                 case 2: break;
                 default:
-                    worldMovementModAllowed = CVRWorld.Instance.allowFlying || CVRWorld.Instance.allowSpawnables;
+                    if (CVRWorld.Instance != null) worldMovementModAllowed = CVRWorld.Instance.allowFlying || CVRWorld.Instance.allowSpawnables;
                     break;
             }
         }

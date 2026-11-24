@@ -14,7 +14,6 @@ using ABI_RC.Core.Savior;
 using ABI_RC.Core.Networking;
 using System.Text;
 using ABI_RC.Systems.GameEventSystem;
-using DarkRift;
 
 [assembly: MelonInfo(typeof(VoiceConnectionStatus.Main), "VoiceConnectionStatus", VoiceConnectionStatus.Main.versionStr, "Nirvash")] 
 [assembly: MelonGame(null, "ChilloutVR")]
@@ -23,7 +22,7 @@ namespace VoiceConnectionStatus
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "0.11.30";
+        public const string versionStr = "0.11.31";
         public static MelonLogger.Instance Logger;
         public static Main Instance;
 
@@ -108,7 +107,7 @@ namespace VoiceConnectionStatus
                 PlayerSetup.Instance.AnimatorManager.SetParameter("VoiceConnectionStatus", state);
             }
             if ((Time.time > Main.joinTime + 5f) && 
-                (NetworkManager.Instance != null && NetworkManager.Instance.GameNetwork.ConnectionState == ConnectionState.Connected))
+                (NetworkManager.Instance != null && NetworkManager.Instance.IsConnectedToGameNetwork()))
             {
                 if (Main.sendChatBoxDisconnect.Value && !state)
                 {

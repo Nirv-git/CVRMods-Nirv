@@ -1,13 +1,14 @@
-﻿using MelonLoader;
-using UnityEngine;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections;
-using System.Reflection;
-using ABI_RC.Core;
+﻿using ABI_RC.Core;
 using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
+using ABI_RC.Systems.GameEventSystem;
+using MelonLoader;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEngine;
 
 [assembly: MelonGame(null, "ChilloutVR")]
 [assembly: MelonInfo(typeof(VisemeValue.Main), "VisemeValue", VisemeValue.Main.versionStr, "Nirvash")]
@@ -20,7 +21,7 @@ namespace VisemeValue
     public class Main : MelonMod
     {
         public static MelonLogger.Instance Logger;
-        public const string versionStr = "1.1.2";
+        public const string versionStr = "1.1.3";
 
         public static MelonPreferences_Category cat;
         private const string catagory = "VisemeValue";
@@ -56,7 +57,26 @@ namespace VisemeValue
             driveVisemePref.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { AvatarReady(); });
             driveIntensityPref.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { AvatarReady(); });
             driveIndivPref.OnEntryValueChangedUntyped.Subscribe((oldValue, newValue) => { AvatarReady(); });
+
+            SetupEvents();
         }
+
+        public static void SetupEvents()
+        {
+            CVRGameEventSystem.Avatar.OnLocalAvatarLoad.AddListener((message) =>
+            {
+                try
+                {
+                    Main.AvatarReady();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("An error occured within CVRGameEventSystem.Avatar.OnLocalAvatarLoad!");
+                    Logger.Error(e);
+                }
+            });
+        }
+
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {

@@ -7,6 +7,7 @@ using System.Collections;
 using System.Reflection;
 using ABI_RC.Core;
 using ABI_RC.Core.Player;
+using ABI_RC.Core.Player.AvatarTracking;
 using HarmonyLib;
 
 
@@ -20,7 +21,7 @@ namespace ViewPointTweaks
 
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetViewPointOffset))]
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.AvatarTracking.PlayerAvatarPoint), nameof(PlayerAvatarPoint.Reset))]
         internal static bool OnSetViewPointOffset()
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"OnSetViewPointOffset");
@@ -43,7 +44,7 @@ namespace ViewPointTweaks
 
 
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetViewPointOffset))]
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.AvatarTracking.PlayerAvatarPoint), nameof(PlayerAvatarPoint.Reset))]
         internal static void AfterSetViewPointOffset()
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"AfterSetViewPointOffset");
@@ -64,8 +65,8 @@ namespace ViewPointTweaks
 
 
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarVr))]
-        internal static bool OnSetupAvatarVr()
+        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.OnSetupAvatar))]
+        internal static bool OnSetupAvatar()
         {
             //Main.Logger.Msg(ConsoleColor.Yellow, $"OnSetupAvatarVr");
             try
@@ -80,32 +81,32 @@ namespace ViewPointTweaks
             }
             catch (Exception ex)
             {
-                Main.Logger.Error("Error in OnSetupAvatarVr \n" + ex.ToString());
+                Main.Logger.Error("Error in OnSetupAvatar \n" + ex.ToString());
             }
             return true;
         }
 
 
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarDesktop))]
-        internal static bool OnSetupAvatarDesktop()
-        {
-            //Main.Logger.Msg(ConsoleColor.Yellow, $"OnSetupAvatarDesktop");
-            try
-            {//Undo transforms 
-                if (Main.currentScaleAdjustment != 0 || Main.currentPosAdjustment != Vector3.zero || Main.currentRotAdjustment != 0)
-                {
-                   //Main.Logger.Msg($"Resetting Offsets");
-                    Main.ResetOffsets();
-                    wasReset = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Main.Logger.Error("Error in OnSetupAvatarDesktop \n" + ex.ToString());
-            }
-            return true;
-        }
+        //[HarmonyPrefix]
+        //[HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarDesktop))]
+        //internal static bool OnSetupAvatarDesktop()
+        //{
+        //    //Main.Logger.Msg(ConsoleColor.Yellow, $"OnSetupAvatarDesktop");
+        //    try
+        //    {//Undo transforms 
+        //        if (Main.currentScaleAdjustment != 0 || Main.currentPosAdjustment != Vector3.zero || Main.currentRotAdjustment != 0)
+        //        {
+        //           //Main.Logger.Msg($"Resetting Offsets");
+        //            Main.ResetOffsets();
+        //            wasReset = false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Main.Logger.Error("Error in OnSetupAvatarDesktop \n" + ex.ToString());
+        //    }
+        //    return true;
+        //}
 
         //[HarmonyPostfix]
         //[HarmonyPatch(typeof(ABI_RC.Core.Player.PlayerSetup), nameof(PlayerSetup.SetupAvatarGeneral))]

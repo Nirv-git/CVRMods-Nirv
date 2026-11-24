@@ -10,6 +10,7 @@ using ABI_RC.Core.Player;
 using ABI_RC.Core.Savior;
 using ABI.CCK.Components;
 using HarmonyLib;
+using ABI_RC.Core.Networking.IO.Instancing;
 
 
 [assembly: MelonInfo(typeof(NearClipPlaneAdj.Main), "NearClipPlaneAdj", NearClipPlaneAdj.Main.versionStr, "Nirvash")]
@@ -20,7 +21,7 @@ namespace NearClipPlaneAdj
 {
     public class Main : MelonMod
     {
-        public const string versionStr = "1.11.19";
+        public const string versionStr = "1.11.20";
         public static MelonLogger.Instance Logger;
 
         public static MelonPreferences_Entry<bool> useNirvMiscPage;
@@ -113,7 +114,7 @@ namespace NearClipPlaneAdj
 
         private static Camera GetScreenCam()
         {
-            Camera screenCamera = PlayerSetup.Instance.GetActiveCamera().GetComponent<Camera>();
+            Camera screenCamera = PlayerSetup.Instance.activeCam;
             return screenCamera;
         }
 
@@ -161,9 +162,9 @@ namespace NearClipPlaneAdj
             //printPlane(); //debug
 
             yield return new WaitForSecondsRealtime(2);
-            if (defaultChangeBlackList.Value && MetaPort.Instance.CurrentWorldId != null && blackList != null)
+            if (defaultChangeBlackList.Value && Instances.CurrentWorldId != null && blackList != null)
             { //Check if world is blacklisted from auto change
-                var worldID = MetaPort.Instance.CurrentWorldId;
+                var worldID = Instances.CurrentWorldId;
 
                 //if (debug.Value)
                 //{
