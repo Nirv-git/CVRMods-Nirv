@@ -1,6 +1,8 @@
 
 # VisemeValue
-This mod exposes your current viseme states for use in avatars. (Much like the Parameter Stream for Viseme Loudness)        
+This mod exposes your current viseme states for use in avatars. (Much like the Parameter Stream for Viseme Loudness)     
+
+  If you just want a parameter showing the current viseme, then the [core parameter](https://docs.chilloutvr.net/cck/avatar/animator-core-parameters/) `VisemeIdx` is native to the game. (This mod was made before that was added)
 
 Settings:       
 - `Attempt to Drive Viseme Parameters if they exists`  default value `true`
